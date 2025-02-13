@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
 class ValueConstants{
-  static double deviceHeight(BuildContext context) => MediaQuery.of(context).size.height;
-  static double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
+  static double screenWidth = 0;
+  static double screenHeight = 0;
+
+  static void init(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+  }
 }

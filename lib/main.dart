@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
+import 'package:jobsit_mobile/screens/splash_screen.dart';
+import 'package:jobsit_mobile/utils/value_constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,6 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    ValueConstants.init(context);
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -22,8 +27,10 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return const LoginScreen();
+    return const SplashScreen();
   }
 }
