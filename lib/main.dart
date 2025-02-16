@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:jobsit_mobile/screens/change_passwork.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/screens/splash_screen.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 
+// void main() {
+//   runApp(const MyApp());
+// }
 void main() {
-  runApp(const MyApp());
+  runApp(const ChangePasswordApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

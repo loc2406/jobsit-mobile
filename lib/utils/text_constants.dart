@@ -32,5 +32,6 @@ class TextConstants{
 
   static const email = 'Email';
   static const password = 'Mật khẩu';
-
+// nation
+  static const vn = 'assets/images/viet_nam.png';
 }
