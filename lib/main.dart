@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/screens/splash_screen.dart';
+import 'package:jobsit_mobile/utils/color_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 
 void main() {
@@ -12,17 +15,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ValueConstants.initScreenSize(context);
 
-    ValueConstants.init(context);
-
-    return MaterialApp(
+    return MultiBlocProvider(providers: [
+      BlocProvider(create: (context) => CandidateCubit())
+    ], child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: ColorConstants.main),
         useMaterial3: true,
       ),
-      home: MainScreen(),
-    );
+      home: const MainScreen(),
+    ));
   }
 }
 

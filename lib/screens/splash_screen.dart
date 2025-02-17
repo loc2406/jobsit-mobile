@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobsit_mobile/screens/active_account_screen.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/screens/register_screen.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
@@ -14,9 +15,14 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  bool _isShowingDialog = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _isShowingDialog ?ColorConstants.main : Colors.white,
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Expanded(
@@ -113,16 +119,35 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void showLoginDialog() {
+    setState(() {
+      _isShowingDialog = true;
+    });
     showModalBottomSheet(
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius:  BorderRadius.vertical(top: Radius.circular(10))),
-        context: context, builder: (context) => const LoginScreen());
+        constraints: BoxConstraints(maxHeight: ValueConstants.screenHeight * 0.85), // dialog hiển thị sẽ có chiều cao tối đa bằng 90% chiều cao màn hình
+        barrierColor: _isShowingDialog ? Colors.transparent : null, // Không làm tối nền phía sau
+      shape: const RoundedRectangleBorder(borderRadius:  BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+        context: context, builder: (context) => const LoginScreen()).whenComplete((){
+      setState(() {
+        _isShowingDialog = false;
+      });
+    });
   }
 
   void showRegisterDialog() {
+    setState(() {
+      _isShowingDialog = true;
+    });
     showModalBottomSheet(
         isScrollControlled: true,
-        shape: const RoundedRectangleBorder(borderRadius:  BorderRadius.vertical(top: Radius.circular(10))),
-        context: context, builder: (context) => const RegisterScreen());
+        constraints: BoxConstraints(maxHeight: ValueConstants.screenHeight * 0.85), // dialog hiển thị sẽ có chiều cao tối đa bằng 90% chiều cao màn hình
+        barrierColor: _isShowingDialog ? Colors.transparent : null, // Không làm tối nền phía sau
+        shape: const RoundedRectangleBorder(borderRadius:  BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+        context: context, builder: (context) => const RegisterScreen()).whenComplete((){
+      setState(() {
+        _isShowingDialog = false;
+      });
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const ActiveAccountScreen()));
+    });
   }
 }
