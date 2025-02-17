@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../utils/asset_constants.dart';
 import '../utils/text_constants.dart';
 import '../utils/value_constants.dart';
 
@@ -57,7 +58,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             const SizedBox(width: 10), // Khoảng cách giữa menu và logo
 
             Flexible( // Đảm bảo logo không bị chèn ép
-              child: Image.asset(TextConstants.splashLogoAsset,height: 20,),
+              child: Image.asset(AssetConstants.splashLogo,height: 20,),
             ),
           ],
         ),
@@ -72,7 +73,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 children: [
                   CircleAvatar(
                     radius: 18,
-                    backgroundImage: AssetImage(TextConstants.vn),
+                    backgroundImage: AssetImage(AssetConstants.iconVN),
                   ),
                   Icon(Icons.arrow_drop_down, color: Colors.black),
                 ],
@@ -93,20 +94,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                     ],
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
+                      Text(
                         "Nguyen Hoa",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       CircleAvatar(
                         radius: 18,
-                        backgroundImage: AssetImage(TextConstants.vn),
+                        backgroundImage: AssetImage(AssetConstants.iconPerson),
                       ),
                     ],
                   ),
@@ -131,7 +132,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 10,

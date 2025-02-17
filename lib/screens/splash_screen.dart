@@ -16,12 +16,10 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
-  bool _isShowingDialog = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _isShowingDialog ?ColorConstants.main : Colors.white,
+      backgroundColor:  Colors.white,
       resizeToAvoidBottomInset: false,
       body: Column(
         children: [
@@ -73,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                 RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(4))))),
-                        onPressed: showRegisterDialog,
+                        onPressed: navigateRegisterScreen,
                         child: const Text(
                           TextConstants.registerAccount,
                           style: TextStyle(
@@ -102,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                         BorderSide(color: ColorConstants.main),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(4))))),
-                        onPressed: showLoginDialog,
+                        onPressed: navigateLoginScreen,
                         child: const Text(
                           TextConstants.haveAccountBefore,
                           style: TextStyle(
@@ -118,36 +116,11 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void showLoginDialog() {
-    setState(() {
-      _isShowingDialog = true;
-    });
-    showModalBottomSheet(
-      isScrollControlled: true,
-        constraints: BoxConstraints(maxHeight: ValueConstants.screenHeight * 0.85), // dialog hiển thị sẽ có chiều cao tối đa bằng 90% chiều cao màn hình
-        barrierColor: _isShowingDialog ? Colors.transparent : null, // Không làm tối nền phía sau
-      shape: const RoundedRectangleBorder(borderRadius:  BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
-        context: context, builder: (context) => const LoginScreen()).whenComplete((){
-      setState(() {
-        _isShowingDialog = false;
-      });
-    });
+  void navigateLoginScreen() {
+    Navigator.push(context,MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
-  void showRegisterDialog() {
-    setState(() {
-      _isShowingDialog = true;
-    });
-    showModalBottomSheet(
-        isScrollControlled: true,
-        constraints: BoxConstraints(maxHeight: ValueConstants.screenHeight * 0.85), // dialog hiển thị sẽ có chiều cao tối đa bằng 90% chiều cao màn hình
-        barrierColor: _isShowingDialog ? Colors.transparent : null, // Không làm tối nền phía sau
-        shape: const RoundedRectangleBorder(borderRadius:  BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
-        context: context, builder: (context) => const RegisterScreen()).whenComplete((){
-      setState(() {
-        _isShowingDialog = false;
-      });
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const ActiveAccountScreen()));
-    });
+  void navigateRegisterScreen() {
+    Navigator.push(context,MaterialPageRoute(builder: (context) => const RegisterScreen()));
   }
 }

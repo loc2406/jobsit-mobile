@@ -2,7 +2,7 @@ import 'package:jobsit_mobile/utils/text_constants.dart';
 
 class ValidateConstants{
   static String? validateEmailLogin(String? email){
-    if (email == null || email.isEmpty){
+    if (email == null || email.trim().isEmpty){
       return TextConstants.pleaseInputEmail;
     }
 
@@ -20,7 +20,7 @@ class ValidateConstants{
   }
 
   static String? validatePasswordLogin(String? password){
-    if (password == null || password.isEmpty){
+    if (password == null || password.trim().isEmpty){
       return TextConstants.pleaseInputPassword;
     }
 
@@ -28,7 +28,7 @@ class ValidateConstants{
   }
 
   static String? validateEmailRegister(String? email){
-    if (email == null || email.isEmpty){
+    if (email == null || email.trim().isEmpty){
       return TextConstants.pleaseInputEmail;
     }
 
@@ -54,7 +54,7 @@ class ValidateConstants{
   }
 
   static String? validatePasswordRegister(String? password){
-    if (password == null || password.isEmpty){
+    if (password == null || password.trim().isEmpty){
       return TextConstants.pleaseInputPassword;
     }
 
@@ -77,7 +77,7 @@ class ValidateConstants{
   }
 
   static String? validateConfirmPassword(String password, String? confirmPassword){
-    if (confirmPassword == null || confirmPassword.isEmpty){
+    if (confirmPassword == null || confirmPassword.trim().isEmpty){
       return TextConstants.pleaseConfirmPassword;
     }
 
@@ -89,7 +89,7 @@ class ValidateConstants{
   }
 
   static String? validateFirstName(String? firstName){
-    if (firstName == null || firstName.isEmpty){
+    if (firstName == null || firstName.trim().isEmpty){
       return TextConstants.pleaseInputFirstName;
     }
 
@@ -110,7 +110,7 @@ class ValidateConstants{
   }
 
   static String? validateLastName(String? lastName){
-    if (lastName == null || lastName.isEmpty){
+    if (lastName == null || lastName.trim().isEmpty){
       return TextConstants.pleaseInputLastName;
     }
 
@@ -131,7 +131,7 @@ class ValidateConstants{
   }
 
   static String? validatePhone(String? phone){
-    if (phone == null || phone.isEmpty){
+    if (phone == null || phone.trim().isEmpty){
       return TextConstants.pleaseInputPhone;
     }
 
@@ -146,6 +146,18 @@ class ValidateConstants{
 
     if (!phoneRegex.hasMatch(phone)){
       return TextConstants.invalidPhone;
+    }
+
+    return null;
+  }
+
+  static String? validateOtp(String? otp){
+    if (otp == null || otp.trim().isEmpty){
+      return TextConstants.pleaseInputOtp;
+    }
+
+    if (otp.length != 6){
+      return TextConstants.otpMustHave6Number;
     }
 
     return null;
