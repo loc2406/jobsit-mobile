@@ -76,14 +76,27 @@ class TextConstants {
   static const sendOTPAgain = 'Gửi lại mã';
   static const activeAccountSuccess = 'Kích hoạt tài khoản thành công';
 
-// Other
-static const navigateInputOTPScreen = 'navigateInputOTPScreen';
-
 // Error
 static const createCandidateError = 'Lỗi khi đăng kí ứng viên';
 static const sendActiveEmailError = 'Lỗi khi gửi email kích hoạt tài khoản';
-static const sendOtpToActiveError = 'Lỗi khi xác minh tài khoản';
+static const sendOtpToActiveError = 'Kích hoạt tài khoản thất bại';
 static const emailIsExistedError = 'Email đã được đăng ký';
 static const emailOrPasswordIncorrectError = 'Email hoặc mật khẩu không đúng';
 static const tokenOrCandidateIdError = 'Token hoặc id của người dùng không hợp lệ';
+static const getJobError = 'Lấy danh sách công việc thất bại';
+
+// Message
+  static const noDataMess = 'Không có dữ liệu';
+  static const sentOtpMess = 'Đã gửi lại mã OTP';
+
+// Bottom navigation bar
+  static const home = 'Trang chủ';
+  static const saved  = 'Đã lưu';
+  static const account  = 'Tài khoản';
+
+    // Home Screen
+    static const searchJob = 'Search job...';
+
+// Other
+  static const navigateInputOTPScreen = 'navigateInputOTPScreen';
 }

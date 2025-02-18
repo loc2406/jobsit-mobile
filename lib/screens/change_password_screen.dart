@@ -58,7 +58,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             const SizedBox(width: 10), // Khoảng cách giữa menu và logo
 
             Flexible( // Đảm bảo logo không bị chèn ép
-              child: Image.asset(AssetConstants.splashLogo,height: 20,),
+              child: Image.asset(AssetConstants.logoSplash,height: 20,),
             ),
           ],
         ),

@@ -17,7 +17,7 @@ class CandidateState {
 
   factory CandidateState.loading() => LoadingState();
 
-  factory CandidateState.registerSuccess() => RegisterSuccessState();
+  factory CandidateState.registerSuccess(String email) => RegisterSuccessState(email);
 
   factory CandidateState.sendOtpSuccess() => SendOtpSuccessState();
 

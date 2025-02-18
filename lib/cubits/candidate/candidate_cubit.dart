@@ -21,7 +21,7 @@ class CandidateCubit extends Cubit<CandidateState> {
     emit(CandidateState.loading());
     try {
       await CandidateServices.createCandidate(email: email, password: password, firstName: firstName, lastName: lastName, phone: phone);
-      emit(CandidateState.registerSuccess());
+      emit(CandidateState.registerSuccess(email));
     } catch (e) {
       emit(CandidateState.error(e.toString()));
     }

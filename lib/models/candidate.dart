@@ -1,3 +1,5 @@
+import 'package:jobsit_mobile/services/candidate_services.dart';
+
 class Candidate {
   final int id;
   final String email;
@@ -24,15 +26,15 @@ class Candidate {
   factory Candidate.fromMap(Map<String, dynamic> map) {
     return Candidate(
       id: int.parse(map[idField].toString()),
-      email: map[userDTOField][emailField] ?? '',
-      firstName: map[userDTOField][firstNameField],
-      lastName: map[userDTOField][lastNameField],
-      gender: map[userDTOField][genderField],
-      birthdate: map[userDTOField][birthdateField],
-      phone: map[userDTOField][phoneField],
-      avatar: map[userDTOField][avatarField],
-      location: map[userDTOField][locationField],
-      mailReceive: map[userDTOField][mailReceiveField],);
+      email: map[CandidateServices.userDTOKey][emailField] ?? '',
+      firstName: map[CandidateServices.userDTOKey][firstNameField],
+      lastName: map[CandidateServices.userDTOKey][lastNameField],
+      gender: map[CandidateServices.userDTOKey][genderField],
+      birthdate: map[CandidateServices.userDTOKey][birthdateField],
+      phone: map[CandidateServices.userDTOKey][phoneField],
+      avatar: map[CandidateServices.userDTOKey][avatarField],
+      location: map[CandidateServices.userDTOKey][locationField],
+      mailReceive: map[CandidateServices.userDTOKey][mailReceiveField],);
   }
 
   Map<String, dynamic> toMap() {
@@ -61,7 +63,4 @@ class Candidate {
   static const avatarField = 'avatar';
   static const locationField = 'location';
   static const mailReceiveField = 'mailReceive';
-
-  // Api response
-  static const userDTOField = 'userDTO';
 }

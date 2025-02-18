@@ -36,8 +36,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _phoneController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _cubit = context.read<CandidateCubit>();
   }
 
@@ -286,7 +286,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(TextConstants.registerSuccessful)));
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const ActiveAccountScreen()),
+                          MaterialPageRoute(builder: (context) => ActiveAccountScreen(), settings: RouteSettings(arguments: state.email)),
                         );
                       }else if (state is ErrorState){
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errMessage)));

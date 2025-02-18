@@ -30,8 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _cubit = context.read<CandidateCubit>();
   }
 
@@ -95,17 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Text.rich(TextSpan(
-                                  text: TextConstants.email,
-                                  children: [
-                                    TextSpan(
-                                        text: '*',
-                                        style: WidgetConstants
-                                            .inputFieldRequireStyle)
-                                  ],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 15))),
+                              child: Text(TextConstants.email, style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 15)),
                             ),
                             InputField(
                                 controller: _emailController,
@@ -117,17 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Text.rich(TextSpan(
-                                  text: TextConstants.password,
-                                  children: [
-                                    TextSpan(
-                                        text: '*',
-                                        style: WidgetConstants
-                                            .inputFieldRequireStyle)
-                                  ],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 15))),
+                              child: Text(TextConstants.password, style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 15)),
                             ),
                             InputField(
                               controller: _passwordController,

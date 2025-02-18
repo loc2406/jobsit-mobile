@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
+import 'package:jobsit_mobile/cubits/job/job_cubit.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
+import 'package:jobsit_mobile/screens/menu_screen.dart';
 import 'package:jobsit_mobile/screens/splash_screen.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
@@ -18,7 +20,8 @@ class MyApp extends StatelessWidget {
     ValueConstants.initScreenSize(context);
 
     return MultiBlocProvider(providers: [
-      BlocProvider(create: (context) => CandidateCubit())
+      BlocProvider(create: (context) => CandidateCubit()),
+      BlocProvider(create: (context) => JobCubit()),
     ], child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -36,5 +39,6 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SplashScreen();
+    // return const MenuScreen();
   }
 }

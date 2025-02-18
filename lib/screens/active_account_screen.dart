@@ -16,21 +16,22 @@ import 'package:jobsit_mobile/utils/widget_constants.dart';
 import 'package:jobsit_mobile/widgets/input_field.dart';
 
 class ActiveAccountScreen extends StatefulWidget {
-  const ActiveAccountScreen({super.key});
-
+  const ActiveAccountScreen({ super.key});
   @override
   State<ActiveAccountScreen> createState() => _ActiveAccountScreenState();
 }
 
 class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
   late final CandidateCubit _cubit;
+  late final String _email;
   final _formKey = GlobalKey();
   final _otpController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _cubit = context.read<CandidateCubit>();
+    _email = ModalRoute.of(context)!.settings.arguments.toString();
   }
 
   @override
@@ -113,7 +114,7 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
               }
             }),
             SizedBox(height: ValueConstants.screenHeight * 0.02,),
-            const Text.rich(TextSpan(text:
+            GestureDetector(onTap: sendOtpAgain,child: const Text.rich(TextSpan(text:
             TextConstants.dontReceiveOTP,
                 style: TextStyle(color: Colors.black,
                     fontSize: 13,
@@ -124,7 +125,7 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
                           fontSize: 13,
                           fontWeight: FontWeight.w400))
                 ]
-            ))
+            )),)
           ],
         ),
       )),
@@ -135,5 +136,10 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
     if ((_formKey.currentState as FormState).validate()){
       await _cubit.sendOtpToActiveAccount(_otpController.text);
     }
+  }
+
+  Future<void> sendOtpAgain() async {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(TextConstants.sentOtpMess)));
+    await _cubit.sendActiveEmail(_email);
   }
 }

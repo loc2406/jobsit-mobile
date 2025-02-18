@@ -5,12 +5,13 @@ import 'package:http/http.dart' as http;
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
 class CandidateServices {
-  static const createCandidateUrl = '${BaseServices.uri}/candidate';
-  static const sendActiveEmailUrl = '${BaseServices.uri}/mail/active-user?';
-  static const activeEmailByOtpUrl = '${BaseServices.uri}/active?';
-  static const loginCandidateUrl = '${BaseServices.uri}/login';
+  static const createCandidateUrl = '${BaseServices.url}/candidate';
+  static const sendActiveEmailUrl = '${BaseServices.url}/mail/active-user?';
+  static const activeEmailByOtpUrl = '${BaseServices.url}/active?';
+  static const loginCandidateUrl = '${BaseServices.url}/login';
 
   // Response key
+  static const userDTOKey = 'userDTO';
   static const userCreationDTOKey = 'userCreationDTO';
   static const candidateOtherInfoDTOKey = 'candidateOtherInfoDTO';
   static const emailKey = 'email';

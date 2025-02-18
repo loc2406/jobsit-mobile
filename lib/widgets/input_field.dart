@@ -22,16 +22,15 @@ class InputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.always,
       controller: controller,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        suffixIcon: suffixIcon != null ? IconButton(
-          icon: Icon(suffixIcon,
-            color: ColorConstants.main,),
-          onPressed: suffixIconClicked,
-        ) : null,
+        suffixIcon: suffixIcon != null ? GestureDetector(onTap: suffixIconClicked,child:  Icon(suffixIcon,
+          color: ColorConstants.main,),) : null,
         enabledBorder: WidgetConstants.inputFieldBorder,
         focusedBorder: WidgetConstants.inputFieldBorder,
+        errorStyle: const TextStyle(color: Colors.grey, fontSize: 13, fontStyle: FontStyle.italic),
         errorBorder: WidgetConstants.inputFieldBorder,
         focusedErrorBorder: WidgetConstants.inputFieldBorder,
       ),
