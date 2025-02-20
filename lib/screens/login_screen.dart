@@ -23,315 +23,226 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   late final CandidateCubit _cubit;
-  final _formKey = GlobalKey();
+  final _formKey = GlobalKey<FormState>();
   bool _isShowPass = false;
   bool _isSaveLoginState = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     _cubit = context.read<CandidateCubit>();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.main,
-      appBar: AppBar(
-        backgroundColor: ColorConstants.main,
-        leading: const SizedBox(),
-      ),
-      body: SizedBox.expand(
-          child: Container(
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
-        padding: EdgeInsets.symmetric(
-            vertical: ValueConstants.screenHeight * 0.02,
-            horizontal: ValueConstants.screenWidth * 0.03),
-        child: SingleChildScrollView(
+        resizeToAvoidBottomInset: true,
+        body: Container(
+          padding: const EdgeInsets.all(24),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(color: ColorConstants.main,
+                        TextConstants.logoLoginAsset,
+                        width: ValueConstants.deviceWidthValue(uiValue: 100),
+                      )
+                    ],
+                  )),
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    TextConstants.logoLoginAsset,
-                    width: ValueConstants.screenWidth * 0.24,
-                    height: ValueConstants.screenHeight * 0.03,
+                  Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InputField(
+                              label: TextConstants.email,
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              validateMethod:
+                                  ValidateConstants.validateEmailLogin),
+                          SizedBox(
+                            height:
+                                ValueConstants.deviceHeightValue(uiValue: 20),
+                          ),
+                          InputField(
+                            label: TextConstants.password,
+                            controller: _passwordController,
+                            keyboardType: TextInputType.visiblePassword,
+                            validateMethod:
+                                ValidateConstants.validatePasswordLogin,
+                            suffixIcon: _isShowPass
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            suffixIconClicked: () {
+                              setState(() {
+                                _isShowPass = !_isShowPass;
+                              });
+                            },
+                            isObscure: _isShowPass ? false : true,
+                          ),
+                        ],
+                      )),
+                  SizedBox(
+                    height: ValueConstants.deviceHeightValue(uiValue: 20),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton(
-                          color: Colors.black,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.close,
-                            color: ColorConstants.main,
-                          )),
-                    ],
-                  )
-                ],
-              ),
-              const Text(TextConstants.LOGIN,
-                  style: TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w700,
-                      color: ColorConstants.main)),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Text(TextConstants.email, style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 15)),
-                            ),
-                            InputField(
-                                controller: _emailController,
-                                keyboardType: TextInputType.emailAddress,
-                                validateMethod:
-                                    ValidateConstants.validateEmailLogin),
-                            SizedBox(
-                              height: ValueConstants.screenHeight * 0.02,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Text(TextConstants.password, style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 15)),
-                            ),
-                            InputField(
-                              controller: _passwordController,
-                              keyboardType: TextInputType.visiblePassword,
-                              validateMethod:
-                                  ValidateConstants.validatePasswordLogin,
-                              suffixIcon: _isShowPass
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              suffixIconClicked: () {
-                                setState(() {
-                                  _isShowPass = !_isShowPass;
-                                });
-                              },
-                              isObscure: _isShowPass ? false : true,
-                            ),
-                          ],
-                        )),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Checkbox(
-                              value: _isSaveLoginState,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isSaveLoginState = !_isSaveLoginState;
-                                });
-                              },
-                              checkColor: Colors.white,
-                              activeColor: ColorConstants.main,
-                              side: const BorderSide(
-                                  color: ColorConstants.main, width: 2),
-                            ),
-                            const Text(
-                              TextConstants.saveLoginState,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400),
-                            )
-                          ],
-                        ),
-                        const Text(
-                          TextConstants.forgotPassword,
-                          style: TextStyle(
-                              color: ColorConstants.main,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              fontStyle: FontStyle.italic,
-                              decoration: TextDecoration.underline,
-                              decorationColor: ColorConstants.main),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: ValueConstants.screenHeight * 0.04,
-                    ),
-                    BlocConsumer<CandidateCubit, CandidateState>(
-                        builder: (context, state) {
-                      if (state is LoadingState) {
-                        return WidgetConstants.circularProgress;
-                      }
-
-                      return SizedBox(
-                          width: double.infinity,
-                          child: TextButton(
-                              style: const ButtonStyle(
-                                  padding: WidgetStatePropertyAll(
-                                      EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 32)),
-                                  backgroundColor: WidgetStatePropertyAll(
-                                      ColorConstants.main),
-                                  shape: WidgetStatePropertyAll(
-                                      RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4))))),
-                              onPressed: handleLogin,
-                              child: const Text(
-                                TextConstants.LOGIN,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              )));
-                    }, listener: (context, state) {
-                      if (state is LoginSuccessState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(TextConstants.loginSuccessful)));
-                      } else if (state is ErrorState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(state.errMessage)));
-                      }
-                    }),
-                    SizedBox(
-                      height: ValueConstants.screenHeight * 0.05,
-                    ),
-                    const Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: ColorConstants.divider,
-                            thickness: 1,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _isSaveLoginState,
+                            onChanged: (value) {
+                              setState(() {
+                                _isSaveLoginState = !_isSaveLoginState;
+                              });
+                            },
+                            checkColor: Colors.white,
+                            activeColor: ColorConstants.main,
+                            side: const BorderSide(
+                                color: ColorConstants.main, width: 2),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 6),
-                          child: Text(
-                            TextConstants.OR,
+                          const Text(
+                            TextConstants.saveLoginState,
                             style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: ColorConstants.divider,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: ColorConstants.divider,
-                            thickness: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: ValueConstants.screenHeight * 0.05,
-                    ),
-                    SizedBox(
-                        width: double.infinity,
-                        child: TextButton(
-                            style: const ButtonStyle(
-                                padding: WidgetStatePropertyAll(
-                                    EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 32)),
-                                backgroundColor: WidgetStatePropertyAll(
-                                    ColorConstants.btnLoginGoogle),
-                                shape: WidgetStatePropertyAll(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4))))),
-                            onPressed: null,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                    TextConstants.iconGgLoginAsset),
-                                const SizedBox(
-                                  width: 6,
-                                ),
-                                const Text(
-                                  TextConstants.LOGIN_WITH_GOOGLE,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700),
-                                )
-                              ],
-                            ))),
-                    SizedBox(
-                      height: ValueConstants.screenHeight * 0.02,
-                    ),
-                    SizedBox(
-                        width: double.infinity,
-                        child: TextButton(
-                            style: const ButtonStyle(
-                                padding: WidgetStatePropertyAll(
-                                    EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 32)),
-                                backgroundColor: WidgetStatePropertyAll(
-                                    ColorConstants.btnLoginFb),
-                                shape: WidgetStatePropertyAll(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4))))),
-                            onPressed: null,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                    TextConstants.iconFbLoginAsset),
-                                const SizedBox(
-                                  width: 6,
-                                ),
-                                const Text(
-                                  TextConstants.LOGIN_WITH_FB,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700),
-                                )
-                              ],
-                            ))),
-                    SizedBox(
-                      height: ValueConstants.screenHeight * 0.02,
-                    ),
-                    const Text(TextConstants.dontHaveAccount,
+                                color: Colors.black,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400),
+                          )
+                        ],
+                      ),
+                      const Text(
+                        TextConstants.forgotPassword,
                         style: TextStyle(
+                            color: ColorConstants.main,
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
-                            color: Colors.black)),
-                    GestureDetector(child: TextButton(
-                        style: null,
-                        onPressed: navigateRegisterScreen,
+                            decorationColor: ColorConstants.main),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: ValueConstants.deviceHeightValue(uiValue: 30),
+                  ),
+                  BlocConsumer<CandidateCubit, CandidateState>(
+                      builder: (context, state) {
+                    if (state is LoadingState) {
+                      return WidgetConstants.circularProgress;
+                    }
+
+                    return SizedBox(
+                        width: double.infinity,
+                        child: TextButton(
+                            style: const ButtonStyle(
+                                padding: WidgetStatePropertyAll(
+                                    EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 32)),
+                                backgroundColor:
+                                    WidgetStatePropertyAll(ColorConstants.main),
+                                shape: WidgetStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16))))),
+                            onPressed: handleLogin,
+                            child: const Text(
+                              TextConstants.login,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700),
+                            )));
+                  }, listener: (context, state) {
+                    if (state is LoginSuccessState) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text(TextConstants.loginSuccessful)));
+                    } else if (state is ErrorState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.errMessage)));
+                    }
+                  }),
+                  SizedBox(
+                    height: ValueConstants.deviceHeightValue(uiValue: 20),
+                  ),
+                  const Text(
+                    TextConstants.orLoginWith,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: ColorConstants.grey,
+                    ),
+                  ),
+                  SizedBox(
+                    height: ValueConstants.deviceHeightValue(uiValue: 14),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: ValueConstants.deviceWidthValue(uiValue: 60),
+                        height: ValueConstants.deviceHeightValue(uiValue: 60),
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            color: ColorConstants.btnLoginGoogle,
+                            borderRadius: BorderRadius.circular(200),
+                            border: const Border.fromBorderSide(
+                                BorderSide(color: ColorConstants.main))),
+                        child: SvgPicture.asset(TextConstants.iconGgLoginAsset),
+                      ),
+                      SizedBox(
+                        width: ValueConstants.deviceHeightValue(uiValue: 26),
+                      ),
+                      Container(
+                        width: ValueConstants.deviceWidthValue(uiValue: 60),
+                        height: ValueConstants.deviceHeightValue(uiValue: 60),
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: ColorConstants.btnLoginFb,
+                            borderRadius: BorderRadius.circular(200),
+                            border: const Border.fromBorderSide(
+                                BorderSide(color: ColorConstants.main))),
+                        child: SvgPicture.asset(TextConstants.iconFbLoginAsset),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: ValueConstants.deviceHeightValue(uiValue: 30),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(TextConstants.dontHaveAccount,
+                          style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black)),
+                      SizedBox(
+                        width: ValueConstants.deviceHeightValue(uiValue: 8),
+                      ),
+                      GestureDetector(
+                        onTap: navigateRegisterScreen,
                         child: const Text(
-                          TextConstants.Register,
+                          TextConstants.register,
                           style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
                               color: ColorConstants.main),
-                        )),)
-                  ],
-                ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
               )
             ],
           ),
-        ),
-      )),
-    );
+        ));
   }
 
   Future<void> handleLogin() async {
@@ -342,6 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void navigateRegisterScreen() {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen()));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => const RegisterScreen()));
   }
 }

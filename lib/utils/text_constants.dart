@@ -1,37 +1,33 @@
 class TextConstants {
   // Splash
   static const splashLogoAsset = 'assets/images/logo_splash_screen.png';
-  static const splashTitle = 'Onboading Screen';
+  static const splashTitle = 'Placeholder for an\nOnboarding Screen Title';
   static const splashContent =
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tempus risus rutrum bibendum eget orci ultricies egestas. Faucibus pellentesqu';
-  static const registerAccount = 'Đăng ký tài khoản';
-  static const haveAccountBefore = 'Bạn đã có tài khoản?';
+      'Discover the world of endless povsibilities with ExploreApp. Whether you\'re looking to find the best local spots, connect with fellow adventurers, or track your travels, we\'ve got you covered.';
 
   // Login
   static const logoLoginAsset = 'assets/images/logo_login_screen.png';
   static const iconGgLoginAsset = 'assets/images/icon_google.svg';
   static const iconFbLoginAsset = 'assets/images/icon_fb.svg';
-  static const Login = 'Đăng nhập';
-  static const LOGIN = 'ĐĂNG NHẬP';
-  static const saveLoginState = 'Lưu phiên đăng nhập';
+  static const login = 'Đăng nhập';
+  static const saveLoginState = 'Lưu mật khẩu';
   static const forgotPassword = 'Quên mật khẩu?';
-  static const OR = 'HOẶC';
+  static const orLoginWith = 'Hoặc đăng nhập bằng';
   static const LOGIN_WITH_GOOGLE = 'ĐĂNG NHẬP VỚI GOOGLE';
   static const LOGIN_WITH_FB = 'ĐĂNG NHẬP VỚI FACEBOOK';
   static const dontHaveAccount = 'Bạn chưa có tài khoản?';
   static const loginSuccessful = 'Đăng nhập thành công';
 
   // Register
-  static const Register = 'Đăng ký';
-  static const REGISTER = 'ĐĂNG KÝ';
+  static const register = 'Đăng ký';
   static const confirmPassword = 'Xác nhận mật khẩu';
-  static const firstAndLastName = 'Họ và tên lót';
-  static const name = 'Tên';
+  static const firstName = 'Họ và tên lót';
+  static const lastName = 'Tên';
   static const phone = 'Số điện thoại';
   static const registerNote =
       'Bằng việc ấn vào nút \"Đăng ký\", tôi đồng ý với Thỏa thuận sử dụng và Quy định bảo mật của Jobsit.vn';
+  static const orContinueWith = 'Hoặc tiếp tục với';
   static const alreadyHaveAccount = 'Bạn đã có tài khoản?  ';
-  static const loginNow = 'Đăng nhập ngay';
   static const registerSuccessful = 'Đăng kí thành công';
 
   static const email = 'Email';
@@ -91,11 +87,12 @@ static const getJobError = 'Lấy danh sách công việc thất bại';
 
 // Bottom navigation bar
   static const home = 'Trang chủ';
+  static const applied = 'Đã ứng tuyển';
   static const saved  = 'Đã lưu';
   static const account  = 'Tài khoản';
 
     // Home Screen
-    static const searchJob = 'Search job...';
+    static const searchJob = 'Search Job';
 
 // Other
   static const navigateInputOTPScreen = 'navigateInputOTPScreen';

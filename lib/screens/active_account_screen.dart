@@ -16,7 +16,8 @@ import 'package:jobsit_mobile/utils/widget_constants.dart';
 import 'package:jobsit_mobile/widgets/input_field.dart';
 
 class ActiveAccountScreen extends StatefulWidget {
-  const ActiveAccountScreen({ super.key});
+  const ActiveAccountScreen({super.key});
+
   @override
   State<ActiveAccountScreen> createState() => _ActiveAccountScreenState();
 }
@@ -24,14 +25,24 @@ class ActiveAccountScreen extends StatefulWidget {
 class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
   late final CandidateCubit _cubit;
   late final String _email;
-  final _formKey = GlobalKey();
+  final _formKey = GlobalKey<FormState>();
   final _otpController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      setState(() {
+        // đảm bảo _email được gán dữ liệu khi UI được build xong (lấy được context)
+        _email = ModalRoute.of(context)!.settings.arguments.toString();
+      });
+    });
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _cubit = context.read<CandidateCubit>();
-    _email = ModalRoute.of(context)!.settings.arguments.toString();
   }
 
   @override
@@ -42,7 +53,8 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
         backgroundColor: ColorConstants.main,
         leading: const SizedBox(),
       ),
-      body: SizedBox.expand(child: Container(
+      body: SizedBox.expand(
+          child: Container(
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -61,7 +73,9 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
                   fontWeight: FontWeight.w700,
                   fontSize: 24),
             ),
-            SizedBox(height: ValueConstants.screenHeight * 0.01,),
+            SizedBox(
+              height: ValueConstants.screenHeight * 0.01,
+            ),
             const Text(
               TextConstants.pleaseInputOTPInEmail,
               style: TextStyle(
@@ -69,63 +83,80 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
                   fontWeight: FontWeight.w400,
                   fontSize: 13),
             ),
-            SizedBox(height: ValueConstants.screenHeight * 0.01,),
-            Form(key: _formKey, child: InputField(
-                controller: _otpController,
-                keyboardType: TextInputType.number,
-                validateMethod: ValidateConstants.validateOtp),),
-            SizedBox(height: ValueConstants.screenHeight * 0.02,),
+            SizedBox(
+              height: ValueConstants.screenHeight * 0.01,
+            ),
+            Form(
+              key: _formKey,
+              child: InputField(
+                  controller: _otpController,
+                  keyboardType: TextInputType.number,
+                  validateMethod: ValidateConstants.validateOtp),
+            ),
+            SizedBox(
+              height: ValueConstants.screenHeight * 0.02,
+            ),
             BlocConsumer<CandidateCubit, CandidateState>(
                 builder: (context, state) {
-                  if (state is LoadingState) {
-                    return WidgetConstants.circularProgress;
-                  }
+              if (state is LoadingState) {
+                return WidgetConstants.circularProgress;
+              }
 
-                  return SizedBox(
-                      width: double.infinity,
-                      child: TextButton(
-                          style: const ButtonStyle(
-                              padding: WidgetStatePropertyAll(
-                                  EdgeInsets.symmetric(
-                                      vertical: 12, horizontal: 32)),
-                              backgroundColor:
+              return SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                      style: const ButtonStyle(
+                          padding: WidgetStatePropertyAll(EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 32)),
+                          backgroundColor:
                               WidgetStatePropertyAll(ColorConstants.main),
-                              shape: WidgetStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(4))))),
-                          onPressed: verifyEmail,
-                          child: const Text(
-                            TextConstants.VERIFY_EMAIL,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700),
-                          )));
-                }, listener: (context, state) {
+                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4))))),
+                      onPressed: verifyEmail,
+                      child: const Text(
+                        TextConstants.VERIFY_EMAIL,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700),
+                      )));
+            }, listener: (context, state) {
               if (state is ActiveSuccessState) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text(TextConstants.activeAccountSuccess)));
-                
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+
+                if (mounted) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
+                }
               } else if (state is ErrorState) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.errMessage)));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.errMessage)));
               }
             }),
-            SizedBox(height: ValueConstants.screenHeight * 0.02,),
-            GestureDetector(onTap: sendOtpAgain,child: const Text.rich(TextSpan(text:
-            TextConstants.dontReceiveOTP,
-                style: TextStyle(color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400),
-                children: [
-                  TextSpan(text: TextConstants.sendOTPAgain,
-                      style: TextStyle(color: ColorConstants.main,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400))
-                ]
-            )),)
+            SizedBox(
+              height: ValueConstants.screenHeight * 0.02,
+            ),
+            GestureDetector(
+              onTap: sendOtpAgain,
+              child: const Text.rich(TextSpan(
+                  text: TextConstants.dontReceiveOTP,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400),
+                  children: [
+                    TextSpan(
+                        text: TextConstants.sendOTPAgain,
+                        style: TextStyle(
+                            color: ColorConstants.main,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400))
+                  ])),
+            )
           ],
         ),
       )),
@@ -133,13 +164,14 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
   }
 
   Future<void> verifyEmail() async {
-    if ((_formKey.currentState as FormState).validate()){
+    if ((_formKey.currentState as FormState).validate()) {
       await _cubit.sendOtpToActiveAccount(_otpController.text);
     }
   }
 
   Future<void> sendOtpAgain() async {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(TextConstants.sentOtpMess)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text(TextConstants.sentOtpMess)));
     await _cubit.sendActiveEmail(_email);
   }
 }

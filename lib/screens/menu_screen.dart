@@ -31,19 +31,17 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: Image.asset(AssetConstants.logo),
-      ),
       body: Container(color: ColorConstants.grayBackground,child: IndexedStack(
         index: _currentIndex,
         children: screens,
       ),),
       bottomNavigationBar: BottomNavigationBar(
+        showUnselectedLabels: true,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Trang chủ"),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Đã lưu"),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: "Tài khoản"),
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: TextConstants.home),
+          BottomNavigationBarItem(icon: Icon(Icons.home_repair_service_outlined), label: TextConstants.applied),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border_rounded), label: TextConstants.saved),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: TextConstants.account),
         ],
         currentIndex: _currentIndex,
         onTap: (index) {
