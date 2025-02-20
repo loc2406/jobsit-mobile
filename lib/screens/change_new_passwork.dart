@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobsit_mobile/utils/asset_constants.dart';
 
 import '../utils/text_constants.dart';
 
@@ -45,7 +46,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             const Spacer(),
             Row(
               children: [
-                Image.asset(TextConstants.vn, width: 24),
+                Image.asset(AssetConstants.iconVN, width: 24),
                 const Icon(Icons.arrow_drop_down, color: Colors.black),
               ],
             ),

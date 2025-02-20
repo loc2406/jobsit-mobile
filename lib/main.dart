@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/job/job_cubit.dart';
+import 'package:jobsit_mobile/screens/forgot_password.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/screens/menu_screen.dart';
 import 'package:jobsit_mobile/screens/splash_screen.dart';
@@ -10,6 +11,7 @@ import 'package:jobsit_mobile/utils/value_constants.dart';
 
 void main() {
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -38,7 +40,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SplashScreen();
+    //return const SplashScreen();
     // return const MenuScreen();
+    return const ForgotPasswordScreen();
   }
 }

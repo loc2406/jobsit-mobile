@@ -9,7 +9,7 @@ class CandidateServices {
   static const sendActiveEmailUrl = '${BaseServices.url}/mail/active-user?';
   static const activeEmailByOtpUrl = '${BaseServices.url}/active?';
   static const loginCandidateUrl = '${BaseServices.url}/login';
-
+  static const sendEmailForgotPassWordUrl = '${BaseServices.url}/user/forgot-password/';
   // Response key
   static const userDTOKey = 'userDTO';
   static const userCreationDTOKey = 'userCreationDTO';
@@ -69,6 +69,22 @@ class CandidateServices {
     }
   }
 
+  static sendEmailForgotPassWord(String email) async {
+    final uri = Uri.parse("${CandidateServices. sendEmailForgotPassWordUrl}$email");
+    print("dia chi guiiiiiiiiii   $email");
+    final response = await http.get(uri);
+
+    if (response.statusCode != 200){
+      final Map<String, dynamic> errBody = jsonDecode(response.body);
+      final errMessage = errBody[messageKey].toString();
+
+      if (errMessage == dataExistingValue){
+        throw Exception(TextConstants.emailIsExistedError);
+      }else{
+        throw Exception(TextConstants.sendActiveEmailError);
+      }
+    }
+  }
   static sendOtpToActiveAccount(String otp) async {
     final uri = Uri.parse("${CandidateServices.activeEmailByOtpUrl}otp=$otp");
     final response = await http.get(uri, headers: BaseServices.headers);

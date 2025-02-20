@@ -35,7 +35,14 @@ class CandidateCubit extends Cubit<CandidateState> {
       emit(CandidateState.error(e.toString()));
     }
   }
-
+  sendEmailForgotPassWord(String email) async {
+    try{
+      await CandidateServices.sendEmailForgotPassWord(email);
+      emit(CandidateState.sendOtpSuccess());
+    }catch(e){
+      emit(CandidateState.error(e.toString()));
+    }
+  }
   sendOtpToActiveAccount(String otp) async {
     try{
       emit(CandidateState.loading());
