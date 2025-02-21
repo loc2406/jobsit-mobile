@@ -46,14 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          surfaceTintColor: Colors.transparent, // Xóa hiệu ứng tối màu khi cuộn job
           backgroundColor: Colors.white,
           leading: Container(
-            margin: EdgeInsets.only(left: ValueConstants.screenWidth * 0.06),
+            margin: EdgeInsets.only(left: ValueConstants.deviceWidthValue(uiValue: 25)),
             child: Image.asset(
               AssetConstants.logoHome,
             ),
           ),
-          leadingWidth: ValueConstants.screenWidth * 0.35,
+          leadingWidth: ValueConstants.deviceWidthValue(uiValue: 143),
           actions: [
             GestureDetector(
               child: Container(
@@ -65,14 +66,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(
-              width: ValueConstants.screenWidth * 0.06,
+              width: ValueConstants.deviceWidthValue(uiValue: 25),
             )
           ],
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: ValueConstants.screenHeight * 0.04,
-              horizontal: ValueConstants.screenWidth * 0.06),
+        body: Container(
+          margin: EdgeInsets.only(
+              left: ValueConstants.deviceWidthValue(uiValue: 25),
+              top: ValueConstants.deviceWidthValue(uiValue: 25),
+            right: ValueConstants.deviceWidthValue(uiValue: 25),
+          ),
           child: Column(
             children: [
               Row(
@@ -135,9 +138,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildJobList() {
-    return ListView.builder(
+    return Padding(padding: EdgeInsets.symmetric(vertical: ValueConstants.deviceWidthValue(uiValue: 15)),child: ListView.builder(
       itemBuilder: (context, index) => JobItem(job: _jobs[index]),
       itemCount: _jobs.length,
-    );
+    ),);
   }
 }

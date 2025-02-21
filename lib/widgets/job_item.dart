@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
 
 import '../models/job.dart';
+import '../utils/value_constants.dart';
 
 class JobItem extends StatelessWidget {
   JobItem({super.key, required this.job});
@@ -16,74 +17,81 @@ class JobItem extends StatelessWidget {
     final differenceInDays = now.difference(DateTime.tryParse(job.endDate) ?? DateTime.now()).inDays;
 
     return Container(
-      margin: const EdgeInsets.all(10),
+      margin: EdgeInsets.only(top: ValueConstants.deviceHeightValue(uiValue: 17)),
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
           color: Colors.white),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Icon(
                 Icons.image_outlined,
                 size: 24,
+                color: ColorConstants.main,
               ),
-              Column(
+              SizedBox(width: ValueConstants.deviceWidthValue(uiValue: 13),),
+              Expanded(child:  Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    job.companyName,
+                    job.jobName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                         color: ColorConstants.main,
                         fontWeight: FontWeight.w700,
                         fontSize: 20),
                   ),
-                  // Text(
-                  //   job.companyDescription,
-                  //   style: const TextStyle(
-                  //       color: Colors.black,
-                  //       fontWeight: FontWeight.w400,
-                  //       fontSize: 13),
-                  // ),
+                  Text(
+                    job.companyName,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13),
+                  ),
                 ],
-              ),
-              const IconButton(
-                  onPressed: null,
-                  icon: Icon(
-                    Icons.bookmark,
-                    color: ColorConstants.main,
-                  ))
+              ),),
+              SizedBox(width: ValueConstants.deviceWidthValue(uiValue: 13),),
+              GestureDetector(
+                child: const Icon(CupertinoIcons.bookmark_fill, color: ColorConstants.main,),
+              )
             ],
           ),
+          SizedBox(height: ValueConstants.deviceWidthValue(uiValue: 15),),
           SingleChildScrollView(scrollDirection: Axis.horizontal,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: buildJobPositionsList(),
             ),
           ),
+          SizedBox(height: ValueConstants.deviceWidthValue(uiValue: 15),),
           Row(
             children: [
               const Icon(Icons.location_on_outlined, color: ColorConstants.main,),
-              Expanded(child: Text(job.companyLocation, maxLines: 1, overflow: TextOverflow.ellipsis))
+              Expanded(child: Text(job.location, maxLines: 1, overflow: TextOverflow.ellipsis))
             ],
           ),
+          SizedBox(height: ValueConstants.deviceWidthValue(uiValue: 15),),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   const Icon(Icons.people, color: ColorConstants.main,),
+                  SizedBox(width: ValueConstants.deviceWidthValue(uiValue: 5),),
                   Text(job.amount.toString(),)
                 ],
               ),
               Row(
                 children: [
-                  const Icon(Icons.alarm, color: ColorConstants.main,),
-                  Text('$differenceInDays days left')
+                  const Icon(CupertinoIcons.clock, color: ColorConstants.main,),
+                  SizedBox(width: ValueConstants.deviceWidthValue(uiValue: 5),),
+                  Text('${differenceInDays}d left')
                 ],
               )
             ],

@@ -23,23 +23,24 @@ class Job {
   final String companyName;
   final String? companyLogo;
   final String companyDescription;
-  final String companyLocation;
   final String jobName;
   final List<JobPosition> positions;
   final int amount;
   final String startDate;
   final String endDate;
+  final String location;
 
   const Job({required this.companyId,
     required this.companyName,
     required this.companyLogo,
     required this.companyDescription,
-    required this.companyLocation,
     required this.jobName,
     required this.positions,
     required this.amount,
     required this.startDate,
-    required this.endDate});
+    required this.endDate,
+    required this.location,
+  });
 
   factory Job.fromMap(Map<String, dynamic> map) {
     return Job(
@@ -47,12 +48,13 @@ class Job {
       companyName: map[JobServices.companyDTOKey][JobServices.nameKey] ?? '',
       companyLogo: map[JobServices.companyDTOKey][JobServices.logoKey] ?? '',
       companyDescription: map[JobServices.companyDTOKey][JobServices.descriptionKey] ?? '',
-      companyLocation: map[JobServices.companyDTOKey][JobServices.locationKey] ?? '',
       jobName: map[JobServices.nameKey],
       positions: ConvertConstants.convertToListPositions(map[JobServices.positionDTOsKey] as List<dynamic>),
       amount: int.parse(map[JobServices.amountKey].toString()),
       startDate: map[JobServices.startDateKey].toString(),
-      endDate: map[JobServices.endDateKey].toString());
+      endDate: map[JobServices.endDateKey].toString(),
+      location: map[JobServices.locationKey] ?? ''
+    );
   }
 
   // Model
