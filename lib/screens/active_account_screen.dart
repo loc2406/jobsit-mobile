@@ -60,8 +60,8 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         padding: EdgeInsets.symmetric(
-            vertical: ValueConstants.screenHeight * 0.02,
-            horizontal: ValueConstants.screenWidth * 0.03),
+            vertical: ValueConstants.deviceHeightValue(uiValue: 18) ,
+            horizontal: ValueConstants.deviceWidthValue(uiValue: 12)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,7 +74,7 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
                   fontSize: 24),
             ),
             SizedBox(
-              height: ValueConstants.screenHeight * 0.01,
+              height: ValueConstants.deviceHeightValue(uiValue: 8),
             ),
             const Text(
               TextConstants.pleaseInputOTPInEmail,
@@ -84,7 +84,7 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
                   fontSize: 13),
             ),
             SizedBox(
-              height: ValueConstants.screenHeight * 0.01,
+                height: ValueConstants.deviceHeightValue(uiValue: 8)
             ),
             Form(
               key: _formKey,
@@ -94,7 +94,7 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
                   validateMethod: ValidateConstants.validateOtp),
             ),
             SizedBox(
-              height: ValueConstants.screenHeight * 0.02,
+                height: ValueConstants.deviceHeightValue(uiValue: 16)
             ),
             BlocConsumer<CandidateCubit, CandidateState>(
                 builder: (context, state) {
@@ -138,7 +138,7 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
               }
             }),
             SizedBox(
-              height: ValueConstants.screenHeight * 0.02,
+                height: ValueConstants.deviceHeightValue(uiValue: 16)
             ),
             GestureDetector(
               onTap: sendOtpAgain,

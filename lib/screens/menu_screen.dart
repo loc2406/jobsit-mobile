@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/init_state.dart';
+import 'package:jobsit_mobile/screens/applied_screen.dart';
 import 'package:jobsit_mobile/screens/home_screen.dart';
 import 'package:jobsit_mobile/screens/saved_work_screen.dart';
 import 'package:jobsit_mobile/utils/asset_constants.dart';
@@ -24,6 +25,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   final List<Widget> screens = [
     const HomeScreen(),
+    const AppliedScreen(),
     const SavedWorkScreen(),
     const AccountScreen(),
   ];
@@ -36,12 +38,13 @@ class _MenuScreenState extends State<MenuScreen> {
         children: screens,
       ),),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: TextConstants.home),
           BottomNavigationBarItem(icon: Icon(Icons.home_repair_service_outlined), label: TextConstants.applied),
           BottomNavigationBarItem(icon: Icon(Icons.bookmark_border_rounded), label: TextConstants.saved),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: TextConstants.account),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: TextConstants.profile),
         ],
         currentIndex: _currentIndex,
         onTap: (index) {

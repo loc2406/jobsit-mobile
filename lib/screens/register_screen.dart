@@ -135,7 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
-                    height: ValueConstants.screenHeight * 0.04,
+                      height: ValueConstants.deviceHeightValue(uiValue: 32)
                   ),
                   BlocConsumer<CandidateCubit, CandidateState>(builder: (context, state){
                     if (state is LoadingState){

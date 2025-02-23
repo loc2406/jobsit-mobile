@@ -73,13 +73,15 @@ class TextConstants {
   static const activeAccountSuccess = 'Kích hoạt tài khoản thành công';
 
 // Error
-static const createCandidateError = 'Lỗi khi đăng kí ứng viên';
-static const sendActiveEmailError = 'Lỗi khi gửi email kích hoạt tài khoản';
-static const sendOtpToActiveError = 'Kích hoạt tài khoản thất bại';
-static const emailIsExistedError = 'Email đã được đăng ký';
-static const emailOrPasswordIncorrectError = 'Email hoặc mật khẩu không đúng';
-static const tokenOrCandidateIdError = 'Token hoặc id của người dùng không hợp lệ';
-static const getJobError = 'Lấy danh sách công việc thất bại';
+  static const createCandidateError = 'Lỗi khi đăng kí ứng viên';
+  static const sendActiveEmailError = 'Lỗi khi gửi email kích hoạt tài khoản';
+  static const sendOtpToActiveError = 'Kích hoạt tài khoản thất bại';
+  static const emailIsExistedError = 'Email đã được đăng ký';
+  static const emailOrPasswordIncorrectError = 'Email hoặc mật khẩu không đúng';
+  static const tokenOrCandidateIdError =
+      'Token hoặc id của người dùng không hợp lệ';
+  static const getJobError = 'Lấy danh sách công việc thất bại';
+  static String loadProvincesFailedError = 'Lấy dữ liệu tỉnh thành thất bại';
 
 // Message
   static const noDataMess = 'Không có dữ liệu';
@@ -88,12 +90,28 @@ static const getJobError = 'Lấy danh sách công việc thất bại';
 // Bottom navigation bar
   static const home = 'Trang chủ';
   static const applied = 'Đã ứng tuyển';
-  static const saved  = 'Đã lưu';
-  static const account  = 'Tài khoản';
+  static const saved = 'Đã lưu';
+  static const profile = 'Cá nhân';
 
-    // Home Screen
-    static const searchJob = 'Search Job';
+  // Home Screen
+  static const searchJob = 'Search Job';
 
-// Other
+  //Filter
+  static const location = 'Vị trí';
+  static const selectLocation = 'Chọn vị trí';
+  static const jobSchedule = 'Hình thức công việc';
+  static const jobPosition = 'Vị trí công việc';
+  static const major = 'Chuyên ngành';
+  static const applyFilter = 'Áp dụng lọc';
+
+  // Profile
+  static const allowToSearch =
+      'Cho phép nhà tuyển dụng tìm kiếm thông tin của bạn';
+  static const emailNotification = 'Thông báo email';
+  static const personalInformation = 'Thông tin cá nhân';
+  static const jobInformation = 'Thông tin công việc';
+  static const noData = 'Chưa có dữ liệu';
+
+  // Other
   static const navigateInputOTPScreen = 'navigateInputOTPScreen';
 }

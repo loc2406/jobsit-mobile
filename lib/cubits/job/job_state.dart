@@ -12,7 +12,24 @@ class JobState {
 
   factory JobState.loading() => LoadingState();
 
-  factory JobState.loaded(List<Job> jobs, int page) => LoadedState(jobs, page);
+  factory JobState.loaded(
+          {required List<Job> jobs,
+          required int page,
+          required String name,
+          required bool isLastPage,
+          required String location,
+          required Map<String, dynamic> schedule,
+          required Map<String, dynamic> position,
+          required Map<String, dynamic> major}) =>
+      LoadedState(
+          jobs: jobs,
+          page: page,
+          name: name,
+          isLastPage: isLastPage,
+          location: location,
+          schedule: schedule,
+          position: position,
+          major: major);
 
   factory JobState.error(String errorMessage) => ErrorState(errorMessage);
 }
