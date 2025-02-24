@@ -91,7 +91,11 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
           ...buildFilterSection(TextConstants.jobSchedule,
               ValueConstants.schedules, _selectedScheduleId, (id) {
             setState(() {
-              _selectedScheduleId = id;
+              if (_selectedScheduleId == id){
+                _selectedScheduleId = -1;
+              }else{
+                _selectedScheduleId = id;
+              }
             });
           }),
           SizedBox(
@@ -100,7 +104,11 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
           ...buildFilterSection(TextConstants.jobPosition,
               ValueConstants.positions, _selectedPositionId, (id) {
             setState(() {
-              _selectedPositionId = id;
+              if (_selectedPositionId == id){
+                _selectedPositionId = -1;
+              }else{
+                _selectedPositionId = id;
+              }
             });
           }),
           SizedBox(
@@ -110,7 +118,11 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
               TextConstants.major, ValueConstants.majors, _selectedMajorId,
               (id) {
             setState(() {
-              _selectedMajorId = id;
+              if (_selectedMajorId == id){
+                _selectedMajorId = -1;
+              }else{
+                _selectedMajorId = id;
+              }
             });
           }),
           SizedBox(

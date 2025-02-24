@@ -38,24 +38,16 @@ class JobServices {
     required int no,
     required int limit,
   }) async {
+    String api = name == null ? getJobUrl : searchJobUrl;
+    api += 'no=$no&limit=$limit';
+    
+    if (name != null && name.isNotEmpty) api += '&name=$name';
+    if (provinceName.isNotEmpty) api += '&provinceName=$provinceName';
+    if (scheduleId != -1) api += '&schedule=${ConvertConstants.getNameById(ValueConstants.schedules, scheduleId)}';
+    if (positionId != -1) api += '&position=${ConvertConstants.getNameById(ValueConstants.positions, positionId)}';
+    if (majorId != -1) api += '&major=${ConvertConstants.getNameById(ValueConstants.majors, majorId)}';
 
-    late Uri uri;
-
-    if (name == null){
-      uri = Uri.parse('${JobServices.getJobUrl}no=$no&limit=$limit');
-    }else{
-      String api = '${JobServices.searchJobUrl}'
-          '&name=${name ?? ''}'
-          '&provinceName=$provinceName'
-          '&no=$no'
-          '&limit=$limit';
-
-      if (scheduleId != -1) api += '&schedule=${ConvertConstants.getNameById(ValueConstants.schedules, scheduleId)}';
-      if (positionId != -1) api += '&position=${ConvertConstants.getNameById(ValueConstants.positions, positionId)}';
-      if (majorId != -1) api += '&major=${ConvertConstants.getNameById(ValueConstants.majors, majorId)}';
-
-      uri = Uri.parse(api);
-    }
+    final uri = Uri.parse(api);
 
     final response = await http.get(uri, headers: BaseServices.headers);
 

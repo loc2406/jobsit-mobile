@@ -28,7 +28,7 @@ class ConvertConstants {
     Map<String, dynamic> element = map.firstWhere(
             (element) => element[JobServices.nameKey] == name,
         orElse: () => {} as Map<String, Object>);
-    return element.isNotEmpty ? (int.tryParse(element[JobServices.idKey]) ?? -1) : -1;
+    return element.isNotEmpty ? (int.tryParse(element[JobServices.idKey].toString()) ?? -1) : -1;
   }
 
   static Map<String, dynamic> getElementById(

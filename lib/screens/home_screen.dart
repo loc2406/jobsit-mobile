@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _getJobs(int no) async {
-    _cubit.getJobs(
+    await _cubit.getJobs(
         name: _searchController.text,
         provinceName: _selectedLocation,
         scheduleId: _selectedScheduleId,
@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                       child: TextField(
                     controller: _searchController,
-                    onChanged: (keyword) => handleFilterJobs(keyword: keyword),
+                    onChanged: (keyword) => handleFilterJobs(),
                     decoration: const InputDecoration(
                         hintText: TextConstants.searchJob,
                         hintStyle: TextStyle(
@@ -141,40 +141,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 ],
               ),
-              Expanded(child:
-                  BlocConsumer<JobCubit, JobState>(builder: (context, state) {
-                if (state is ErrorState) {
-                  return Center(
-                    child: Text(state.errMessage),
-                  );
-                } else if (state is EmptyState) {
-                  return const Center(
-                    child: Text(TextConstants.noDataMess),
-                  );
-                } else if (state is LoadedState) {
-                  _jobs = state.jobs;
-                  _selectedLocation = state.location;
-                  _selectedScheduleId = int.tryParse(state.schedule[JobServices.idKey].toString()) ?? -1;
-                  _selectedPositionId = int.tryParse(state.position[JobServices.idKey].toString()) ?? -1;
-                  _selectedMajorId = int.tryParse(state.major[JobServices.idKey].toString()) ?? -1;
+              Expanded(
+                child: BlocListener<JobCubit, JobState>(
+                  listener: (context, state) {
+                    if (state is LoadedState) {
+                      try {
+                        // Cập nhật các giá trị filter từ state
+                        _selectedLocation = state.location;
+                        _selectedScheduleId = int.tryParse(state.schedule[JobServices.idKey].toString()) ?? -1;
+                        _selectedPositionId = int.tryParse(state.position[JobServices.idKey].toString()) ?? -1;
+                        _selectedMajorId = int.tryParse(state.major[JobServices.idKey].toString()) ?? -1;
 
-                  return _buildJobList();
-                } else {
-                  return const Center(child: WidgetConstants.circularProgress);
-                }
-              }, listener: (BuildContext context, JobState state) {
-                    if (state is LoadedState){
-                      if (state.page == 0) {
-                        _pagingController.refresh();
+                        // Xử lý pagination
+                        if (state.isLastPage) {
+                          _pagingController.appendLastPage(state.jobs);
+                        } else {
+                          _pagingController.appendPage(state.jobs, state.page + 1);
+                        }
+                      } catch (error) {
+                        _pagingController.error = error;
                       }
-
-                      if (state.isLastPage){
-                        _pagingController.appendLastPage(state.jobs);
-                      }else{
-                        _pagingController.appendPage(state.jobs, state.page + 1);
-                      }
+                    } else if (state is ErrorState) {
+                      _pagingController.error = state.errMessage;
                     }
-                  },))
+                  },
+                  child: _buildJobList(),
+                ),
+              ),
             ],
           ),
         ));
@@ -186,9 +179,16 @@ class _HomeScreenState extends State<HomeScreen> {
           vertical: ValueConstants.deviceWidthValue(uiValue: 15)),
       child: PagedListView<int, Job>(
         pagingController: _pagingController,
+        scrollController: ScrollController(keepScrollOffset: true),
         builderDelegate: PagedChildBuilderDelegate<Job>(
           itemBuilder: (context, job, index) => JobItem(
             job: job
+          ),
+          newPageProgressIndicatorBuilder: (_) => const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: CircularProgressIndicator(),
+            ),
           ),
         ),
       ),
@@ -212,24 +212,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     _selectedPositionId = ConvertConstants.getIdByName(ValueConstants.positions, position);
                     _selectedMajorId = ConvertConstants.getIdByName(ValueConstants.majors, major);
 
-                    await handleFilterJobs(keyword: _searchController.text);
+                    await handleFilterJobs();
                   },
                 )
               ],
             ));
   }
 
-  Future<void> handleFilterJobs({required String keyword, int no = 0}) async {
-    _pagingController.itemList = [];
-    _pagingController.refresh();
+  Future<void> handleFilterJobs() async {
+    _pagingController.itemList?.clear();
+    _getJobs(0);
+  }
 
-    await _cubit.getJobs(
-        name: keyword, 
-        provinceName: _selectedLocation, 
-        scheduleId: _selectedScheduleId, 
-        positionId: _selectedPositionId,
-        majorId: _selectedMajorId,
-        no: no
-    );
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 }
