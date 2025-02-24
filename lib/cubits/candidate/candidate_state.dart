@@ -6,14 +6,11 @@ import 'package:jobsit_mobile/models/candidate.dart';
 
 import 'active_success_state.dart';
 import 'error_state.dart';
-import 'init_state.dart';
 import 'loading_state.dart';
 import 'no_logged_in_state.dart';
 
 class CandidateState {
   const CandidateState();
-
-  factory CandidateState.init() => InitState();
 
   factory CandidateState.loading() => LoadingState();
 
@@ -25,7 +22,7 @@ class CandidateState {
 
   factory CandidateState.active() => ActiveState();
 
-  factory CandidateState.loginSuccess(String token, int candidateId) => LoginSuccessState(token, candidateId);
+  factory CandidateState.loginSuccess(String token, Candidate candidate) => LoginSuccessState(token, candidate);
 
   factory CandidateState.error(String errorMessage) => ErrorState(errorMessage);
 

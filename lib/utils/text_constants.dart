@@ -73,13 +73,18 @@ class TextConstants {
   static const activeAccountSuccess = 'Kích hoạt tài khoản thành công';
 
 // Error
-static const createCandidateError = 'Lỗi khi đăng kí ứng viên';
-static const sendActiveEmailError = 'Lỗi khi gửi email kích hoạt tài khoản';
-static const sendOtpToActiveError = 'Kích hoạt tài khoản thất bại';
-static const emailIsExistedError = 'Email đã được đăng ký';
-static const emailOrPasswordIncorrectError = 'Email hoặc mật khẩu không đúng';
-static const tokenOrCandidateIdError = 'Token hoặc id của người dùng không hợp lệ';
-static const getJobError = 'Lấy danh sách công việc thất bại';
+  static const createCandidateError = 'Lỗi khi đăng kí ứng viên';
+  static const sendActiveEmailError = 'Lỗi khi gửi email kích hoạt tài khoản';
+  static const sendOtpToActiveError = 'Kích hoạt tài khoản thất bại';
+  static const emailIsExistedError = 'Email đã được đăng ký';
+  static const emailOrPasswordIncorrectError = 'Email hoặc mật khẩu không đúng';
+  static const tokenOrCandidateIdError =
+      'Token hoặc id của người dùng không hợp lệ';
+  static const getJobError = 'Lấy danh sách công việc thất bại';
+  static const loadProvincesFailedError = 'Lấy dữ liệu tỉnh thành thất bại';
+  static const getCandidateInfoFailedError = 'Lấy thông tin ứng viên thất bại';
+  static const updateCandidateInfoFailedError = 'Cập nhật thông tin ứng viên thất bại';
+
 
 // Message
   static const noDataMess = 'Không có dữ liệu';
@@ -88,12 +93,42 @@ static const getJobError = 'Lấy danh sách công việc thất bại';
 // Bottom navigation bar
   static const home = 'Trang chủ';
   static const applied = 'Đã ứng tuyển';
-  static const saved  = 'Đã lưu';
-  static const account  = 'Tài khoản';
+  static const saved = 'Đã lưu';
+  static const profile = 'Cá nhân';
 
-    // Home Screen
-    static const searchJob = 'Search Job';
+  // Home Screen
+  static const searchJob = 'Search Job';
 
-// Other
+  //Filter
+  static const location = 'Vị trí';
+  static const selectLocation = 'Chọn vị trí';
+  static const jobSchedule = 'Hình thức công việc';
+  static const jobPosition = 'Vị trí công việc';
+  static const major = 'Chuyên ngành';
+  static const applyFilter = 'Áp dụng lọc';
+
+  // Profile
+  static const allowToSearch =
+      'Cho phép nhà tuyển dụng tìm kiếm thông tin của bạn';
+  static const emailNotification = 'Thông báo email';
+  static const personalInfo = 'Thông tin cá nhân';
+  static const jobInfo = 'Thông tin công việc';
+  static const noData = 'Chưa có dữ liệu';
+  static const jobWanted = 'Công việc mong muốn';
+  static const jobLocation = 'Nơi làm việc';
+  static const cv = 'CV';
+  static const coverLetter = 'Thư xin việc';
+  static const changePassword = 'Thay đổi mật khẩu';
+  static const logout = 'Đăng xuất';
+  static const dontLoggedIn = 'Bạn chưa đăng nhập!';
+  static const birthdate = 'Ngày sinh';
+  static const gender = 'Giới tính';
+  static const male = 'Nam';
+  static const female = 'Nữ';
+  static const city = 'Thành phố';
+  static const address = 'Địa chỉ';
+  static const save = 'Lưu';
+
+  // Other
   static const navigateInputOTPScreen = 'navigateInputOTPScreen';
 }

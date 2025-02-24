@@ -24,25 +24,20 @@ class ActiveAccountScreen extends StatefulWidget {
 
 class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
   late final CandidateCubit _cubit;
-  late final String _email;
+  String? _email;
   final _formKey = GlobalKey<FormState>();
   final _otpController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      setState(() {
-        // đảm bảo _email được gán dữ liệu khi UI được build xong (lấy được context)
-        _email = ModalRoute.of(context)!.settings.arguments.toString();
-      });
-    });
+    _cubit = context.read<CandidateCubit>();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _cubit = context.read<CandidateCubit>();
+    _email ??= ModalRoute.of(context)!.settings.arguments.toString();
   }
 
   @override
@@ -123,15 +118,10 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
                       )));
             }, listener: (context, state) {
               if (state is ActiveSuccessState) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text(TextConstants.activeAccountSuccess)));
+                  ScaffoldMessenger.of(this.context).showSnackBar(const SnackBar(
+                      content: Text(TextConstants.activeAccountSuccess)));
 
-                if (mounted) {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen()));
-                }
+                  Navigator.pop(context);
               } else if (state is ErrorState) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errMessage)));
@@ -172,6 +162,6 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
   Future<void> sendOtpAgain() async {
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text(TextConstants.sentOtpMess)));
-    await _cubit.sendActiveEmail(_email);
+    await _cubit.sendActiveEmail(_email!);
   }
 }

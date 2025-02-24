@@ -5,23 +5,30 @@ class Candidate {
   final String email;
   final String firstName;
   final String lastName;
-  final String? gender;
+  final bool isMale;
   final String? birthdate;
   final String phone;
   final String? avatar;
   final String? location;
   final bool mailReceive;
+  final bool searchable;
+  final String? university;
+  final String? cv;
 
   const Candidate({required this.id,
     required this.email,
     required this.firstName,
     required this.lastName,
-    this.gender,
+    this.isMale = true,
     this.birthdate,
     required this.phone,
     this.avatar,
     this.location,
-    required this.mailReceive});
+    required this.mailReceive,
+    required this.searchable,
+    this.university,
+    this.cv,
+  });
 
   factory Candidate.fromMap(Map<String, dynamic> map) {
     return Candidate(
@@ -29,12 +36,16 @@ class Candidate {
       email: map[CandidateServices.userDTOKey][emailField] ?? '',
       firstName: map[CandidateServices.userDTOKey][firstNameField],
       lastName: map[CandidateServices.userDTOKey][lastNameField],
-      gender: map[CandidateServices.userDTOKey][genderField],
+      isMale: map[CandidateServices.userDTOKey][genderField],
       birthdate: map[CandidateServices.userDTOKey][birthdateField],
       phone: map[CandidateServices.userDTOKey][phoneField],
       avatar: map[CandidateServices.userDTOKey][avatarField],
       location: map[CandidateServices.userDTOKey][locationField],
-      mailReceive: map[CandidateServices.userDTOKey][mailReceiveField],);
+      mailReceive: map[CandidateServices.userDTOKey][mailReceiveField],
+      searchable: map[CandidateServices.candidateOtherInfoDTOKey][searchableField],
+      university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField]['name'],
+      cv: map[CandidateServices.candidateOtherInfoDTOKey][cvField],
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -43,7 +54,7 @@ class Candidate {
       emailField: email,
       firstNameField: firstName,
       lastNameField: lastName,
-      genderField: gender,
+      genderField: isMale,
       birthdateField: birthdate,
       phoneField: phone,
       avatarField: avatar,
@@ -63,4 +74,7 @@ class Candidate {
   static const avatarField = 'avatar';
   static const locationField = 'location';
   static const mailReceiveField = 'mailReceive';
+  static const searchableField = 'searchable';
+  static const universityDTOField = 'universityDTO';
+  static const cvField = 'cv';
 }

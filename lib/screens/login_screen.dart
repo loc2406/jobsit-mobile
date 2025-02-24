@@ -6,6 +6,7 @@ import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/error_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/loading_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
+import 'package:jobsit_mobile/screens/menu_screen.dart';
 import 'package:jobsit_mobile/screens/register_screen.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
@@ -164,6 +165,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (state is LoginSuccessState) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text(TextConstants.loginSuccessful)));
+                      
+                      Navigator.pop(context);
+
                     } else if (state is ErrorState) {
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(state.errMessage)));

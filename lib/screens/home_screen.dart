@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          surfaceTintColor: Colors.transparent, // Xóa hiệu ứng tối màu khi cuộn job
+          surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.white,
           leading: Container(
             margin: EdgeInsets.only(left: ValueConstants.deviceWidthValue(uiValue: 25)),

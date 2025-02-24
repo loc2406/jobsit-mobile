@@ -5,7 +5,7 @@ import 'candidate_state.dart';
 class LoginSuccessState extends CandidateState{
 
   final String token;
-  final int candidateId;
+  final Candidate candidate;
 
-  const LoginSuccessState(this.token, this.candidateId);
+  const LoginSuccessState(this.token, this.candidate);
 }
