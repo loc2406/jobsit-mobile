@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/job/job_cubit.dart';
-import 'package:jobsit_mobile/screens/forgot_password.dart';
+import 'package:jobsit_mobile/screens/job_info_edit_page_screen.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/screens/menu_screen.dart';
 import 'package:jobsit_mobile/screens/splash_screen.dart';
@@ -42,6 +42,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     //return const SplashScreen();
     // return const MenuScreen();
-    return const ForgotPasswordScreen();
+    //return const ForgotPasswordScreen();
+    return JobInfoEditPage();
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/init_state.dart';
+import 'package:jobsit_mobile/screens/applied_screen.dart';
 import 'package:jobsit_mobile/screens/home_screen.dart';
 import 'package:jobsit_mobile/screens/saved_work_screen.dart';
 import 'package:jobsit_mobile/utils/asset_constants.dart';
@@ -23,7 +24,8 @@ class _MenuScreenState extends State<MenuScreen> {
   int _currentIndex = 0;
 
   final List<Widget> screens = [
-    const HomeScreen(),
+    //const HomeScreen(),
+    const AppliedScreen(),
     const SavedWorkScreen(),
     const AccountScreen(),
   ];
@@ -31,19 +33,18 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: Image.asset(AssetConstants.logo),
-      ),
       body: Container(color: ColorConstants.grayBackground,child: IndexedStack(
         index: _currentIndex,
         children: screens,
       ),),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        showUnselectedLabels: true,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Trang chủ"),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Đã lưu"),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: "Tài khoản"),
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: TextConstants.home),
+          BottomNavigationBarItem(icon: Icon(Icons.home_repair_service_outlined), label: TextConstants.applied),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border_rounded), label: TextConstants.saved),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: TextConstants.profile),
         ],
         currentIndex: _currentIndex,
         onTap: (index) {
