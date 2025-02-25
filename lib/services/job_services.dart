@@ -30,7 +30,7 @@ class JobServices {
   static const dataExistingValue = 'DATA EXISTING';
 
   static Future<Map<String, dynamic>> getJobs({
-    String? name,
+    String name = '',
     String provinceName = '',
     int scheduleId = -1,
     int positionId = -1,
@@ -38,10 +38,10 @@ class JobServices {
     required int no,
     required int limit,
   }) async {
-    String api = name == null ? getJobUrl : searchJobUrl;
+    String api = searchJobUrl;
     api += 'no=$no&limit=$limit';
     
-    if (name != null && name.isNotEmpty) api += '&name=$name';
+    if (name.isNotEmpty) api += '&name=$name';
     if (provinceName.isNotEmpty) api += '&provinceName=$provinceName';
     if (scheduleId != -1) api += '&schedule=${ConvertConstants.getNameById(ValueConstants.schedules, scheduleId)}';
     if (positionId != -1) api += '&position=${ConvertConstants.getNameById(ValueConstants.positions, positionId)}';

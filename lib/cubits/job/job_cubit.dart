@@ -38,7 +38,7 @@ class JobCubit extends Cubit<JobState> {
   }
 
   Future<void> getJobs(
-      {String? name,
+      {String name = '',
       String provinceName = '',
       int scheduleId = -1,
       int positionId = -1,

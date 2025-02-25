@@ -51,9 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _getProvinces() async {
     await _cubit.getProvinces();
-    if (_cubit.provinces().isNotEmpty){
-      _getJobs(0);
-    }
   }
 
   Future<void> _getJobs(int no) async {
