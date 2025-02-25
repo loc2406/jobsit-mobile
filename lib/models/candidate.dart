@@ -5,7 +5,7 @@ class Candidate {
   final String email;
   final String firstName;
   final String lastName;
-  final bool isMale;
+  final bool? gender;
   final String? birthdate;
   final String phone;
   final String? avatar;
@@ -19,7 +19,7 @@ class Candidate {
     required this.email,
     required this.firstName,
     required this.lastName,
-    this.isMale = true,
+    this.gender,
     this.birthdate,
     required this.phone,
     this.avatar,
@@ -36,15 +36,15 @@ class Candidate {
       email: map[CandidateServices.userDTOKey][emailField] ?? '',
       firstName: map[CandidateServices.userDTOKey][firstNameField],
       lastName: map[CandidateServices.userDTOKey][lastNameField],
-      isMale: map[CandidateServices.userDTOKey][genderField],
+      gender: map[CandidateServices.userDTOKey][genderField],
       birthdate: map[CandidateServices.userDTOKey][birthdateField],
       phone: map[CandidateServices.userDTOKey][phoneField],
       avatar: map[CandidateServices.userDTOKey][avatarField],
       location: map[CandidateServices.userDTOKey][locationField],
       mailReceive: map[CandidateServices.userDTOKey][mailReceiveField],
       searchable: map[CandidateServices.candidateOtherInfoDTOKey][searchableField],
-      university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField]['name'],
-      cv: map[CandidateServices.candidateOtherInfoDTOKey][cvField],
+      university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField] ?? '',
+      cv: map[CandidateServices.candidateOtherInfoDTOKey][cvField] ?? '',
     );
   }
 
@@ -54,7 +54,7 @@ class Candidate {
       emailField: email,
       firstNameField: firstName,
       lastNameField: lastName,
-      genderField: isMale,
+      genderField: gender,
       birthdateField: birthdate,
       phoneField: phone,
       avatarField: avatar,

@@ -262,6 +262,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void navigateLoginScreen() {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+    Navigator.pop(context);
   }
 }

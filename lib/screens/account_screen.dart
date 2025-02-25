@@ -330,7 +330,7 @@ class _AccountScreenState extends State<AccountScreen> {
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
             _buildPersonalInfoItem(
-                AssetConstants.iconProfile, _candidate.isMale ? TextConstants.male : TextConstants.female)
+                AssetConstants.iconProfile, (_candidate.gender ?? TextConstants.noData).toString())
           ],
         ),
       )
