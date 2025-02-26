@@ -11,16 +11,16 @@ class FilterBottomSheet extends StatefulWidget {
   FilterBottomSheet(
       {super.key,
       required this.selectedLocation,
-      required this.selectedScheduleId,
-      required this.selectedPositionId,
-      required this.selectedMajorId,
+      required this.selectedSchedule,
+      required this.selectedPosition,
+      required this.selectedMajor,
       required this.provinces,
       required this.onApply});
 
   late String selectedLocation;
-  late int selectedScheduleId;
-  late int selectedPositionId;
-  late int selectedMajorId;
+  late String selectedSchedule;
+  late String selectedPosition;
+  late String selectedMajor;
   late List<String> provinces;
   late void Function(String, String, String, String) onApply;
 
@@ -30,9 +30,9 @@ class FilterBottomSheet extends StatefulWidget {
 
 class FilterBottomSheetState extends State<FilterBottomSheet> {
   late String _selectedLocation;
-  late int _selectedScheduleId;
-  late int _selectedPositionId;
-  late int _selectedMajorId;
+  late String _selectedSchedule;
+  late String _selectedPosition;
+  late String _selectedMajor;
   late List<String> _provinces;
   late void Function(String, String, String, String) _onApply;
 
@@ -40,9 +40,9 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
   void initState() {
     super.initState();
     _selectedLocation = widget.selectedLocation;
-    _selectedScheduleId = widget.selectedScheduleId;
-    _selectedPositionId = widget.selectedPositionId;
-    _selectedMajorId = widget.selectedMajorId;
+    _selectedSchedule = widget.selectedSchedule;
+    _selectedPosition = widget.selectedPosition;
+    _selectedMajor = widget.selectedMajor;
     _provinces = widget.provinces;
     _onApply = widget.onApply;
   }
@@ -88,40 +88,48 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
           SizedBox(
             height: ValueConstants.deviceHeightValue(uiValue: 15),
           ),
-          ...buildFilterSection(TextConstants.jobSchedule,
-              ValueConstants.schedules, _selectedScheduleId, (id) {
-            setState(() {
-              if (_selectedScheduleId == id){
-                _selectedScheduleId = -1;
-              }else{
-                _selectedScheduleId = id;
-              }
-            });
+          ..._buildFilterSection(
+              title: TextConstants.jobSchedule,
+              options: ValueConstants.schedules,
+              selectedName: _selectedSchedule,
+              onSelectedItem: (name) {
+                setState(() {
+                  if (_selectedSchedule == name){
+                    _selectedSchedule = '';
+                  }else{
+                    _selectedSchedule = name;
+                  }
+                });
           }),
           SizedBox(
             height: ValueConstants.deviceHeightValue(uiValue: 15),
           ),
-          ...buildFilterSection(TextConstants.jobPosition,
-              ValueConstants.positions, _selectedPositionId, (id) {
-            setState(() {
-              if (_selectedPositionId == id){
-                _selectedPositionId = -1;
-              }else{
-                _selectedPositionId = id;
-              }
-            });
+          ..._buildFilterSection(
+              title: TextConstants.jobPosition,
+              options: ValueConstants.positions,
+              selectedName: _selectedPosition,
+              onSelectedItem: (name) {
+                setState(() {
+                  if (_selectedPosition == name){
+                    _selectedPosition = '';
+                  }else{
+                    _selectedPosition = name;
+                  }
+                });
           }),
           SizedBox(
             height: ValueConstants.deviceHeightValue(uiValue: 15),
           ),
-          ...buildFilterSection(
-              TextConstants.major, ValueConstants.majors, _selectedMajorId,
-              (id) {
+          ..._buildFilterSection(
+              title: TextConstants.major,
+              options: ValueConstants.majors,
+              selectedName: _selectedMajor,
+              onSelectedItem: (name) {
             setState(() {
-              if (_selectedMajorId == id){
-                _selectedMajorId = -1;
+              if (_selectedMajor == name){
+                _selectedMajor = '';
               }else{
-                _selectedMajorId = id;
+                _selectedMajor = name;
               }
             });
           }),
@@ -167,11 +175,11 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
     ];
   }
 
-  List<Widget> buildFilterSection(
-      String title,
-      List<Map<String, dynamic>> options,
-      int selectedId,
-      void Function(int id) onSelectedItem) {
+  List<Widget> _buildFilterSection(
+      {required String title,
+      required List<Map<String, dynamic>> options,
+      required String selectedName,
+      required void Function(String name) onSelectedItem}) {
     return [
       Text(
         title,
@@ -186,14 +194,16 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: filterItem(options, selectedId, onSelectedItem),
+          children: _filterItem(options: options, selectedName: selectedName, onSelectedItem: onSelectedItem),
         ),
       )
     ];
   }
 
-  List<Widget> filterItem(List<Map<String, dynamic>> options, int selectedId,
-      void Function(int id) onSelectedItem) {
+  List<Widget> _filterItem(
+      {required List<Map<String, dynamic>> options,
+      required String selectedName,
+      required void Function(String name) onSelectedItem}) {
     return options
         .map((item) => GestureDetector(
               child: Container(
@@ -201,7 +211,7 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
                 margin: EdgeInsets.only(
                     right: ValueConstants.deviceWidthValue(uiValue: 10)),
                 decoration: BoxDecoration(
-                    color: item[JobServices.idKey] == selectedId
+                    color: item[JobServices.nameKey] == selectedName
                         ? ColorConstants.main
                         : Colors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -210,23 +220,19 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
                 child: Text(
                   item[JobServices.nameKey].toString(),
                   style: TextStyle(
-                      color: item[JobServices.nameKey] == selectedId
+                      color: item[JobServices.nameKey] == selectedName
                           ? Colors.white
                           : Colors.black,
                       fontSize: 13),
                 ),
               ),
-              onTap: () => onSelectedItem(item[JobServices.idKey]),
+              onTap: () => onSelectedItem(item[JobServices.nameKey]),
             ))
         .toList();
   }
 
   void handleApplyFilter() {
-    String scheduleName = ConvertConstants.getNameById(ValueConstants.schedules, _selectedScheduleId);
-    String positionName = ConvertConstants.getNameById(ValueConstants.positions, _selectedPositionId);
-    String majorName = ConvertConstants.getNameById(ValueConstants.majors, _selectedMajorId);
-    debugPrint("$_selectedLocation ---$scheduleName --- $positionName --- $majorName");
+    _onApply(_selectedLocation, _selectedSchedule, _selectedPosition, _selectedMajor);
     Navigator.pop(context);
-    _onApply(_selectedLocation, scheduleName, positionName, majorName);
   }
 }

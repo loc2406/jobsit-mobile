@@ -1,20 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:http/http.dart' as http;
 import 'package:jobsit_mobile/utils/convert_constants.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
-import 'package:jobsit_mobile/utils/value_constants.dart';
 
-import '../../models/candidate.dart';
-import '../../models/job.dart';
 import '../../services/base_services.dart';
-import '../../services/candidate_services.dart';
 import '../../services/job_services.dart';
-import '../../widgets/job_item.dart';
 import 'job_state.dart';
 
 class JobCubit extends Cubit<JobState> {
@@ -40,9 +32,9 @@ class JobCubit extends Cubit<JobState> {
   Future<void> getJobs(
       {String name = '',
       String provinceName = '',
-      int scheduleId = -1,
-      int positionId = -1,
-      int majorId = -1,
+      String schedule = '',
+      String position = '',
+      String major = '',
       required int no}) async {
 
     emit(JobState.loading());
@@ -51,9 +43,9 @@ class JobCubit extends Cubit<JobState> {
       final response = await JobServices.getJobs(
           name: name,
           provinceName: provinceName,
-          scheduleId: scheduleId,
-          positionId: positionId,
-          majorId: majorId,
+          schedule: schedule,
+          position: position,
+          major: major,
           no: no,
           limit: _limit);
 
@@ -68,15 +60,12 @@ class JobCubit extends Cubit<JobState> {
         emit(JobState.loaded(
           jobs: jobs,
           page: no,
-          name: name ?? '',
+          name: name,
           isLastPage: isLastPage,
           location: provinceName,
-          schedule: ConvertConstants.getElementById(
-              ValueConstants.schedules, scheduleId),
-          position: ConvertConstants.getElementById(
-              ValueConstants.positions, positionId),
-          major:
-              ConvertConstants.getElementById(ValueConstants.majors, majorId),
+          schedule: schedule,
+          position: position,
+          major: major,
         ));
       }
     } catch (e) {

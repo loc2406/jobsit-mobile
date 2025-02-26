@@ -84,7 +84,8 @@ class TextConstants {
   static String loadProvincesFailedError = 'Lấy dữ liệu tỉnh thành thất bại';
 
 // Message
-  static const noDataMess = 'Không có dữ liệu';
+  static const noMatchingJobAtThisTimeMess = 'Rất tiếc, hiện tại không có công việc phù hợp được tìm thấy';
+  static const notFindJobMess = 'Không tìm thấy công việc';
   static const sentOtpMess = 'Đã gửi lại mã OTP';
 
 // Bottom navigation bar

@@ -18,9 +18,9 @@ class JobState {
           required String name,
           required bool isLastPage,
           required String location,
-          required Map<String, dynamic> schedule,
-          required Map<String, dynamic> position,
-          required Map<String, dynamic> major}) =>
+          required String schedule,
+          required String position,
+          required String major}) =>
       LoadedState(
           jobs: jobs,
           page: page,

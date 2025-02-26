@@ -11,6 +11,7 @@ import '../models/job.dart';
 class JobServices {
   static const getJobUrl = '${BaseServices.url}/job?';
   static const searchJobUrl = '${BaseServices.url}/job/filter?';
+  static const displayJobLogoUrl = '${BaseServices.url}/file/display/';
 
   // Response key
   static const contentsKey = 'contents';
@@ -32,20 +33,20 @@ class JobServices {
   static Future<Map<String, dynamic>> getJobs({
     String name = '',
     String provinceName = '',
-    int scheduleId = -1,
-    int positionId = -1,
-    int majorId = -1,
+    String schedule = '',
+    String position = '',
+    String major = '',
     required int no,
     required int limit,
   }) async {
-    String api = searchJobUrl;
-    api += 'no=$no&limit=$limit';
+
+    String api = '${searchJobUrl}no=$no&limit=$limit';
     
     if (name.isNotEmpty) api += '&name=$name';
     if (provinceName.isNotEmpty) api += '&provinceName=$provinceName';
-    if (scheduleId != -1) api += '&schedule=${ConvertConstants.getNameById(ValueConstants.schedules, scheduleId)}';
-    if (positionId != -1) api += '&position=${ConvertConstants.getNameById(ValueConstants.positions, positionId)}';
-    if (majorId != -1) api += '&major=${ConvertConstants.getNameById(ValueConstants.majors, majorId)}';
+    if (schedule.isNotEmpty) api += '&schedule=$schedule';
+    if (position.isNotEmpty) api += '&position=$position}';
+    if (major.isNotEmpty) api += '&major=$major';
 
     final uri = Uri.parse(api);
 

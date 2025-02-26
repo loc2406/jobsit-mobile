@@ -1,20 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jobsit_mobile/services/base_services.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
 
 import '../models/job.dart';
 import '../utils/value_constants.dart';
 
 class JobItem extends StatelessWidget {
-  JobItem({super.key, required this.job});
+  const JobItem({super.key, required this.job});
 
   final Job job;
-  final now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
 
-    final differenceInDays = now.difference(DateTime.tryParse(job.endDate) ?? DateTime.now()).inDays;
+    final startDate = DateTime.tryParse(job.startDate) ?? DateTime.now();
+    final endDate = DateTime.tryParse(job.endDate) ?? DateTime.now();
+    final differenceInDays = endDate.difference(startDate).inDays;
 
     return Container(
       margin: EdgeInsets.only(top: ValueConstants.deviceHeightValue(uiValue: 17)),
@@ -28,11 +30,9 @@ class JobItem extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.image_outlined,
-                size: 24,
-                color: ColorConstants.main,
-              ),
+             job.companyLogo != null
+              ? Image.network('${BaseServices.url}${job.companyLogo}', width: 24, height: 24, errorBuilder: (context, error, stackTrace) => _buildJobDefaultLogo(),)
+              : _buildJobDefaultLogo(),
               SizedBox(width: ValueConstants.deviceWidthValue(uiValue: 13),),
               Expanded(child:  Column(
                 mainAxisSize: MainAxisSize.min,
@@ -98,6 +98,14 @@ class JobItem extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildJobDefaultLogo(){
+    return const Icon(
+      Icons.image_outlined,
+      size: 24,
+      color: ColorConstants.main,
     );
   }
 

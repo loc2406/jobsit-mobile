@@ -7,9 +7,9 @@ class LoadedState extends JobState {
   final String name;
   final String location;
   final bool isLastPage;
-  final Map<String, dynamic> schedule;
-  final Map<String, dynamic> position;
-  final Map<String, dynamic> major;
+  final String schedule;
+  final String position;
+  final String major;
 
   LoadedState(
       {required this.jobs,

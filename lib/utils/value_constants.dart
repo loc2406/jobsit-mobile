@@ -26,17 +26,21 @@ class ValueConstants {
   ];
 
   static final positions = [
-    {"id": 1, "name": "Front end"},
-    {"id": 2, "name": "Back end"},
-    {"id": 3, "name": "Full Stack"},
-    {"id": 7, "name": "DevOps"}
+    {"id": 1, "name": "Front-end Developer"},
+    {"id": 2, "name": "Back-end Developer"},
+    {"id": 3, "name": "Full Stack Developer"},
+    {"id": 4, "name": "Mobile Developer"},
+    {"id": 5, "name": "Embedded Developer"},
+    {"id": 6, "name": "QA Tester"},
+    {"id": 7, "name": "DevOps Engineer"}
   ];
 
   static final majors = [
-    {"id": 1, "name": "Khoa học máy tính"},
-    {"id": 2, "name": "Công nghệ phần mềm"},
-    {"id": 3, "name": "Kỹ thuật máy tính"},
-    {"id": 4, "name": "Trí tuệ nhân tạo"},
-    {"id": 6, "name": "Hệ thống quản lý thông tin"}
+    {"id": 1, "name": "Computer Science"},
+    {"id": 2, "name": "Software Engineering"},
+    {"id": 3, "name": "Computer Engineering"},
+    {"id": 4, "name": "Artificial Intelligence"},
+    {"id": 5, "name": "	Artificial Intelligence"},
+    {"id": 6, "name": "	Information Systems Management"}
   ];
 }
