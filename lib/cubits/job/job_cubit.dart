@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:jobsit_mobile/services/province_services.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../../models/candidate.dart';
+import '../../models/province.dart';
 import '../../services/base_services.dart';
 import '../../services/candidate_services.dart';
 import '../../services/job_services.dart';

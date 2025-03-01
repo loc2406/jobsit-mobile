@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:jobsit_mobile/cubits/candidate/edit_success_state.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../../models/candidate.dart';
@@ -79,24 +80,27 @@ class CandidateCubit extends Cubit<CandidateState> {
     required File? avatar,
     required String firstName,
     required String lastName,
-    required String email,
     required String birthdate,
     required String phone,
-    required String gender,
+    required bool? gender,
+    required String location,
   }) async {
     try {
       emit(CandidateState.loading());
 
-      await CandidateServices.update(
+      await CandidateServices.updateCandidate(
           candidateId: candidateId,
           token: token,
           avatar: avatar,
           firstName: firstName,
           lastName: lastName,
-          email: email,
           birthdate: birthdate,
           phone: phone,
-          gender: gender);
+          gender: gender,
+        location: location,
+      );
+
+      emit(CandidateState.editSuccess());
 
       final candidate = await CandidateServices.getCandidateById(candidateId);
       emit(CandidateState.loginSuccess(token, candidate));

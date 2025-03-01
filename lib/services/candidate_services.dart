@@ -26,10 +26,17 @@ class CandidateServices {
   static const passwordKey = 'password';
   static const firstNameKey = 'firstName';
   static const lastNameKey = 'lastName';
+  static const genderKey = 'gender';
   static const phoneKey = 'phone';
+  static const birthDayKey = 'birthDay';
   static const messageKey = 'message';
   static const tokenKey = 'token';
   static const idUserKey = 'idUser';
+  static const nameKey = 'name';
+  static const locationKey = 'location';
+  static const candidateProfileDTOKey = 'candidateProfileDTO';
+  static const userProfileDTOKey = 'userProfileDTO';
+
 
   // Response value
   static const dataExistingValue = 'DATA EXISTING';
@@ -121,16 +128,16 @@ class CandidateServices {
     return '$getCandidateAvatarUrl$avatar';
   }
 
-  static Future<void> update({
+  static Future<void> updateCandidate({
     required int candidateId,
     required String token,
     required File? avatar,
     required String firstName,
     required String lastName,
-    required String email,
     required String birthdate,
     required String phone,
-    required String gender,
+    required bool? gender,
+    required String location,
   }) async {
     final uri =
         Uri.parse('${CandidateServices.updateCandidateUrl}$candidateId');
@@ -140,21 +147,22 @@ class CandidateServices {
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Content-Type'] = 'multipart/form-data';
 
-    request.fields['candidateProfileDTO'] = jsonEncode({
-      'userProfileDTO': {
-        "lastName": lastName,
-        "firstName": firstName,
-        "email": email,
-        "gender": (gender == TextConstants.male) ? 1 : 0,
-        "phone": phone,
-        "birthDay": birthdate,
-      }
+    request.fields[candidateProfileDTOKey] = jsonEncode({
+      userProfileDTOKey: {
+        firstNameKey: firstName,
+        lastNameKey: lastName,
+        genderKey: gender != null ? (gender == true ? 1 : 0) : null,
+        phoneKey: phone,
+        birthDayKey: birthdate,
+        locationKey: location
+      },
+      candidateOtherInfoDTOKey: {}
     });
 
     if (avatar != null) {
       request.files.add(
         await http.MultipartFile.fromPath(
-          'fileAvatar', // Tên key của file trong API
+          'fileAvatar',
           avatar.path,
           contentType: MediaType('image', 'jpeg'),
         ),
@@ -166,7 +174,5 @@ class CandidateServices {
     if (response.statusCode != 200) {
       throw Exception(TextConstants.updateCandidateInfoFailedError);
     }
-
-    return;
   }
 }

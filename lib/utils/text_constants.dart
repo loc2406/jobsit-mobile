@@ -38,30 +38,40 @@ class TextConstants {
   static const emailOrPasswordIncorrect =
       'Địa chỉ email hoặc mật khẩu không đúng';
   static const pleaseInputPassword = 'Vui lòng nhập mật khẩu';
-  static const pleaseInputMin6Digits = 'Vui lòng nhập tối thiểu 6 ký tự';
-  static const pleaseInputMax256Digits = 'Vui lòng nhập tối đa 256 ký tự';
+  static const pleaseInputMin6Letters = 'Vui lòng nhập tối thiểu 6 ký tự';
+  static const pleaseInputMax256Letters = 'Vui lòng nhập tối đa 256 ký tự';
   static const emailIncorrect = 'Địa chỉ email không đúng';
   static const emailExisted = 'Địa chỉ email này đã tồn tại';
-  static const passwordMustFrom6To32Digits = 'Mật khẩu phải từ 6 đến 32 ký tự';
+  static const passwordMustFrom6To32Letters = 'Mật khẩu phải từ 6 đến 32 ký tự';
   static const pleaseInputAtLeast1UpperCase =
       'Vui lòng nhập ít nhất 1 chữ in hoa';
   static const pleaseInputAtLeast1Number = 'Vui lòng nhập ít nhất 1 số';
   static const pleaseConfirmPassword = 'Vui lòng xác nhận lại mật khẩu';
   static const confirmPasswordIncorrect = 'Mật khẩu chưa khớp';
   static const pleaseInputPhone = 'Vui lòng nhập số điện thoại';
-  static const phoneMustFrom8To13Digits =
+  static const phoneMustFrom8To13Letters =
       'Số điện thoại phải có độ dài từ 8 đến 13 ký tự';
   static const invalidPhone = 'Số điện thoại không hợp lệ';
   static const pleaseInputFirstName = 'Vui lòng nhập họ và tên lót';
-  static const firstNameMustFrom2To32Digits =
+  static const firstNameMustFrom2To32Letters =
       'Họ và tên lót phải có độ dài từ 2 đến 32 ký tự';
   static const invalidFirstName = 'Họ và tên lót không hợp lệ';
   static const pleaseInputLastName = 'Vui lòng nhập tên';
-  static const lastNameMustFrom2To32Digits =
+  static const lastNameMustFrom2To32Letters =
       'Tên phải có độ dài từ 2 đến 32 ký tự';
+  static const pleaseNotFinishBySpace = 'Vui lòng không kết thúc bằng dấu cách';
   static const invalidLastName = 'Tên không hợp lệ';
   static const pleaseInputOtp = 'Vui lòng nhập mã OTP';
   static const otpMustHave6Number = 'Mã xác thực phải bao gồm 6 chữ số';
+  static const addressMustFrom8To255Letters = 'Địa chỉ nơi ở phải có độ dài từ 8 đến 255 ký tự';
+  static const pleaseInputSchool = 'Vui lòng nhập trường học';
+  static const pleaseUpdateAvatar = 'Vui lòng cập nhật ảnh đại diện';
+  static const avatarSizeMustSmallerThan512KB = 'Ảnh đại diện có dung lượng <= 512KB';
+  static const pleaseSelectBirthdate = 'Vui lòng chọn ngày sinh';
+  static const pleaseSelectGender = 'Vui lòng chọn giới tính';
+  static const pleaseSelectCity = 'Vui lòng chọn Tỉnh\/Thành phố';
+  static const pleaseSelectDistrict = 'Vui lòng chọn Quận\/Huyện';
+  static const pleaseInputCorrectAddressRegex = 'Vui lòng nhập đúng định dạng địa chỉ đang ở';
 
   // Verify account
   static const verifyEmail = "Xác thực Email";
@@ -82,9 +92,11 @@ class TextConstants {
       'Token hoặc id của người dùng không hợp lệ';
   static const getJobError = 'Lấy danh sách công việc thất bại';
   static const loadProvincesFailedError = 'Lấy dữ liệu tỉnh thành thất bại';
+  static const loadDistrictsFailedError = 'Lấy dữ liệu quận/huyện thất bại';
+  static const apiError = 'Lỗi do đường dẫn';
   static const getCandidateInfoFailedError = 'Lấy thông tin ứng viên thất bại';
   static const updateCandidateInfoFailedError = 'Cập nhật thông tin ứng viên thất bại';
-
+  static const provincesEmptyError = 'Danh sách thành phố bị trống';
 
 // Message
   static const noDataMess = 'Không có dữ liệu';
@@ -122,13 +134,20 @@ class TextConstants {
   static const logout = 'Đăng xuất';
   static const dontLoggedIn = 'Bạn chưa đăng nhập!';
   static const birthdate = 'Ngày sinh';
+  static const defaultCandidateBirthdate = 'dd-MM-yyyy';
   static const gender = 'Giới tính';
+  static const selectGender = 'Chọn giới tính';
   static const male = 'Nam';
   static const female = 'Nữ';
   static const city = 'Thành phố';
   static const address = 'Địa chỉ';
   static const save = 'Lưu';
+  static const district = 'Quận/huyện';
+  static const school = 'Trường học';
 
   // Other
   static const navigateInputOTPScreen = 'navigateInputOTPScreen';
+  static const  candidate = 'candidate';
+  static const  token = 'token';
+
 }

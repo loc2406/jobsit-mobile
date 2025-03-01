@@ -11,6 +11,7 @@ import 'package:jobsit_mobile/cubits/candidate/no_logged_in_state.dart';
 import 'package:jobsit_mobile/screens/edit_account_screen.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/services/base_services.dart';
+import 'package:jobsit_mobile/services/candidate_services.dart';
 import 'package:jobsit_mobile/utils/asset_constants.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
@@ -31,6 +32,7 @@ class _AccountScreenState extends State<AccountScreen> {
   bool _onReceiveEmail = false;
   late CandidateCubit _cubit;
   late Candidate _candidate;
+  late String _token;
 
   @override
   void initState() {
@@ -42,46 +44,71 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         title: const Text(
           TextConstants.profile,
           style: WidgetConstants.mainBold16Style,
         ),
         centerTitle: true,
       ),
-      body: BlocBuilder<CandidateCubit, CandidateState>(builder: (context, state){
-        if (state is NoLoggedInState){
+      body: BlocBuilder<CandidateCubit, CandidateState>(
+          builder: (context, state) {
+        if (state is NoLoggedInState) {
           return _buildNoLoggedInWidget();
-        }else if (state is LoadingState){
-          return const Center(child: WidgetConstants.circularProgress,);
-        }else if (state is ErrorState){
-          return Center(child: Text(state.errMessage),);
-        }else if (state is LoginSuccessState){
+        } else if (state is LoadingState) {
+          return const Center(
+            child: WidgetConstants.circularProgress,
+          );
+        } else if (state is ErrorState) {
+          return Center(
+            child: Text(state.errMessage),
+          );
+        } else if (state is LoginSuccessState) {
           _candidate = state.candidate;
+          _token = state.token;
           _isAllowedSearch = state.candidate.searchable;
           _onReceiveEmail = state.candidate.mailReceive;
           return _buildProfile();
-        }else{
+        } else {
           return const SizedBox();
         }
       }),
     );
   }
 
-  Widget _buildNoLoggedInWidget(){
+  Widget _buildNoLoggedInWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(width: double.infinity, child: Text(TextConstants.dontLoggedIn, style: WidgetConstants.blackBold16Style, textAlign: TextAlign.center,),),
-        SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10),),
+        const SizedBox(
+          width: double.infinity,
+          child: Text(
+            TextConstants.dontLoggedIn,
+            style: WidgetConstants.blackBold16Style,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        SizedBox(
+          height: ValueConstants.deviceHeightValue(uiValue: 10),
+        ),
         GestureDetector(
           child: Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: ColorConstants.main),
-            child: const Text(TextConstants.login, style: WidgetConstants.whiteBold16Style, textAlign: TextAlign.center,),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: ColorConstants.main),
+            child: const Text(
+              TextConstants.login,
+              style: WidgetConstants.whiteBold16Style,
+              textAlign: TextAlign.center,
+            ),
           ),
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()));
           },
         )
       ],
@@ -91,21 +118,34 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget _buildProfile() {
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: ValueConstants.deviceWidthValue(uiValue: 25),),
+        horizontal: ValueConstants.deviceWidthValue(uiValue: 25),
+      ),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10),),
+            SizedBox(
+              height: ValueConstants.deviceHeightValue(uiValue: 10),
+            ),
             Container(
-              width: 100,
-              height: 100,
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.fromBorderSide(
-                      BorderSide(color: ColorConstants.main, width: 2))),
-              child: const Icon(Icons.person_outline, color: ColorConstants.main, size: 75,),
-              // child: Image.network('${BaseServices.url}/file/display/1740393856495_galaxy-s24-plus-den.webp'),
+              width: ValueConstants.screenWidth * 0.25,
+              height: ValueConstants.screenWidth * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                shape: BoxShape.circle,
+                border: Border.all(color: ColorConstants.main, width: 2),
+              ),
+              child: ClipOval(
+                child: _candidate.avatar != null
+                    ? Image.network(
+                        CandidateServices.getCandidateAvatarLink(
+                            _candidate.avatar!),
+                        width: ValueConstants.screenWidth * 0.25,
+                        height: ValueConstants.screenWidth * 0.25,
+                        errorBuilder: (context, object, stacktrace) =>
+                            WidgetConstants.buildDefaultCandidateAvatar(),
+                      )
+                    : WidgetConstants.buildDefaultCandidateAvatar(),
+              ),
             ),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 15),
@@ -216,9 +256,8 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               controlAffinity: ListTileControlAffinity.leading,
               thumbColor: const WidgetStatePropertyAll(Colors.white),
-              trackColor: WidgetStatePropertyAll(_onReceiveEmail
-                  ? ColorConstants.main
-                  : ColorConstants.grey),
+              trackColor: WidgetStatePropertyAll(
+                  _onReceiveEmail ? ColorConstants.main : ColorConstants.grey),
               contentPadding: const EdgeInsets.all(0),
             ),
             SizedBox(
@@ -271,7 +310,9 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
             ),
-            SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10),),
+            SizedBox(
+              height: ValueConstants.deviceHeightValue(uiValue: 10),
+            ),
           ],
         ),
       ),
@@ -288,11 +329,21 @@ class _AccountScreenState extends State<AccountScreen> {
             style: WidgetConstants.mainBold16Style,
           ),
           GestureDetector(
-              child: SvgPicture.asset(
-            AssetConstants.iconEdit,
-          ), onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const EditAccountScreen()));
-          },)
+            child: SvgPicture.asset(
+              AssetConstants.iconEdit,
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const EditAccountScreen(),
+                    settings: RouteSettings(arguments: {
+                      TextConstants.candidate: _candidate,
+                      TextConstants.token: _token,
+                    })),
+              );
+            },
+          )
         ],
       ),
       SizedBox(
@@ -309,28 +360,31 @@ class _AccountScreenState extends State<AccountScreen> {
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            _buildPersonalInfoItem(
-                AssetConstants.iconCall, _candidate.phone),
+            _buildPersonalInfoItem(AssetConstants.iconCall, _candidate.phone),
+            SizedBox(
+              height: ValueConstants.deviceHeightValue(uiValue: 10),
+            ),
+            _buildPersonalInfoItem(AssetConstants.iconLocation,
+                _candidate.location ?? TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
             _buildPersonalInfoItem(
-                AssetConstants.iconLocation, _candidate.location ?? TextConstants.noData),
+                AssetConstants.iconHome,
+                _candidate.university != null
+                    ? (_candidate.university![CandidateServices.nameKey] ??
+                        TextConstants.noData)
+                    : TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            _buildPersonalInfoItem(
-                AssetConstants.iconHome, _candidate.university ?? TextConstants.noData),
+            _buildPersonalInfoItem(AssetConstants.iconCalendar,
+                _candidate.birthdate ?? TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            _buildPersonalInfoItem(
-                AssetConstants.iconCalendar, _candidate.birthdate ?? TextConstants.noData),
-            SizedBox(
-              height: ValueConstants.deviceHeightValue(uiValue: 10),
-            ),
-            _buildPersonalInfoItem(
-                AssetConstants.iconProfile, (_candidate.gender ?? TextConstants.noData).toString())
+            _buildPersonalInfoItem(AssetConstants.iconProfile,
+                _candidate.gender != null ? (_candidate.gender == true ? TextConstants.male : TextConstants.female) : TextConstants.noData)
           ],
         ),
       )
@@ -344,7 +398,12 @@ class _AccountScreenState extends State<AccountScreen> {
         SizedBox(
           width: ValueConstants.deviceWidthValue(uiValue: 10),
         ),
-        Expanded(child: Text(info, overflow: TextOverflow.ellipsis, maxLines: 1,))
+        Expanded(
+            child: Text(
+          info,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ))
       ],
     );
   }
@@ -421,10 +480,12 @@ class _AccountScreenState extends State<AccountScreen> {
               TextConstants.cv,
               style: WidgetConstants.blackBold16Style,
             ),
-            _candidate.cv != null ? Image.asset(
-              AssetConstants.exCV,
-              width: double.infinity,
-            ) : const Text(TextConstants.noData),
+            _candidate.cv != null
+                ? Image.asset(
+                    AssetConstants.exCV,
+                    width: double.infinity,
+                  )
+                : const Text(TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
@@ -435,9 +496,7 @@ class _AccountScreenState extends State<AccountScreen> {
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 5),
             ),
-            const Text(
-              TextConstants.noData
-            ),
+            const Text(TextConstants.noData),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:jobsit_mobile/cubits/candidate/active_state.dart';
+import 'package:jobsit_mobile/cubits/candidate/edit_success_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/register_success_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/send_otp_success_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
@@ -27,4 +28,6 @@ class CandidateState {
   factory CandidateState.error(String errorMessage) => ErrorState(errorMessage);
 
   factory CandidateState.noLoggedIn() => NoLoggedInState();
+
+  factory CandidateState.editSuccess() => EditSuccessState();
 }

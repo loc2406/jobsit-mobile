@@ -12,7 +12,7 @@ class Candidate {
   final String? location;
   final bool mailReceive;
   final bool searchable;
-  final String? university;
+  final Map<String, dynamic>? university;
   final String? cv;
 
   const Candidate({required this.id,
@@ -37,30 +37,15 @@ class Candidate {
       firstName: map[CandidateServices.userDTOKey][firstNameField],
       lastName: map[CandidateServices.userDTOKey][lastNameField],
       gender: map[CandidateServices.userDTOKey][genderField],
-      birthdate: map[CandidateServices.userDTOKey][birthdateField],
+      birthdate: map[CandidateServices.userDTOKey][birthDayField],
       phone: map[CandidateServices.userDTOKey][phoneField],
       avatar: map[CandidateServices.userDTOKey][avatarField],
       location: map[CandidateServices.userDTOKey][locationField],
       mailReceive: map[CandidateServices.userDTOKey][mailReceiveField],
       searchable: map[CandidateServices.candidateOtherInfoDTOKey][searchableField],
-      university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField] ?? '',
+      university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField],
       cv: map[CandidateServices.candidateOtherInfoDTOKey][cvField] ?? '',
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      idField: id,
-      emailField: email,
-      firstNameField: firstName,
-      lastNameField: lastName,
-      genderField: gender,
-      birthdateField: birthdate,
-      phoneField: phone,
-      avatarField: avatar,
-      locationField: location,
-      mailReceiveField: mailReceive,
-    };
   }
 
   // Model
@@ -69,7 +54,7 @@ class Candidate {
   static const firstNameField = 'firstName';
   static const lastNameField = 'lastName';
   static const genderField = 'gender';
-  static const birthdateField = 'birthdate';
+  static const birthDayField = 'birthDay';
   static const phoneField = 'phone';
   static const avatarField = 'avatar';
   static const locationField = 'location';
