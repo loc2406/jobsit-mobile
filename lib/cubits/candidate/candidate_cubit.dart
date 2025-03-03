@@ -1,16 +1,22 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:jobsit_mobile/cubits/candidate/edit_success_state.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../../models/candidate.dart';
+import '../../models/province.dart';
+import '../../models/school.dart';
 import '../../services/base_services.dart';
 import '../../services/candidate_services.dart';
+import '../../services/province_services.dart';
 
 class CandidateCubit extends Cubit<CandidateState> {
-  CandidateCubit() : super(CandidateState.init());
+  CandidateCubit() : super(CandidateState.noLoggedIn());
 
   Future<void> createCandidate(
       {required String email,
@@ -20,7 +26,12 @@ class CandidateCubit extends Cubit<CandidateState> {
       required String phone}) async {
     emit(CandidateState.loading());
     try {
-      await CandidateServices.createCandidate(email: email, password: password, firstName: firstName, lastName: lastName, phone: phone);
+      await CandidateServices.createCandidate(
+          email: email,
+          password: password,
+          firstName: firstName,
+          lastName: lastName,
+          phone: phone);
       emit(CandidateState.registerSuccess(email));
     } catch (e) {
       emit(CandidateState.error(e.toString()));
@@ -28,39 +39,120 @@ class CandidateCubit extends Cubit<CandidateState> {
   }
 
   sendActiveEmail(String email) async {
-    try{
+    try {
       await CandidateServices.sendActiveEmail(email);
       emit(CandidateState.sendOtpSuccess());
-    }catch(e){
+    } catch (e) {
       emit(CandidateState.error(e.toString()));
     }
   }
 
   sendOtpToActiveAccount(String otp) async {
-    try{
+    try {
       emit(CandidateState.loading());
       await CandidateServices.sendOtpToActiveAccount(otp);
       emit(CandidateState.activeSuccess());
-    }catch(e){
+    } catch (e) {
       emit(CandidateState.error(e.toString()));
     }
   }
 
   loginAccount({required String email, required String password}) async {
-    try{
+    try {
       emit(CandidateState.loading());
-      final responseBody = await CandidateServices.loginAccount(email, password);
+      final responseBody =
+          await CandidateServices.loginAccount(email, password);
 
       final token = responseBody[CandidateServices.tokenKey].toString();
-      final candidateId = int.tryParse(responseBody[CandidateServices.idUserKey].toString());
+      final candidateId =
+          int.tryParse(responseBody[CandidateServices.idUserKey].toString());
 
-      if (token.isNotEmpty && candidateId != null){
-        emit(CandidateState.loginSuccess(token, candidateId));
-      }else{
+      if (token.isNotEmpty && candidateId != null) {
+        final candidate = await CandidateServices.getCandidateById(candidateId);
+        emit(CandidateState.loginSuccess(token, candidate));
+      } else {
         emit(CandidateState.error(TextConstants.tokenOrCandidateIdError));
       }
-    }catch(e){
+    } catch (e) {
       emit(CandidateState.error(e.toString()));
+    }
+  }
+
+  Future<List<Province>> getProvinces() async {
+    try{
+      final provinces = await ProvinceServices.getProvinces();
+      return provinces;
+    }catch(e){
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<String>> getDistricts(int provinceCode) async {
+    try{
+      final districts = await ProvinceServices.getDistricts(provinceCode);
+      return districts;
+    }catch(e){
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<University>> getUniversities() async {
+    try{
+      final universities = await CandidateServices.getUniversities();
+      return universities;
+    }catch(e){
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
+  updateInfo({
+    required int candidateId,
+    required String token,
+    required File? avatar,
+    required String firstName,
+    required String lastName,
+    required String birthdate,
+    required String phone,
+    required bool? gender,
+    required String location,
+    University? university,
+  }) async {
+    try {
+      emit(CandidateState.loading());
+
+      await CandidateServices.updateCandidate(
+          candidateId: candidateId,
+          token: token,
+          avatar: avatar,
+          firstName: firstName,
+          lastName: lastName,
+          birthdate: birthdate,
+          phone: phone,
+          gender: gender,
+          location: location,
+          university: university
+      );
+
+      emit(CandidateState.editSuccess());
+
+      final candidate = await CandidateServices.getCandidateById(candidateId);
+      emit(CandidateState.loginSuccess(token, candidate));
+
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  updateMailReceive(int id, String token) async {
+    try{
+      await CandidateServices.updateMailReceive(id, token);
+      final candidate = await CandidateServices.getCandidateById(id);
+      emit(CandidateState.loginSuccess(token, candidate));
+    }catch(e){
+      debugPrint(e.toString());
     }
   }
 }

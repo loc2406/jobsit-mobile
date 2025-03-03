@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
-import 'package:jobsit_mobile/cubits/candidate/init_state.dart';
 import 'package:jobsit_mobile/screens/applied_screen.dart';
 import 'package:jobsit_mobile/screens/home_screen.dart';
 import 'package:jobsit_mobile/screens/saved_work_screen.dart';
@@ -25,8 +24,8 @@ class _MenuScreenState extends State<MenuScreen> {
 
   final List<Widget> screens = [
     const HomeScreen(),
-    const AppliedScreen(),
     const SavedWorkScreen(),
+    const AppliedScreen(),
     const AccountScreen(),
   ];
 

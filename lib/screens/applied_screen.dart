@@ -12,7 +12,7 @@ class _AppliedScreenState extends State<AppliedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('Saved work'),
+      body: Text('Applied work'),
     );
   }
 }

@@ -38,30 +38,41 @@ class TextConstants {
   static const emailOrPasswordIncorrect =
       'Địa chỉ email hoặc mật khẩu không đúng';
   static const pleaseInputPassword = 'Vui lòng nhập mật khẩu';
-  static const pleaseInputMin6Digits = 'Vui lòng nhập tối thiểu 6 ký tự';
-  static const pleaseInputMax256Digits = 'Vui lòng nhập tối đa 256 ký tự';
+  static const pleaseInputMin6Letters = 'Vui lòng nhập tối thiểu 6 ký tự';
+  static const pleaseInputMax256Letters = 'Vui lòng nhập tối đa 256 ký tự';
   static const emailIncorrect = 'Địa chỉ email không đúng';
   static const emailExisted = 'Địa chỉ email này đã tồn tại';
-  static const passwordMustFrom6To32Digits = 'Mật khẩu phải từ 6 đến 32 ký tự';
+  static const passwordMustFrom6To32Letters = 'Mật khẩu phải từ 6 đến 32 ký tự';
   static const pleaseInputAtLeast1UpperCase =
       'Vui lòng nhập ít nhất 1 chữ in hoa';
   static const pleaseInputAtLeast1Number = 'Vui lòng nhập ít nhất 1 số';
   static const pleaseConfirmPassword = 'Vui lòng xác nhận lại mật khẩu';
   static const confirmPasswordIncorrect = 'Mật khẩu chưa khớp';
   static const pleaseInputPhone = 'Vui lòng nhập số điện thoại';
-  static const phoneMustFrom8To13Digits =
+  static const phoneMustFrom8To13Letters =
       'Số điện thoại phải có độ dài từ 8 đến 13 ký tự';
-  static const invalidPhone = 'Số điện thoại không hợp lệ';
+  static const pleaseInputCorrectRegexPhone = 'Vui lòng nhập số điện thoại đúng định dạng';
   static const pleaseInputFirstName = 'Vui lòng nhập họ và tên lót';
-  static const firstNameMustFrom2To32Digits =
+  static const firstNameMustFrom2To32Letters =
       'Họ và tên lót phải có độ dài từ 2 đến 32 ký tự';
   static const invalidFirstName = 'Họ và tên lót không hợp lệ';
   static const pleaseInputLastName = 'Vui lòng nhập tên';
-  static const lastNameMustFrom2To32Digits =
+  static const lastNameMustFrom2To32Letters =
       'Tên phải có độ dài từ 2 đến 32 ký tự';
+  static const pleaseNotFinishBySpace = 'Vui lòng không kết thúc bằng dấu cách';
   static const invalidLastName = 'Tên không hợp lệ';
   static const pleaseInputOtp = 'Vui lòng nhập mã OTP';
   static const otpMustHave6Number = 'Mã xác thực phải bao gồm 6 chữ số';
+  static const addressMustFrom8To255Letters = 'Địa chỉ nơi ở phải có độ dài từ 8 đến 255 ký tự';
+  static const pleaseUpdateAvatar = 'Vui lòng cập nhật ảnh đại diện';
+  static const avatarSizeMustSmallerThan512KB = 'Ảnh đại diện có dung lượng <= 512KB';
+  static const pleaseSelectBirthdate = 'Vui lòng chọn ngày sinh';
+  static const invalidBirthdate = 'Ngày sinh không hợp lệ';
+  static const pleaseSelectGender = 'Vui lòng chọn giới tính';
+  static const pleaseSelectCity = 'Vui lòng chọn Tỉnh\/Thành phố';
+  static const pleaseSelectDistrict = 'Vui lòng chọn Quận\/Huyện';
+  static const pleaseInputCorrectAddressRegex = 'Vui lòng nhập đúng định dạng địa chỉ đang ở';
+  static const pleaseInputAddress = 'Vui lòng nhập địa chỉ';
 
   // Verify account
   static const verifyEmail = "Xác thực Email";
@@ -81,12 +92,20 @@ class TextConstants {
   static const tokenOrCandidateIdError =
       'Token hoặc id của người dùng không hợp lệ';
   static const getJobError = 'Lấy danh sách công việc thất bại';
-  static String loadProvincesFailedError = 'Lấy dữ liệu tỉnh thành thất bại';
+  static const loadProvincesFailedError = 'Lấy dữ liệu tỉnh thành thất bại';
+  static const loadDistrictsFailedError = 'Lấy dữ liệu quận/huyện thất bại';
+  static const unexpectedError = 'Lỗi ngoài ý muốn';
+  static const getCandidateInfoFailedError = 'Lấy thông tin ứng viên thất bại';
+  static const updateCandidateInfoFailedError = 'Cập nhật thông tin ứng viên thất bại';
+  static const provincesEmptyError = 'Danh sách thành phố bị trống';
+  static const loadUniversitiesFailedError = 'Lấy dữ liệu truờng học thất bại';
+  static const updateMailReceiveError = 'Cập nhật trạng thái nhận email thất bại';
 
 // Message
   static const noMatchingJobAtThisTimeMess = 'Rất tiếc, hiện tại không có công việc phù hợp được tìm thấy';
   static const notFindJobMess = 'Không tìm thấy công việc';
   static const sentOtpMess = 'Đã gửi lại mã OTP';
+  static const editSuccessful = 'Chỉnh sửa thành công';
 
 // Bottom navigation bar
   static const home = 'Trang chủ';
@@ -109,10 +128,31 @@ class TextConstants {
   static const allowToSearch =
       'Cho phép nhà tuyển dụng tìm kiếm thông tin của bạn';
   static const emailNotification = 'Thông báo email';
-  static const personalInformation = 'Thông tin cá nhân';
-  static const jobInformation = 'Thông tin công việc';
+  static const personalInfo = 'Thông tin cá nhân';
+  static const jobInfo = 'Thông tin công việc';
   static const noData = 'Chưa có dữ liệu';
+  static const jobWanted = 'Công việc mong muốn';
+  static const jobLocation = 'Nơi làm việc';
+  static const cv = 'CV';
+  static const coverLetter = 'Thư xin việc';
+  static const changePassword = 'Thay đổi mật khẩu';
+  static const logout = 'Đăng xuất';
+  static const dontLoggedIn = 'Bạn chưa đăng nhập!';
+  static const birthdate = 'Ngày sinh';
+  static const defaultCandidateBirthdate = 'dd-MM-yyyy';
+  static const gender = 'Giới tính';
+  static const selectGender = 'Chọn giới tính';
+  static const male = 'Nam';
+  static const female = 'Nữ';
+  static const city = 'Thành phố';
+  static const address = 'Địa chỉ';
+  static const save = 'Lưu';
+  static const district = 'Quận/huyện';
+  static const university = 'Trường học';
+  static const selectUniversity = 'Chọn trường học';
 
   // Other
   static const navigateInputOTPScreen = 'navigateInputOTPScreen';
+  static const  candidate = 'candidate';
+  static const  token = 'token';
 }

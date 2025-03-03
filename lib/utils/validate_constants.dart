@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:jobsit_mobile/utils/text_constants.dart';
+import 'package:path/path.dart' as path;
+import 'package:intl/intl.dart';
+
+import '../models/province.dart';
 
 class ValidateConstants{
+
   static String? validateEmailLogin(String? email){
     if (email == null || email.trim().isEmpty){
       return TextConstants.pleaseInputEmail;
@@ -34,12 +41,12 @@ class ValidateConstants{
 
     final isValidMinLength = email.length >= 6;
     if (!isValidMinLength){
-      return TextConstants.pleaseInputMin6Digits;
+      return TextConstants.pleaseInputMin6Letters;
     }
 
     final isValidMaxLength = email.length <= 256;
     if (!isValidMaxLength){
-      return TextConstants.pleaseInputMax256Digits;
+      return TextConstants.pleaseInputMax256Letters;
     }
 
     final RegExp emailRegex = RegExp(
@@ -60,7 +67,7 @@ class ValidateConstants{
 
     final isValidLength = password.length >= 6 && password.length <=32;
     if (!isValidLength){
-      return TextConstants.passwordMustFrom6To32Digits;
+      return TextConstants.passwordMustFrom6To32Letters;
     }
 
     final isContainsUpperCase = RegExp(r'[A-Z]').hasMatch(password);
@@ -89,42 +96,34 @@ class ValidateConstants{
   }
 
   static String? validateFirstName(String? firstName){
-    if (firstName == null || firstName.trim().isEmpty){
+    if (firstName == null || firstName.isEmpty){
       return TextConstants.pleaseInputFirstName;
     }
 
     final isValidLength = firstName.length >= 2 && firstName.length <=32;
     if (!isValidLength){
-      return TextConstants.firstNameMustFrom2To32Digits;
+      return TextConstants.firstNameMustFrom2To32Letters;
     }
 
-    final RegExp firstNameRegex = RegExp(
-        r"^[A-Za-zÀ-Ỹà-ỹ ]{2,32}$"
-    );
-
-    if (!firstNameRegex.hasMatch(firstName)){
-      return TextConstants.invalidFirstName;
+    if (firstName[firstName.length-1] == ' '){
+      return TextConstants.pleaseNotFinishBySpace;
     }
 
     return null;
   }
 
   static String? validateLastName(String? lastName){
-    if (lastName == null || lastName.trim().isEmpty){
+    if (lastName == null || lastName.isEmpty){
       return TextConstants.pleaseInputLastName;
     }
 
     final isValidLength = lastName.length >= 2 && lastName.length <=32;
     if (!isValidLength){
-      return TextConstants.lastNameMustFrom2To32Digits;
+      return TextConstants.lastNameMustFrom2To32Letters;
     }
 
-    final RegExp lastNameRegex = RegExp(
-        r"^[A-Za-zÀ-Ỹà-ỹ]{2,32}$"
-    );
-
-    if (!lastNameRegex.hasMatch(lastName)){
-      return TextConstants.invalidLastName;
+    if (lastName[lastName.length-1] == ' '){
+      return TextConstants.pleaseNotFinishBySpace;
     }
 
     return null;
@@ -137,15 +136,15 @@ class ValidateConstants{
 
     final isValidLength = phone.length >= 8 && phone.length <=13;
     if (!isValidLength){
-      return TextConstants.phoneMustFrom8To13Digits;
+      return TextConstants.phoneMustFrom8To13Letters;
     }
 
     final RegExp phoneRegex = RegExp(
-        r"^(84|0[35789])\d{8}$"
+        r"^(84|0[35789])\d{6,11}$"
     );
 
     if (!phoneRegex.hasMatch(phone)){
-      return TextConstants.invalidPhone;
+      return TextConstants.pleaseInputCorrectRegexPhone;
     }
 
     return null;
@@ -158,6 +157,79 @@ class ValidateConstants{
 
     if (otp.length != 6){
       return TextConstants.otpMustHave6Number;
+    }
+
+    return null;
+  }
+
+  static String? validateCandidateAvatar(File? img){
+    if (img == null) return TextConstants.pleaseUpdateAvatar;
+    // String extension = path.extension(img.path).toLowerCase();
+    // extension == ".jpg" || extension == ".png"
+    int imgSize = img.lengthSync();
+
+    if (imgSize > 512 * 1024) {
+      return TextConstants.avatarSizeMustSmallerThan512KB;
+    }
+
+    return TextConstants.editSuccessful;
+  }
+
+  static String? validateBirthdate(String? birthdate){
+    if (birthdate == TextConstants.defaultCandidateBirthdate){
+      return TextConstants.pleaseSelectBirthdate;
+    }
+
+    final now = DateTime.now();
+    final birthdateDate = DateFormat('dd-MM-yyyy').parse(birthdate!);
+    if (birthdateDate.isAfter(now)){
+      return TextConstants.invalidBirthdate;
+    }
+
+    return null;
+  }
+
+  static String? validateGender(bool? gender){
+    if (gender == null){
+      return TextConstants.pleaseSelectGender;
+    }
+
+    return null;
+  }
+
+  static String? validateCity(Province? city){
+    if (city == null){
+      return TextConstants.pleaseSelectCity;
+    }
+
+    return null;
+  }
+
+  static String? validateDistrict(String? district){
+    if (district == null){
+      return TextConstants.pleaseSelectDistrict;
+    }
+
+    return null;
+  }
+
+  static String? validateAddress(String? address){
+    if (address == null || address.trim().isEmpty){
+      return TextConstants.pleaseInputAddress;
+    }
+
+    final isValidLength = address.length >= 8 && address.length <= 255;
+    if (!isValidLength){
+      return TextConstants.addressMustFrom8To255Letters;
+    }
+
+    final regex = RegExp(r'^[a-zA-ZÀ-Ỹà-ỹ0-9._/-\s]*$');
+    if (!regex.hasMatch(address)){
+      return TextConstants.pleaseInputCorrectAddressRegex;
+    }
+
+    if (address[address.length-1] == ' '){
+      return TextConstants.pleaseNotFinishBySpace;
     }
 
     return null;
