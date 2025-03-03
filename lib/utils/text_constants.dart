@@ -100,11 +100,13 @@ class TextConstants {
   static const provincesEmptyError = 'Danh sách thành phố bị trống';
   static const loadUniversitiesFailedError = 'Lấy dữ liệu truờng học thất bại';
   static const updateMailReceiveError = 'Cập nhật trạng thái nhận email thất bại';
+  static const logoutFailedError = 'Đăng xuất thất bại';
 
 // Message
   static const noDataMess = 'Không có dữ liệu';
   static const sentOtpMess = 'Đã gửi lại mã OTP';
   static const editSuccessful = 'Chỉnh sửa thành công';
+  static const youAreLogout = 'Bạn vừa đăng xuất';
 
 // Bottom navigation bar
   static const home = 'Trang chủ';

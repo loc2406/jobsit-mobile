@@ -15,7 +15,7 @@ import 'package:jobsit_mobile/utils/value_constants.dart';
 
 import '../models/candidate.dart';
 import '../models/province.dart';
-import '../models/school.dart';
+import '../models/university.dart';
 import '../utils/color_constants.dart';
 import '../utils/text_constants.dart';
 import '../utils/widget_constants.dart';
@@ -68,6 +68,11 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     final universities = await _cubit.getUniversities();
     setState(() {
       _universities = universities;
+      try{
+        _selectedUniversity =   _universities.firstWhere((uni) => uni.id == _candidate.university?.id);
+      }catch(e){
+        _selectedUniversity = null;
+      }
     });
   }
 

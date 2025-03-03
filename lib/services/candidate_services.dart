@@ -8,7 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../models/candidate.dart';
-import '../models/school.dart';
+import '../models/university.dart';
 
 class CandidateServices {
   static const createCandidateUrl = '${BaseServices.url}/candidate';
@@ -20,6 +20,7 @@ class CandidateServices {
   static const updateCandidateUrl = '${BaseServices.url}/candidate/';
   static const universitiesUrl = '${BaseServices.url}/university';
   static const updateMailReceiveUrl = '${BaseServices.url}/candidate/email-notification/';
+  static const logoutUrl = '${BaseServices.url}/logout?token=';
 
   // Response key
   static const userDTOKey = 'userDTO';
@@ -212,6 +213,16 @@ class CandidateServices {
 
     if (response.statusCode != 200) {
       throw Exception(TextConstants.updateMailReceiveError);
+    }
+  }
+
+  static logout(String token) async {
+    final uri = Uri.parse('${CandidateServices.logoutUrl}$token');
+
+    final response = await http.post(uri, headers: BaseServices.headers);
+
+    if (response.statusCode != 200) {
+      throw Exception(TextConstants.logoutFailedError);
     }
   }
 }

@@ -118,6 +118,7 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
                       )));
             }, listener: (context, state) {
               if (state is ActiveSuccessState) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(TextConstants.activeAccountSuccess)));
                   Navigator.pop(context);
               } else if (state is ErrorState) {
                 ScaffoldMessenger.of(context)

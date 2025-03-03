@@ -256,8 +256,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         lastName: _lastNameController.text,
         phone: _phoneController.text,
       );
-
-      await _cubit.sendActiveEmail(_emailController.text);
     }
   }
 
