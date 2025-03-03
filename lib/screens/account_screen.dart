@@ -372,8 +372,7 @@ class _AccountScreenState extends State<AccountScreen> {
             _buildPersonalInfoItem(
                 AssetConstants.iconHome,
                 _candidate.university != null
-                    ? (_candidate.university![CandidateServices.nameKey] ??
-                        TextConstants.noData)
+                    ? _candidate.university!.name
                     : TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),

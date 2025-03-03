@@ -1,3 +1,4 @@
+import 'package:jobsit_mobile/models/school.dart';
 import 'package:jobsit_mobile/services/candidate_services.dart';
 
 class Candidate {
@@ -12,7 +13,7 @@ class Candidate {
   final String? location;
   final bool mailReceive;
   final bool searchable;
-  final Map<String, dynamic>? university;
+  final School? university;
   final String? cv;
 
   const Candidate({required this.id,
@@ -43,7 +44,7 @@ class Candidate {
       location: map[CandidateServices.userDTOKey][locationField],
       mailReceive: map[CandidateServices.userDTOKey][mailReceiveField],
       searchable: map[CandidateServices.candidateOtherInfoDTOKey][searchableField],
-      university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField],
+      university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField] != null ?School.fromMap(map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField]) : null,
       cv: map[CandidateServices.candidateOtherInfoDTOKey][cvField] ?? '',
     );
   }
