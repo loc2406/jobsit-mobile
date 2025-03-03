@@ -98,10 +98,10 @@ class CandidateCubit extends Cubit<CandidateState> {
     }
   }
 
-  Future<List<School>> getSchools() async {
+  Future<List<University>> getUniversities() async {
     try{
-      final schools = await CandidateServices.getSchools();
-      return schools;
+      final universities = await CandidateServices.getUniversities();
+      return universities;
     }catch(e){
       debugPrint(e.toString());
       return [];
@@ -118,7 +118,7 @@ class CandidateCubit extends Cubit<CandidateState> {
     required String phone,
     required bool? gender,
     required String location,
-    School? school,
+    University? university,
   }) async {
     try {
       emit(CandidateState.loading());
@@ -133,7 +133,7 @@ class CandidateCubit extends Cubit<CandidateState> {
           phone: phone,
           gender: gender,
           location: location,
-          school: school
+          university: university
       );
 
       emit(CandidateState.editSuccess());
@@ -142,7 +142,17 @@ class CandidateCubit extends Cubit<CandidateState> {
       emit(CandidateState.loginSuccess(token, candidate));
 
     } catch (e) {
-      emit(CandidateState.error(e.toString()));
+      debugPrint(e.toString());
+    }
+  }
+
+  updateMailReceive(int id, String token) async {
+    try{
+      await CandidateServices.updateMailReceive(id, token);
+      final candidate = await CandidateServices.getCandidateById(id);
+      emit(CandidateState.loginSuccess(token, candidate));
+    }catch(e){
+      debugPrint(e.toString());
     }
   }
 }

@@ -4,7 +4,7 @@ class BaseServices{
     'Content-Type': 'application/json; charset=UTF-8'
   };
 
-  static getHeaderWithToken(String token){
+  static Map<String, String> getHeaderWithToken(String token){
     return {
       "Authorization": "Bearer $token",
       'Content-Type': 'application/json; charset=UTF-8'

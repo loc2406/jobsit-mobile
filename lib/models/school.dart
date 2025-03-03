@@ -1,11 +1,11 @@
-class School{
+class University{
   final int id;
   final String name;
 
-  School(this.id, this.name);
+  University(this.id, this.name);
 
-  factory School.fromMap(Map<String, dynamic> map){
-    return School(
+  factory University.fromMap(Map<String, dynamic> map){
+    return University(
         int.parse(map[idKey].toString()), map[nameKey].toString());
   }
 

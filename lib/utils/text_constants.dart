@@ -98,7 +98,8 @@ class TextConstants {
   static const getCandidateInfoFailedError = 'Lấy thông tin ứng viên thất bại';
   static const updateCandidateInfoFailedError = 'Cập nhật thông tin ứng viên thất bại';
   static const provincesEmptyError = 'Danh sách thành phố bị trống';
-  static const loadSchoolsFailedError = 'Lấy dữ liệu truờng học thất bại';
+  static const loadUniversitiesFailedError = 'Lấy dữ liệu truờng học thất bại';
+  static const updateMailReceiveError = 'Cập nhật trạng thái nhận email thất bại';
 
 // Message
   static const noDataMess = 'Không có dữ liệu';
@@ -146,8 +147,8 @@ class TextConstants {
   static const address = 'Địa chỉ';
   static const save = 'Lưu';
   static const district = 'Quận/huyện';
-  static const school = 'Trường học';
-  static const selectSchool = 'Chọn trường học';
+  static const university = 'Trường học';
+  static const selectUniversity = 'Chọn trường học';
 
   // Other
   static const navigateInputOTPScreen = 'navigateInputOTPScreen';

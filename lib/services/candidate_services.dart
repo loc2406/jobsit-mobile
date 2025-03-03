@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:jobsit_mobile/models/school.dart';
 import 'package:jobsit_mobile/services/base_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../models/candidate.dart';
+import '../models/school.dart';
 
 class CandidateServices {
   static const createCandidateUrl = '${BaseServices.url}/candidate';
@@ -18,7 +18,8 @@ class CandidateServices {
   static const getCandidateByIdUrl = '${BaseServices.url}/candidate/user/';
   static const getCandidateAvatarUrl = '${BaseServices.url}/file/display/';
   static const updateCandidateUrl = '${BaseServices.url}/candidate/';
-  static const schoolsUrl = '${BaseServices.url}/university';
+  static const universitiesUrl = '${BaseServices.url}/university';
+  static const updateMailReceiveUrl = '${BaseServices.url}/candidate/email-notification/';
 
   // Response key
   static const userDTOKey = 'userDTO';
@@ -141,7 +142,7 @@ class CandidateServices {
     required String phone,
     required bool? gender,
     required String location,
-    School? school,
+    University? university,
   }) async {
     final uri =
         Uri.parse('${CandidateServices.updateCandidateUrl}$candidateId');
@@ -161,10 +162,10 @@ class CandidateServices {
         locationKey: location
       },
       candidateOtherInfoDTOKey:
-        school != null
+        university != null
           ? {
             universityDTOKey: {
-              idKey: school.id
+              idKey: university.id
             }
           } : {}
     };
@@ -188,18 +189,29 @@ class CandidateServices {
     }
   }
 
-  static Future<List<School>> getSchools() async {
+  static Future<List<University>> getUniversities() async {
     try {
-      final response = await http.get(Uri.parse(schoolsUrl));
+      final response = await http.get(Uri.parse(universitiesUrl));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-        return data.map((school) => School.fromMap(school)).toList();
+        return data.map((university) => University.fromMap(university)).toList();
       } else {
-        throw Exception(TextConstants.loadSchoolsFailedError);
+        throw Exception(TextConstants.loadUniversitiesFailedError);
       }
     } catch (e) {
       throw Exception('${TextConstants.unexpectedError}: $e');
+    }
+  }
+
+  static updateMailReceive(int id, String token) async {
+    final uri = Uri.parse('${CandidateServices.updateMailReceiveUrl}$id');
+
+    final response = await http.put(uri,
+        headers: BaseServices.getHeaderWithToken(token));
+
+    if (response.statusCode != 200) {
+      throw Exception(TextConstants.updateMailReceiveError);
     }
   }
 }

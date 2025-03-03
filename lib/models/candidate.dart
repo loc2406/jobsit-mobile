@@ -13,7 +13,7 @@ class Candidate {
   final String? location;
   final bool mailReceive;
   final bool searchable;
-  final School? university;
+  final University? university;
   final String? cv;
 
   const Candidate({required this.id,
@@ -42,10 +42,10 @@ class Candidate {
       phone: map[CandidateServices.userDTOKey][phoneField],
       avatar: map[CandidateServices.userDTOKey][avatarField],
       location: map[CandidateServices.userDTOKey][locationField],
-      mailReceive: map[CandidateServices.userDTOKey][mailReceiveField],
+      mailReceive: map[CandidateServices.candidateOtherInfoDTOKey][receiveEmailNotificationField],
       searchable: map[CandidateServices.candidateOtherInfoDTOKey][searchableField],
-      university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField] != null ?School.fromMap(map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField]) : null,
-      cv: map[CandidateServices.candidateOtherInfoDTOKey][cvField] ?? '',
+      university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField] != null ?University.fromMap(map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField]) : null,
+      cv: map[CandidateServices.candidateOtherInfoDTOKey][cvField],
     );
   }
 
@@ -59,7 +59,7 @@ class Candidate {
   static const phoneField = 'phone';
   static const avatarField = 'avatar';
   static const locationField = 'location';
-  static const mailReceiveField = 'mailReceive';
+  static const receiveEmailNotificationField = 'receiveEmailNotification';
   static const searchableField = 'searchable';
   static const universityDTOField = 'universityDTO';
   static const cvField = 'cv';

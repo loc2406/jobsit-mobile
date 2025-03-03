@@ -31,7 +31,7 @@ class WidgetConstants {
       color: Colors.red, fontSize: 13, fontStyle: FontStyle.italic);
 
   static Widget buildDefaultCandidateAvatar() {
-    return Icon(Icons.person_outline,
-        color: ColorConstants.main, size: ValueConstants.screenWidth * 0.25);
+    return Icon(Icons.image_outlined,
+        color: ColorConstants.main, size: ValueConstants.screenWidth * 0.1);
   }
 }

@@ -43,10 +43,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   bool? _selectedGender;
   Province? _selectedCity;
   String? _selectedDistrict;
-  School? _selectedSchool;
+  University? _selectedUniversity;
   List<Province> _cities = [];
   List<String> _districts = [];
-  List<School> _schools = [];
+  List<University> _universities = [];
   late String _token;
 
   @override
@@ -54,7 +54,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     super.initState();
     _cubit = context.read<CandidateCubit>();
     _getProvinces();
-    _getSchools();
+    _getUniversities();
   }
 
   Future<void> _getProvinces() async {
@@ -64,10 +64,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     });
   }
 
-  Future<void> _getSchools() async {
-    final schools = await _cubit.getSchools();
+  Future<void> _getUniversities() async {
+    final universities = await _cubit.getUniversities();
     setState(() {
-      _schools = schools;
+      _universities = universities;
     });
   }
 
@@ -489,11 +489,11 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
   List<Widget> _buildSelectSchoolField() {
     return [
-      ..._buildTitle(TextConstants.school),
-      DropdownButtonFormField<School?>(
+      ..._buildTitle(TextConstants.university),
+      DropdownButtonFormField<University?>(
         isExpanded: true ,
         style: WidgetConstants.black16Style,
-        value: _selectedSchool,
+        value: _selectedUniversity,
         decoration: const InputDecoration(
           filled: true,
           fillColor: Colors.white,
@@ -508,17 +508,17 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           const DropdownMenuItem(
             value: null,
             child: Text(
-              TextConstants.selectSchool,
+              TextConstants.selectUniversity,
               style: WidgetConstants.black16Style,
             ),
           ),
-          ..._schools.map(
-                (school) => DropdownMenuItem(
-              value: school,
+          ..._universities.map(
+                (university) => DropdownMenuItem(
+              value: university,
               child: Tooltip(
-                message: school.name, // Hiển thị toàn bộ nội dung khi di chuột hoặc nhấn giữ
+                message: university.name, // Hiển thị toàn bộ nội dung khi di chuột hoặc nhấn giữ
                 child: Text(
-                  school.name,
+                  university.name,
                   style: WidgetConstants.black16Style,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -529,7 +529,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
         ],
         onChanged: (value){
           setState(() {
-            _selectedSchool = value;
+            _selectedUniversity = value;
           });
         },
         icon: const Icon(
@@ -554,7 +554,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           gender: _selectedGender,
           location:
               '${_addressController.text}, $_selectedDistrict, ${_selectedCity!.name}',
-          school: _selectedSchool
+          university: _selectedUniversity
       );
     }
   }

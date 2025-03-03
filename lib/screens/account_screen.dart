@@ -61,10 +61,6 @@ class _AccountScreenState extends State<AccountScreen> {
           return const Center(
             child: WidgetConstants.circularProgress,
           );
-        } else if (state is ErrorState) {
-          return Center(
-            child: Text(state.errMessage),
-          );
         } else if (state is LoginSuccessState) {
           _candidate = state.candidate;
           _token = state.token;
@@ -245,10 +241,8 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             SwitchListTile(
               value: _onReceiveEmail,
-              onChanged: (value) {
-                setState(() {
-                  // _onReceiveEmail = !_onReceiveEmail;
-                });
+              onChanged: (value) async {
+                await _cubit.updateMailReceive(_candidate.id, _token);
               },
               title: const Text(
                 TextConstants.emailNotification,
@@ -475,16 +469,7 @@ class _AccountScreenState extends State<AccountScreen> {
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            const Text(
-              TextConstants.cv,
-              style: WidgetConstants.blackBold16Style,
-            ),
-            _candidate.cv != null
-                ? Image.asset(
-                    AssetConstants.exCV,
-                    width: double.infinity,
-                  )
-                : const Text(TextConstants.noData),
+            ..._buildJobInfoItem(TextConstants.cv, _candidate.cv ?? TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
