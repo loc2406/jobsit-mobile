@@ -303,6 +303,12 @@ class _AccountScreenState extends State<AccountScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
+              onTap: () async {
+                final isLogout = await _cubit.logout(_token);
+                if (mounted && isLogout){
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(TextConstants.youAreLogout)));
+                }
+              },
             ),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),

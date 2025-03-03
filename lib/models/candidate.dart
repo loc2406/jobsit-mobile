@@ -1,4 +1,4 @@
-import 'package:jobsit_mobile/models/school.dart';
+import 'package:jobsit_mobile/models/university.dart';
 import 'package:jobsit_mobile/services/candidate_services.dart';
 
 class Candidate {

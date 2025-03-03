@@ -10,7 +10,7 @@ import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../../models/candidate.dart';
 import '../../models/province.dart';
-import '../../models/school.dart';
+import '../../models/university.dart';
 import '../../services/base_services.dart';
 import '../../services/candidate_services.dart';
 import '../../services/province_services.dart';
@@ -33,6 +33,7 @@ class CandidateCubit extends Cubit<CandidateState> {
           lastName: lastName,
           phone: phone);
       emit(CandidateState.registerSuccess(email));
+      sendActiveEmail(email);
     } catch (e) {
       emit(CandidateState.error(e.toString()));
     }
@@ -153,6 +154,18 @@ class CandidateCubit extends Cubit<CandidateState> {
       emit(CandidateState.loginSuccess(token, candidate));
     }catch(e){
       debugPrint(e.toString());
+    }
+  }
+
+  Future<bool> logout(String token) async {
+    try{
+      emit(CandidateState.loading());
+      await CandidateServices.logout(token);
+      emit(CandidateState.noLoggedIn());
+      return true;
+    }catch(e){
+      debugPrint(e.toString());
+      return false;
     }
   }
 }
