@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:http/http.dart' as http;
@@ -7,15 +8,27 @@ import 'package:jobsit_mobile/utils/convert_constants.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../../models/candidate.dart';
+import '../../models/province.dart';
 import '../../services/base_services.dart';
 import '../../services/candidate_services.dart';
 import '../../services/job_services.dart';
+import '../../services/province_services.dart';
 import 'job_state.dart';
 
 class JobCubit extends Cubit<JobState> {
   JobCubit() : super(JobState.loading());
 
   final _limit = 5;
+
+  Future<List<Province>> getProvinces() async {
+    try{
+      final provinces = await ProvinceServices.getProvinces();
+      return provinces;
+    }catch(e){
+      debugPrint(e.toString());
+      return [];
+    }
+  }
 
   Future<void> getJobs(
       {String name = '',

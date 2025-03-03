@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:jobsit_mobile/models/province.dart';
 import 'package:jobsit_mobile/services/job_services.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
 import 'package:jobsit_mobile/utils/convert_constants.dart';
@@ -21,7 +22,7 @@ class FilterBottomSheet extends StatefulWidget {
   late String selectedSchedule;
   late String selectedPosition;
   late String selectedMajor;
-  late List<String> provinces;
+  late List<Province> provinces;
   late void Function(String, String, String, String) onApply;
 
   @override
@@ -33,7 +34,7 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
   late String _selectedSchedule;
   late String _selectedPosition;
   late String _selectedMajor;
-  late List<String> _provinces;
+  late List<Province> _provinces;
   late void Function(String, String, String, String) _onApply;
 
   @override
@@ -169,8 +170,8 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
       ),
       ..._provinces
           .map((province) => DropdownMenuItem(
-        value: province,
-        child: Text(province),
+        value: province.name,
+        child: Text(province.name),
       ))
     ];
   }

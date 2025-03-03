@@ -1,5 +1,5 @@
 class BaseServices{
-  static const url = 'http://192.168.1.35:8085/api';
+  static const url = 'http://192.168.1.226:8085/api';
   static const headers = {
     'Content-Type': 'application/json; charset=UTF-8'
   };

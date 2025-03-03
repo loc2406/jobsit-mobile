@@ -15,6 +15,7 @@ import 'package:jobsit_mobile/widgets/job_item.dart';
 
 import '../cubits/job/error_state.dart';
 import '../models/job.dart';
+import '../models/province.dart';
 import '../utils/asset_constants.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final JobCubit _cubit;
+  List<Province> _provinces = [];
   final _searchController = TextEditingController();
   final PagingController<int, Job> _pagingController =
       PagingController(firstPageKey: 0);
@@ -45,7 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _getProvinces() async {
-    await _cubit.getProvinces();
+    final provinces = await _cubit.getProvinces();
+    setState(() {
+      _provinces = provinces;
+    });
   }
 
   Future<void> _getJobs(int no) async {
@@ -202,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => Wrap(
               children: [
                 FilterBottomSheet(
-                  provinces: _cubit.provinces(),
+                  provinces: _provinces,
                   selectedLocation: _selectedLocation,
                   selectedSchedule: _selectedSchedule,
                   selectedPosition: _selectedPosition,
