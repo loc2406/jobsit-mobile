@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:http/http.dart' as http;
@@ -8,8 +9,11 @@ import 'package:jobsit_mobile/cubits/candidate/edit_success_state.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../../models/candidate.dart';
+import '../../models/province.dart';
+import '../../models/school.dart';
 import '../../services/base_services.dart';
 import '../../services/candidate_services.dart';
+import '../../services/province_services.dart';
 
 class CandidateCubit extends Cubit<CandidateState> {
   CandidateCubit() : super(CandidateState.noLoggedIn());
@@ -74,6 +78,36 @@ class CandidateCubit extends Cubit<CandidateState> {
     }
   }
 
+  Future<List<Province>> getProvinces() async {
+    try{
+      final provinces = await ProvinceServices.getProvinces();
+      return provinces;
+    }catch(e){
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<String>> getDistricts(int provinceCode) async {
+    try{
+      final districts = await ProvinceServices.getDistricts(provinceCode);
+      return districts;
+    }catch(e){
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<School>> getSchools() async {
+    try{
+      final schools = await CandidateServices.getSchools();
+      return schools;
+    }catch(e){
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
   updateInfo({
     required int candidateId,
     required String token,
@@ -84,6 +118,7 @@ class CandidateCubit extends Cubit<CandidateState> {
     required String phone,
     required bool? gender,
     required String location,
+    School? school,
   }) async {
     try {
       emit(CandidateState.loading());
@@ -97,7 +132,8 @@ class CandidateCubit extends Cubit<CandidateState> {
           birthdate: birthdate,
           phone: phone,
           gender: gender,
-        location: location,
+          location: location,
+          school: school
       );
 
       emit(CandidateState.editSuccess());

@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:jobsit_mobile/models/province.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
-import 'base_services.dart';
 
 class ProvinceServices{
 
@@ -23,18 +22,16 @@ class ProvinceServices{
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-        // final List<dynamic> data = object[dataKey];
         return data.map((province) => Province.fromMap(province as Map<String, dynamic>)).toList();
       } else {
         throw Exception(TextConstants.loadProvincesFailedError);
       }
     }catch(e){
-      throw Exception(TextConstants.apiError);
+      throw Exception('${TextConstants.unexpectedError}: $e');
     }
   }
 
-  static Future<List<String>> getDistricts(int? provinceCode) async {
-    if (provinceCode == null) return [];
+  static Future<List<String>> getDistricts(int provinceCode) async {
     try{
       final response = await http.get(Uri.parse(districtApi(provinceCode)));
 
@@ -43,10 +40,10 @@ class ProvinceServices{
         final List<dynamic> districts = data[districtsKey];
         return districts.map((e) => e[nameKey].toString()).toList();
       } else {
-        throw Exception(TextConstants.loadProvincesFailedError);
+        throw Exception(TextConstants.loadDistrictsFailedError);
       }
     }catch(e){
-      throw Exception(TextConstants.apiError);
+      throw Exception('${TextConstants.unexpectedError}: $e');
     }
   }
 }

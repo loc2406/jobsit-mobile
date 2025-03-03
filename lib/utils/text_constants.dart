@@ -51,7 +51,7 @@ class TextConstants {
   static const pleaseInputPhone = 'Vui lòng nhập số điện thoại';
   static const phoneMustFrom8To13Letters =
       'Số điện thoại phải có độ dài từ 8 đến 13 ký tự';
-  static const invalidPhone = 'Số điện thoại không hợp lệ';
+  static const pleaseInputCorrectRegexPhone = 'Vui lòng nhập số điện thoại đúng định dạng';
   static const pleaseInputFirstName = 'Vui lòng nhập họ và tên lót';
   static const firstNameMustFrom2To32Letters =
       'Họ và tên lót phải có độ dài từ 2 đến 32 ký tự';
@@ -64,14 +64,15 @@ class TextConstants {
   static const pleaseInputOtp = 'Vui lòng nhập mã OTP';
   static const otpMustHave6Number = 'Mã xác thực phải bao gồm 6 chữ số';
   static const addressMustFrom8To255Letters = 'Địa chỉ nơi ở phải có độ dài từ 8 đến 255 ký tự';
-  static const pleaseInputSchool = 'Vui lòng nhập trường học';
   static const pleaseUpdateAvatar = 'Vui lòng cập nhật ảnh đại diện';
   static const avatarSizeMustSmallerThan512KB = 'Ảnh đại diện có dung lượng <= 512KB';
   static const pleaseSelectBirthdate = 'Vui lòng chọn ngày sinh';
+  static const invalidBirthdate = 'Ngày sinh không hợp lệ';
   static const pleaseSelectGender = 'Vui lòng chọn giới tính';
   static const pleaseSelectCity = 'Vui lòng chọn Tỉnh\/Thành phố';
   static const pleaseSelectDistrict = 'Vui lòng chọn Quận\/Huyện';
   static const pleaseInputCorrectAddressRegex = 'Vui lòng nhập đúng định dạng địa chỉ đang ở';
+  static const pleaseInputAddress = 'Vui lòng nhập địa chỉ';
 
   // Verify account
   static const verifyEmail = "Xác thực Email";
@@ -93,14 +94,16 @@ class TextConstants {
   static const getJobError = 'Lấy danh sách công việc thất bại';
   static const loadProvincesFailedError = 'Lấy dữ liệu tỉnh thành thất bại';
   static const loadDistrictsFailedError = 'Lấy dữ liệu quận/huyện thất bại';
-  static const apiError = 'Lỗi do đường dẫn';
+  static const unexpectedError = 'Lỗi ngoài ý muốn';
   static const getCandidateInfoFailedError = 'Lấy thông tin ứng viên thất bại';
   static const updateCandidateInfoFailedError = 'Cập nhật thông tin ứng viên thất bại';
   static const provincesEmptyError = 'Danh sách thành phố bị trống';
+  static const loadSchoolsFailedError = 'Lấy dữ liệu truờng học thất bại';
 
 // Message
   static const noDataMess = 'Không có dữ liệu';
   static const sentOtpMess = 'Đã gửi lại mã OTP';
+  static const editSuccessful = 'Chỉnh sửa thành công';
 
 // Bottom navigation bar
   static const home = 'Trang chủ';
@@ -144,6 +147,7 @@ class TextConstants {
   static const save = 'Lưu';
   static const district = 'Quận/huyện';
   static const school = 'Trường học';
+  static const selectSchool = 'Chọn trường học';
 
   // Other
   static const navigateInputOTPScreen = 'navigateInputOTPScreen';

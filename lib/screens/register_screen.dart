@@ -121,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             label: TextConstants.phone,
                             controller: _phoneController,
                             keyboardType: TextInputType.phone,
-                            validateMethod: ValidateConstants.validatePhoneRegister,
+                            validateMethod: ValidateConstants.validatePhone,
                           ),
                         ],
                       )),

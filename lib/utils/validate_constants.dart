@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:path/path.dart' as path;
+import 'package:intl/intl.dart';
 
 import '../models/province.dart';
 
@@ -95,7 +96,7 @@ class ValidateConstants{
   }
 
   static String? validateFirstName(String? firstName){
-    if (firstName == null || firstName.trim().isEmpty){
+    if (firstName == null || firstName.isEmpty){
       return TextConstants.pleaseInputFirstName;
     }
 
@@ -112,7 +113,7 @@ class ValidateConstants{
   }
 
   static String? validateLastName(String? lastName){
-    if (lastName == null || lastName.trim().isEmpty){
+    if (lastName == null || lastName.isEmpty){
       return TextConstants.pleaseInputLastName;
     }
 
@@ -128,7 +129,7 @@ class ValidateConstants{
     return null;
   }
 
-  static String? validatePhoneRegister(String? phone){
+  static String? validatePhone(String? phone){
     if (phone == null || phone.trim().isEmpty){
       return TextConstants.pleaseInputPhone;
     }
@@ -139,24 +140,11 @@ class ValidateConstants{
     }
 
     final RegExp phoneRegex = RegExp(
-        r"^(84|0[35789])\d{8}$"
+        r"^(84|0[35789])\d{6,11}$"
     );
 
     if (!phoneRegex.hasMatch(phone)){
-      return TextConstants.invalidPhone;
-    }
-
-    return null;
-  }
-
-  static String? validatePhoneCandidateInfo(String? phone){
-    if (phone == null || phone.trim().isEmpty){
-      return TextConstants.pleaseInputPhone;
-    }
-
-    final isValidLength = phone.length >= 8 && phone.length <=13;
-    if (!isValidLength){
-      return TextConstants.phoneMustFrom8To13Letters;
+      return TextConstants.pleaseInputCorrectRegexPhone;
     }
 
     return null;
@@ -174,14 +162,6 @@ class ValidateConstants{
     return null;
   }
 
-  static String? validateSchool(String? school){
-    if (school == null || school.trim().isEmpty){
-      return TextConstants.pleaseInputSchool;
-    }
-
-    return null;
-  }
-
   static String? validateCandidateAvatar(File? img){
     if (img == null) return TextConstants.pleaseUpdateAvatar;
     // String extension = path.extension(img.path).toLowerCase();
@@ -192,12 +172,18 @@ class ValidateConstants{
       return TextConstants.avatarSizeMustSmallerThan512KB;
     }
 
-    return null;
+    return TextConstants.editSuccessful;
   }
 
   static String? validateBirthdate(String? birthdate){
     if (birthdate == TextConstants.defaultCandidateBirthdate){
       return TextConstants.pleaseSelectBirthdate;
+    }
+
+    final now = DateTime.now();
+    final birthdateDate = DateFormat('dd-MM-yyyy').parse(birthdate!);
+    if (birthdateDate.isAfter(now)){
+      return TextConstants.invalidBirthdate;
     }
 
     return null;
@@ -228,7 +214,12 @@ class ValidateConstants{
   }
 
   static String? validateAddress(String? address){
-    if (address == null || address.trim().isEmpty|| address.length < 8 || address.length > 255){
+    if (address == null || address.trim().isEmpty){
+      return TextConstants.pleaseInputAddress;
+    }
+
+    final isValidLength = address.length >= 8 && address.length <= 255;
+    if (!isValidLength){
       return TextConstants.addressMustFrom8To255Letters;
     }
 

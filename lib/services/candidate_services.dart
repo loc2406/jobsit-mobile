@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:jobsit_mobile/models/school.dart';
 import 'package:jobsit_mobile/services/base_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -17,6 +18,7 @@ class CandidateServices {
   static const getCandidateByIdUrl = '${BaseServices.url}/candidate/user/';
   static const getCandidateAvatarUrl = '${BaseServices.url}/file/display/';
   static const updateCandidateUrl = '${BaseServices.url}/candidate/';
+  static const schoolsUrl = '${BaseServices.url}/university';
 
   // Response key
   static const userDTOKey = 'userDTO';
@@ -36,7 +38,8 @@ class CandidateServices {
   static const locationKey = 'location';
   static const candidateProfileDTOKey = 'candidateProfileDTO';
   static const userProfileDTOKey = 'userProfileDTO';
-
+  static const universityDTOKey = 'universityDTO';
+  static const idKey = 'id';
 
   // Response value
   static const dataExistingValue = 'DATA EXISTING';
@@ -138,6 +141,7 @@ class CandidateServices {
     required String phone,
     required bool? gender,
     required String location,
+    School? school,
   }) async {
     final uri =
         Uri.parse('${CandidateServices.updateCandidateUrl}$candidateId');
@@ -147,7 +151,7 @@ class CandidateServices {
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Content-Type'] = 'multipart/form-data';
 
-    request.fields[candidateProfileDTOKey] = jsonEncode({
+    Map<String, dynamic> candidateData = {
       userProfileDTOKey: {
         firstNameKey: firstName,
         lastNameKey: lastName,
@@ -156,8 +160,16 @@ class CandidateServices {
         birthDayKey: birthdate,
         locationKey: location
       },
-      candidateOtherInfoDTOKey: {}
-    });
+      candidateOtherInfoDTOKey:
+        school != null
+          ? {
+            universityDTOKey: {
+              idKey: school.id
+            }
+          } : {}
+    };
+
+    request.fields[candidateProfileDTOKey] = jsonEncode(candidateData);
 
     if (avatar != null) {
       request.files.add(
@@ -173,6 +185,21 @@ class CandidateServices {
 
     if (response.statusCode != 200) {
       throw Exception(TextConstants.updateCandidateInfoFailedError);
+    }
+  }
+
+  static Future<List<School>> getSchools() async {
+    try {
+      final response = await http.get(Uri.parse(schoolsUrl));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+        return data.map((school) => School.fromMap(school)).toList();
+      } else {
+        throw Exception(TextConstants.loadSchoolsFailedError);
+      }
+    } catch (e) {
+      throw Exception('${TextConstants.unexpectedError}: $e');
     }
   }
 }

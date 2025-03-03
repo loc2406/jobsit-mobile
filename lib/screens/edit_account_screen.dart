@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,17 +7,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/edit_success_state.dart';
-import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
-import 'package:jobsit_mobile/cubits/job/job_cubit.dart';
 import 'package:jobsit_mobile/services/candidate_services.dart';
 import 'package:jobsit_mobile/services/province_services.dart';
 import 'package:jobsit_mobile/utils/only_letters_input_formatter.dart';
 import 'package:jobsit_mobile/utils/validate_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
-import 'package:jobsit_mobile/widgets/input_field.dart';
 
 import '../models/candidate.dart';
 import '../models/province.dart';
+import '../models/school.dart';
 import '../utils/color_constants.dart';
 import '../utils/text_constants.dart';
 import '../utils/widget_constants.dart';
@@ -46,8 +43,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   bool? _selectedGender;
   Province? _selectedCity;
   String? _selectedDistrict;
+  School? _selectedSchool;
   List<Province> _cities = [];
   List<String> _districts = [];
+  List<School> _schools = [];
   late String _token;
 
   @override
@@ -55,12 +54,20 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     super.initState();
     _cubit = context.read<CandidateCubit>();
     _getProvinces();
+    _getSchools();
   }
 
   Future<void> _getProvinces() async {
-    final cities = await ProvinceServices.getProvinces();
+    final cities = await _cubit.getProvinces();
     setState(() {
       _cities = cities;
+    });
+  }
+
+  Future<void> _getSchools() async {
+    final schools = await _cubit.getSchools();
+    setState(() {
+      _schools = schools;
     });
   }
 
@@ -101,7 +108,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
         listener: (context, state) {
           if (state is EditSuccessState) {
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Cập nhật thành công!')));
+                .showSnackBar(const SnackBar(content: Text(TextConstants.editSuccessful)));
             Navigator.pop(context);
           }
         },
@@ -175,7 +182,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                         label: TextConstants.phone,
                         controller: _phoneController,
                         validateMethod:
-                            ValidateConstants.validatePhoneCandidateInfo,
+                            ValidateConstants.validatePhone,
                         keyboardType: TextInputType.phone,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -190,13 +197,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                       validateMethod: ValidateConstants.validateAddress,
                       keyboardType: TextInputType.text,
                     ),
-                    ..._buildInputField(
-                      title: TextConstants.school,
-                      label: TextConstants.school,
-                      controller: _schoolController,
-                      // validateMethod: ValidateConstants.validateSchool,
-                      keyboardType: TextInputType.text,
-                    ),
+                   ..._buildSelectSchoolField(),
                     SizedBox(
                       height: ValueConstants.deviceHeightValue(uiValue: 20),
                     ),
@@ -274,7 +275,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
         readOnly: isReadOnly,
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
+          fillColor: title == TextConstants.email ? ColorConstants.grayBackground : Colors.white,
           hintText: label,
           hintStyle: const TextStyle(color: ColorConstants.grey),
           contentPadding:
@@ -305,7 +306,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           hintText: TextConstants.defaultCandidateBirthdate,
           contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           hintStyle: TextStyle(color: ColorConstants.grey),
-          suffixIcon: Icon(Icons.arrow_drop_down),
+          suffixIcon: Icon(Icons.arrow_drop_down, color: ColorConstants.main,),
           enabledBorder: WidgetConstants.inputFieldBorder,
           focusedBorder: WidgetConstants.inputFieldBorder,
           errorBorder: WidgetConstants.inputFieldBorder,
@@ -321,7 +322,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   Future<void> _showDatePicker() async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: null,
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
@@ -330,6 +331,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
       setState(() {
         _birthdateController.text =
             "${pickedDate.day}-${pickedDate.month}-${pickedDate.year}";
+      });
+    }else{
+      setState(() {
+        _birthdateController.text = TextConstants.defaultCandidateBirthdate;
       });
     }
   }
@@ -419,7 +424,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           )
         ],
         onChanged: (value) async {
-          final districts = await ProvinceServices.getDistricts(value?.code);
+          final List<String> districts = (value != null) ? await _cubit.getDistricts(value.code) : [];
           setState(() {
             _selectedCity = value;
             _districts = districts;
@@ -482,6 +487,59 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     ];
   }
 
+  List<Widget> _buildSelectSchoolField() {
+    return [
+      ..._buildTitle(TextConstants.school),
+      DropdownButtonFormField<School?>(
+        isExpanded: true ,
+        style: WidgetConstants.black16Style,
+        value: _selectedSchool,
+        decoration: const InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          errorStyle: WidgetConstants.inputFieldErrStyle,
+          enabledBorder: WidgetConstants.inputFieldBorder,
+          focusedBorder: WidgetConstants.inputFieldBorder,
+          errorBorder: WidgetConstants.inputFieldBorder,
+          focusedErrorBorder: WidgetConstants.inputFieldBorder,
+          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        ),
+        items: [
+          const DropdownMenuItem(
+            value: null,
+            child: Text(
+              TextConstants.selectSchool,
+              style: WidgetConstants.black16Style,
+            ),
+          ),
+          ..._schools.map(
+                (school) => DropdownMenuItem(
+              value: school,
+              child: Tooltip(
+                message: school.name, // Hiển thị toàn bộ nội dung khi di chuột hoặc nhấn giữ
+                child: Text(
+                  school.name,
+                  style: WidgetConstants.black16Style,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ),
+          )
+        ],
+        onChanged: (value){
+          setState(() {
+            _selectedSchool = value;
+          });
+        },
+        icon: const Icon(
+          Icons.arrow_drop_down,
+          color: ColorConstants.main,
+        ),
+      )
+    ];
+  }
+
   Future<void> _handleUpdateInfo() async {
     if ((_formKey.currentState as FormState).validate() &&
         _selectedImg != null) {
@@ -495,23 +553,23 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           phone: _phoneController.text,
           gender: _selectedGender,
           location:
-              '${_addressController.text}, $_selectedDistrict, ${_selectedCity!.name}');
+              '${_addressController.text}, $_selectedDistrict, ${_selectedCity!.name}',
+          school: _selectedSchool
+      );
     }
   }
 
   List<Widget> _buildValidImageWidget() {
     final validateMessage =
         ValidateConstants.validateCandidateAvatar(_selectedImg);
-    return validateMessage != null
-        ? [
+    return [
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 20),
             ),
             Text(
-              validateMessage,
+              validateMessage!,
               style: WidgetConstants.redItalic16Style,
             )
-          ]
-        : [];
+          ];
   }
 }
