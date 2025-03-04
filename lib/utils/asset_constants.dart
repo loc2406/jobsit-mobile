@@ -4,8 +4,8 @@ class AssetConstants{
   static const logoHome = 'assets/images/logo_home_screen.png';
   static const iconGgLogin = 'assets/images/icon_google.svg';
   static const iconFbLogin = 'assets/images/icon_fb.svg';
-  static const iconVN = 'assets/images/ic_VN.png';
-  static const exCV = 'assets/images/example_cv.png';
+  static const iconVN = 'assets/images/viet_nam.png';
+  static const iconPerson = 'assets/images/ic_person.png';
   static const iconFilter = 'assets/images/ic_filter.svg';
   static const iconEdit = 'assets/images/ic_edit.svg';
   static const iconCalendar = 'assets/images/ic_calendar.svg';
