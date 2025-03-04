@@ -19,6 +19,7 @@ class CandidateServices {
   static const getCandidateAvatarUrl = '${BaseServices.url}/file/display/';
   static const updateCandidateUrl = '${BaseServices.url}/candidate/';
   static const universitiesUrl = '${BaseServices.url}/university';
+  static const updateSearchableUrl = '${BaseServices.url}/candidate/searchable/';
   static const updateMailReceiveUrl = '${BaseServices.url}/candidate/email-notification/';
   static const logoutUrl = '${BaseServices.url}/logout?token=';
 
@@ -202,6 +203,17 @@ class CandidateServices {
       }
     } catch (e) {
       throw Exception('${TextConstants.unexpectedError}: $e');
+    }
+  }
+
+  static updateSearchable(int id, String token) async {
+    final uri = Uri.parse('${CandidateServices.updateSearchableUrl}$id');
+
+    final response = await http.put(uri,
+        headers: BaseServices.getHeaderWithToken(token));
+
+    if (response.statusCode != 200) {
+      throw Exception(TextConstants.updateSearchableError);
     }
   }
 

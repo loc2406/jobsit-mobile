@@ -99,6 +99,7 @@ class TextConstants {
   static const updateCandidateInfoFailedError = 'Cập nhật thông tin ứng viên thất bại';
   static const provincesEmptyError = 'Danh sách thành phố bị trống';
   static const loadUniversitiesFailedError = 'Lấy dữ liệu truờng học thất bại';
+  static const updateSearchableError = 'Cập nhật trạng thái cho phép tìm kiếm hồ sơ thất bại';
   static const updateMailReceiveError = 'Cập nhật trạng thái nhận email thất bại';
   static const logoutFailedError = 'Đăng xuất thất bại';
 
