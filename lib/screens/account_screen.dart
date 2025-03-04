@@ -224,10 +224,8 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             SwitchListTile(
               value: _isAllowedSearch,
-              onChanged: (value) {
-                setState(() {
-                  // _isAllowedSearch = !_isAllowedSearch;
-                });
+              onChanged: (value) async {
+                await _cubit.updateSearchable(_candidate.id, _token);
               },
               title: const Text(
                 TextConstants.allowToSearch,
