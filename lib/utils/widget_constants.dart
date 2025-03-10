@@ -12,7 +12,10 @@ class WidgetConstants {
   static const main11Style = TextStyle(color: ColorConstants.main, fontSize: 11, fontWeight: FontWeight.w500);
   static const main12Style = TextStyle(color: ColorConstants.main, fontSize: 12, fontWeight: FontWeight.w500);
   static const main13Style = TextStyle(color: ColorConstants.main, fontSize: 13, fontWeight: FontWeight.w500);
+  static const main22Style = TextStyle(color: ColorConstants.main, fontSize: 22, fontWeight: FontWeight.w500);
   static const black12Style = TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w500);
+  static const black11Style = TextStyle(color: Colors.black, fontSize: 11, fontWeight: FontWeight.w500);
+  static const black14Style = TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500);
   static const black16Style = TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500);
   static const white12Style = TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500);
 

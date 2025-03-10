@@ -21,10 +21,10 @@ class JobCubit extends Cubit<JobState> {
   final _limit = 5;
 
   Future<List<Province>> getProvinces() async {
-    try{
+    try {
       final provinces = await ProvinceServices.getProvinces();
       return provinces;
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
       return [];
     }
@@ -37,7 +37,6 @@ class JobCubit extends Cubit<JobState> {
       String position = '',
       String major = '',
       required int no}) async {
-
     emit(JobState.loading());
 
     try {

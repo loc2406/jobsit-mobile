@@ -107,7 +107,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       SizedBox(width: 8),
                       CircleAvatar(
                         radius: 18,
-                        backgroundImage: AssetImage(AssetConstants.exCV),
+                        backgroundImage: AssetImage(AssetConstants.iconPerson),
                       ),
                     ],
                   ),

@@ -14,4 +14,7 @@ class AssetConstants{
   static const iconLocation = 'assets/images/ic_location.svg';
   static const iconMessage = 'assets/images/ic_message.svg';
   static const iconProfile = 'assets/images/ic_profile.svg';
+  static const iconBag = 'assets/images/ic_bag.svg';
+  static const iconSalary = 'assets/images/ic_salary.svg';
+  static const iconBookmark = 'assets/images/ic_bookmark.svg';
 }

@@ -3,15 +3,27 @@ import 'package:jobsit_mobile/services/job_services.dart';
 import '../models/job.dart';
 
 class ConvertConstants {
-  static List<JobPosition> convertToListPositions(List<dynamic> list) {
+  static List<JobPosition> convertToListJobPositions(List<dynamic> list) {
     return list
         .map((map) => JobPosition.fromMap(map as Map<String, dynamic>))
+        .toList();
+  }
+
+  static List<JobSchedule> convertToListJobSchedules(List<dynamic> list) {
+    return list
+        .map((map) => JobSchedule.fromMap(map as Map<String, dynamic>))
         .toList();
   }
 
   static List<Job> convertToListJobs(List<dynamic> list) {
     return list
         .map((jobMap) => Job.fromMap(jobMap as Map<String, dynamic>))
+        .toList();
+  }
+
+  static List<Job> convertToListSavedJobs(List<dynamic> list) {
+    return list
+        .map((jobMap) => Job.fromSavedMap(jobMap as Map<String, dynamic>))
         .toList();
   }
 

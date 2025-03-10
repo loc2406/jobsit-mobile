@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:http/http.dart' as http;
 import 'package:jobsit_mobile/cubits/candidate/edit_success_state.dart';
+import 'package:jobsit_mobile/utils/preferences/shared_prefs.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../../models/candidate.dart';
@@ -70,6 +71,8 @@ class CandidateCubit extends Cubit<CandidateState> {
 
       if (token.isNotEmpty && candidateId != null) {
         final candidate = await CandidateServices.getCandidateById(candidateId);
+        await SharedPrefs.saveCandidateToken(token);
+        await SharedPrefs.saveCandidateId(candidateId);
         emit(CandidateState.loginSuccess(token, candidate));
       } else {
         emit(CandidateState.error(TextConstants.tokenOrCandidateIdError));
@@ -176,6 +179,14 @@ class CandidateCubit extends Cubit<CandidateState> {
     }catch(e){
       debugPrint(e.toString());
       return false;
+    }
+  }
+
+  void setLoginStatus({required bool status, String? token, Candidate? candidate}) {
+    if (status){
+      emit(CandidateState.loginSuccess(token!, candidate!));
+    }else{
+      emit(CandidateState.noLoggedIn());
     }
   }
 }

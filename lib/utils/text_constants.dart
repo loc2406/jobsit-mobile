@@ -102,6 +102,9 @@ class TextConstants {
   static const updateSearchableError = 'Cập nhật trạng thái cho phép tìm kiếm hồ sơ thất bại';
   static const updateMailReceiveError = 'Cập nhật trạng thái nhận email thất bại';
   static const logoutFailedError = 'Đăng xuất thất bại';
+  static const getSavedJobError = 'Lấy danh sách công việc đã lưu thất bại!';
+  static const saveJobError = 'Lưu công việc thất bại!';
+  static const deleteJobError = 'Lưu công việc thất bại!';
 
 // Message
   static const noMatchingJobAtThisTimeMess = 'Rất tiếc, hiện tại không có công việc phù hợp được tìm thấy';
@@ -109,6 +112,8 @@ class TextConstants {
   static const sentOtpMess = 'Đã gửi lại mã OTP';
   static const editSuccessful = 'Chỉnh sửa thành công';
   static const youAreLogout = 'Bạn vừa đăng xuất';
+  static const saveJobSuccessful = 'Lưu công việc thành công';
+  static const deleteJobSuccessful = 'Hủy lưu công việc thành công';
 
 // Bottom navigation bar
   static const home = 'Trang chủ';
@@ -154,8 +159,25 @@ class TextConstants {
   static const university = 'Trường học';
   static const selectUniversity = 'Chọn trường học';
 
+  // Job Detail
+  static const  position = 'Vị trí';
+  static const  dontHave = 'Không có';
+  static const  type = 'Hình thức';
+  static const  salary = 'Lương';
+  static const  deadline = 'Thời hạn';
+  static const  jobDetail = 'Chi tiết công việc';
+  static const  defaultDate = 'dd/MM/yyyy';
+  static const  description = 'Thông tin';
+  static const  company = 'Công ty';
+  static const  jobDescription = 'Mô tả công việc';
+  static const  companyOverview = 'Giới thiệu công ty';
+  static const  companyAddress = 'Địa chỉ công ty';
+  static const  apply = 'Ứng tuyển';
+
+  // Appbar title
+  static const savedJob = 'Công việc đã lưu';
+
   // Other
-  static const navigateInputOTPScreen = 'navigateInputOTPScreen';
   static const  candidate = 'candidate';
   static const  token = 'token';
 }
