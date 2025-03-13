@@ -8,12 +8,14 @@ import 'package:jobsit_mobile/cubits/candidate/error_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/loading_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/no_logged_in_state.dart';
+import 'package:jobsit_mobile/cubits/saved_jobs/saved_job_cubit.dart';
 import 'package:jobsit_mobile/screens/edit_account_screen.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/services/base_services.dart';
 import 'package:jobsit_mobile/services/candidate_services.dart';
 import 'package:jobsit_mobile/utils/asset_constants.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
+import 'package:jobsit_mobile/utils/preferences/shared_prefs.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
@@ -303,7 +305,10 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               onTap: () async {
                 final isLogout = await _cubit.logout(_token);
+
                 if (mounted && isLogout){
+                  SharedPrefs.saveCandidateToken('');
+                  context.read<SavedJobCubit>().clearAllSavedJobs();
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(TextConstants.youAreLogout)));
                 }
               },

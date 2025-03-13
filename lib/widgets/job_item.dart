@@ -108,7 +108,6 @@ class JobItemState extends State<JobItem> {
                 GestureDetector(
                   onTap: () async {
                     await onIconBookmarkClicked.call();
-                    setState(() {});
                   },
                   child: BlocBuilder<SavedJobCubit, SavedJobsState>(
                     builder: (context, state) {

@@ -180,4 +180,8 @@ class TextConstants {
   // Other
   static const  candidate = 'candidate';
   static const  token = 'token';
+  static const  attachedCV = 'Attached CV';
+  static const addNewCV = 'Thêm CV mới';
+  static const coverLetterHint = 'Viết giới thiệu ngắn gọn về bản thân bạn';
+  static const submit = 'Ứng tuyển';
 }

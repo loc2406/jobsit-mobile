@@ -14,6 +14,7 @@ import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
 
+import '../cubits/saved_jobs/saved_job_state.dart';
 import '../models/job.dart';
 import '../utils/color_constants.dart';
 
@@ -82,7 +83,17 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 });
               }
             },
-            child: Icon(_isSaved ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, color: ColorConstants.main,),
+            child: BlocBuilder<SavedJobCubit, SavedJobsState>(
+              builder: (context, state) {
+                final isSaved = _savedJobCubit.allSavedJobs().any((job)=> job.jobId == _job.jobId);
+                return Icon(
+                  isSaved
+                      ? CupertinoIcons.bookmark_fill
+                      : CupertinoIcons.bookmark,
+                  color: ColorConstants.main,
+                );
+              },
+            ),
           ),
           const SizedBox(width: 25,)
         ],

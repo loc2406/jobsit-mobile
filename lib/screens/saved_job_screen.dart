@@ -82,7 +82,9 @@ class _SavedJobScreenState extends State<SavedJobScreen> {
 
   Widget _buildSavedJob() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ValueConstants.deviceWidthValue(uiValue: 25), vertical: 10),
+      margin: EdgeInsets.symmetric(
+          horizontal: ValueConstants.deviceWidthValue(uiValue: 25),
+          vertical: 10),
       child: Column(
         children: [
           Expanded(
@@ -108,7 +110,8 @@ class _SavedJobScreenState extends State<SavedJobScreen> {
                     _pagingController.error = state.errMessage;
                   } else if (state is EmptyState) {
                     _pagingController.itemList = [];
-                  } else if (state is SaveJobSuccessState|| state is DeleteJobSuccessState){
+                  } else if (state is SaveJobSuccessState ||
+                      state is DeleteJobSuccessState) {
                     _pagingController.itemList = [];
                   }
                 },
@@ -124,14 +127,20 @@ class _SavedJobScreenState extends State<SavedJobScreen> {
     return PagedListView<int, Job>(
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Job>(
-        itemBuilder: (context, job, index) => JobItem(
-          job: job,
-          onIconBookmarkClicked: () async {},
-        ),
-        newPageProgressIndicatorBuilder: (_) => const Center(
-          child: WidgetConstants.circularProgress,
-        ),
-      ),
+          itemBuilder: (context, job, index) => JobItem(
+                job: job,
+                onIconBookmarkClicked: () async {
+                  await _savedJobCubit.deleteJob(job.jobId,
+                      (_candidateCubit.state as LoginSuccessState).token);
+                },
+              ),
+          newPageProgressIndicatorBuilder: (_) => const Center(
+                child: WidgetConstants.circularProgress,
+              ),
+          noItemsFoundIndicatorBuilder: (context) => const Center(
+                child: Text(TextConstants.noData,
+                    style: WidgetConstants.black16Style),
+              )),
     );
   }
 

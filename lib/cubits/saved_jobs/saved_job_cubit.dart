@@ -15,6 +15,10 @@ class SavedJobCubit extends Cubit<SavedJobsState> {
 
   List<Job> allSavedJobs() => _savedJobs;
 
+  void clearAllSavedJobs(){
+    _savedJobs = [];
+  }
+
   getSavedJobs({required String token, required int no}) async {
     emit(SavedJobsState.loading());
     try {

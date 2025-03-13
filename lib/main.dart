@@ -62,7 +62,7 @@ class MainStateScreen extends State<MainScreen>{
 
   Future<void> _checkLoginStatus() async {
     String? token = await SharedPrefs.getCandidateToken();
-    if (token != null){
+    if (token != null && token.isNotEmpty){
       bool isExpired = JwtDecoder.isExpired(token);
       int? id = await SharedPrefs.getCandidateId();
 
