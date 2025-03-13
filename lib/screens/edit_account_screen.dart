@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/edit_success_state.dart';
+import 'package:jobsit_mobile/screens/search_bottom_sheet_screen.dart';
 import 'package:jobsit_mobile/services/candidate_services.dart';
 import 'package:jobsit_mobile/services/province_services.dart';
 import 'package:jobsit_mobile/utils/only_letters_input_formatter.dart';
@@ -40,6 +41,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
   final _schoolController = TextEditingController();
+  final _cityController = TextEditingController();
   bool? _selectedGender;
   Province? _selectedCity;
   String? _selectedDistrict;
@@ -396,51 +398,77 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
   List<Widget> _buildSelectCityField() {
     return [
+      // ..._buildTitle(TextConstants.city),
+      // DropdownButtonFormField<Province?>(
+      //   style: WidgetConstants.black16Style,
+      //   value: _selectedCity,
+      //   decoration: const InputDecoration(
+      //     filled: true,
+      //     fillColor: Colors.white,
+      //     errorStyle: WidgetConstants.inputFieldErrStyle,
+      //     enabledBorder: WidgetConstants.inputFieldBorder,
+      //     focusedBorder: WidgetConstants.inputFieldBorder,
+      //     errorBorder: WidgetConstants.inputFieldBorder,
+      //     focusedErrorBorder: WidgetConstants.inputFieldBorder,
+      //     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      //   ),
+      //   items: [
+      //     const DropdownMenuItem(
+      //       value: null,
+      //       child: Text(
+      //         TextConstants.selectLocation,
+      //         style: WidgetConstants.black16Style,
+      //       ),
+      //     ),
+      //     ..._cities.map(
+      //       (province) => DropdownMenuItem(
+      //         value: province,
+      //         child: Text(
+      //           province.name,
+      //           style: WidgetConstants.black16Style,
+      //         ),
+      //       ),
+      //     )
+      //   ],
+      //   onChanged: (value) async {
+      //     final List<String> districts = (value != null) ? await _cubit.getDistricts(value.code) : [];
+      //     setState(() {
+      //       _selectedCity = value;
+      //       _districts = districts;
+      //     });
+      //   },
+      //   icon: const Icon(
+      //     Icons.arrow_drop_down,
+      //     color: ColorConstants.main,
+      //   ),
+      //   validator: ValidateConstants.validateCity,
+      // )
       ..._buildTitle(TextConstants.city),
-      DropdownButtonFormField<Province?>(
+      TextFormField(
         style: WidgetConstants.black16Style,
-        value: _selectedCity,
+        controller: _cityController,
+        readOnly: true,
         decoration: const InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          errorStyle: WidgetConstants.inputFieldErrStyle,
+          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          suffixIcon: Icon(Icons.arrow_drop_down, color: ColorConstants.main,),
           enabledBorder: WidgetConstants.inputFieldBorder,
           focusedBorder: WidgetConstants.inputFieldBorder,
           errorBorder: WidgetConstants.inputFieldBorder,
           focusedErrorBorder: WidgetConstants.inputFieldBorder,
-          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          errorStyle: WidgetConstants.inputFieldErrStyle,
         ),
-        items: [
-          const DropdownMenuItem(
-            value: null,
-            child: Text(
-              TextConstants.selectLocation,
-              style: WidgetConstants.black16Style,
-            ),
-          ),
-          ..._cities.map(
-            (province) => DropdownMenuItem(
-              value: province,
-              child: Text(
-                province.name,
-                style: WidgetConstants.black16Style,
-              ),
-            ),
-          )
-        ],
-        onChanged: (value) async {
-          final List<String> districts = (value != null) ? await _cubit.getDistricts(value.code) : [];
-          setState(() {
-            _selectedCity = value;
-            _districts = districts;
-          });
+        onTap: (){
+          showModalBottomSheet(context: context, builder: (context)=> SearchBottomSheet<Province>(searchHint: 'Search city...', items: _cities, itemLabel: (city) => city.name, onSelected: (city) async {
+            final List<String> districts = (city != null) ? await _cubit.getDistricts(city.code) : [];
+                setState(() {
+                  _selectedCity = city;
+                  _districts = districts;
+                });
+          }));
         },
-        icon: const Icon(
-          Icons.arrow_drop_down,
-          color: ColorConstants.main,
-        ),
-        validator: ValidateConstants.validateCity,
-      )
+      ),
     ];
   }
 
