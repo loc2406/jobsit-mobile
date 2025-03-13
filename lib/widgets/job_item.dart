@@ -13,7 +13,7 @@ import '../models/job.dart';
 import '../utils/value_constants.dart';
 
 class JobItem extends StatefulWidget {
-  JobItem({super.key, required this.job, required this.onIconBookmarkClicked});
+  const JobItem({super.key, required this.job, required this.onIconBookmarkClicked});
 
   final Job job;
   final Future<void> Function() onIconBookmarkClicked;

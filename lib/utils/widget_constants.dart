@@ -18,7 +18,7 @@ class WidgetConstants {
   static const black14Style = TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500);
   static const black16Style = TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500);
   static const white12Style = TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500);
-  static const gray12Style = TextStyle(color: ColorConstants.grayBackground, fontSize: 12, fontWeight: FontWeight.w500);
+  static const grey12Style = TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w500);
 
   // Text style - Bold
   static const mainBold16Style = TextStyle(color: ColorConstants.main, fontSize: 16, fontWeight: FontWeight.w700);

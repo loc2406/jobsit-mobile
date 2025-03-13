@@ -73,6 +73,8 @@ class TextConstants {
   static const pleaseSelectDistrict = 'Vui lòng chọn Quận\/Huyện';
   static const pleaseInputCorrectAddressRegex = 'Vui lòng nhập đúng định dạng địa chỉ đang ở';
   static const pleaseInputAddress = 'Vui lòng nhập địa chỉ';
+  static const pleaseUploadCV = 'Vui lòng tải lên CV đính kèm';
+  static const onlySupportCVFile = 'Chỉ hỗ trợ file .doc, .docx và .pdf và tối đa 512 KB';
 
   // Verify account
   static const verifyEmail = "Xác thực Email";
@@ -103,8 +105,10 @@ class TextConstants {
   static const updateMailReceiveError = 'Cập nhật trạng thái nhận email thất bại';
   static const logoutFailedError = 'Đăng xuất thất bại';
   static const getSavedJobError = 'Lấy danh sách công việc đã lưu thất bại!';
-  static const saveJobError = 'Lưu công việc thất bại!';
-  static const deleteJobError = 'Lưu công việc thất bại!';
+  static const saveJobError = 'Lưu việc làm thất bại!';
+  static const deleteJobError = 'Lưu việc làm thất bại!';
+  static const applyError = 'Ứng tuyển thất bại!';
+  static const youAreAppliedThisJobError = 'Bạn đã ứng tuyển công việc này!';
 
 // Message
   static const noMatchingJobAtThisTimeMess = 'Rất tiếc, hiện tại không có công việc phù hợp được tìm thấy';
@@ -112,8 +116,9 @@ class TextConstants {
   static const sentOtpMess = 'Đã gửi lại mã OTP';
   static const editSuccessful = 'Chỉnh sửa thành công';
   static const youAreLogout = 'Bạn vừa đăng xuất';
-  static const saveJobSuccessful = 'Lưu công việc thành công';
-  static const deleteJobSuccessful = 'Hủy lưu công việc thành công';
+  static const saveJobSuccessful = 'Lưu việc làm thành công';
+  static const deleteJobSuccessful = 'Hủy lưu việc làm thành công';
+  static const applySuccessful = 'Ứng tuyển thành công';
 
 // Bottom navigation bar
   static const home = 'Trang chủ';
@@ -183,5 +188,5 @@ class TextConstants {
   static const  attachedCV = 'Attached CV';
   static const addNewCV = 'Thêm CV mới';
   static const coverLetterHint = 'Viết giới thiệu ngắn gọn về bản thân bạn';
-  static const submit = 'Ứng tuyển';
+  static const submit = 'Xác nhận';
 }

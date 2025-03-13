@@ -62,7 +62,7 @@ class _MenuScreenState extends State<MenuScreen> {
               label: TextConstants.saved),
           BottomNavigationBarItem(
               icon: SvgPicture.asset(AssetConstants.iconProfile, width: 24, height: 24, colorFilter: ColorFilter.mode(_currentIndex == 3 ? ColorConstants.main : Colors.black, BlendMode.srcIn),),
-              label: TextConstants.saved),
+              label: TextConstants.profile),
         ],
         currentIndex: _currentIndex,
         onTap: (index) {

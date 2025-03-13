@@ -1,15 +1,24 @@
 import 'dart:io';
-
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
+import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
 
+import '../cubits/job/job_cubit.dart';
+import '../screens/cv_viewer_screen.dart';
+
 class ApplyBottomSheet extends StatefulWidget {
-  const ApplyBottomSheet({super.key});
+  const ApplyBottomSheet({super.key, required this.jobId});
+
+  final int jobId;
 
   @override
   State<ApplyBottomSheet> createState() => _ApplyBottomSheetState();
@@ -19,18 +28,45 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
 
   File? _selectedCV;
   final TextEditingController _controller = TextEditingController();
+  late final int _jobId;
+  String? _validateMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _jobId = widget.jobId;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(24),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           const Text(TextConstants.attachedCV, style: WidgetConstants.mainBold16Style),
           SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 20),),
           GestureDetector(
+            onTap: () async => await _selectCV(),
+            onLongPress: (){
+              if (_selectedCV != null){
+                if (path.basename(_selectedCV!.path).endsWith('.pdf')){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CVViewerScreen(path: _selectedCV!.path),
+                    ),
+                  );
+                }else{
+                  OpenFile.open(_selectedCV!.path);
+                }
+              }
+            },
             child: Container(
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
+                color: Colors.white,
                 border: Border.all(color: ColorConstants.main),
                 borderRadius: BorderRadius.circular(8)
               ),
@@ -38,19 +74,28 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
               child: _selectedCV != null ? Text(path.basename(_selectedCV!.path), style: WidgetConstants.blackBold16Style,) : const Text(TextConstants.addNewCV, style: WidgetConstants.blackBold16Style,),
             ),
           ),
-          SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 47),),
+          if (_validateMessage != null) ..._buildErrMessage(),
+          SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 20),),
           const Text(TextConstants.coverLetter, style: WidgetConstants.mainBold16Style),
           SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 20),),
           TextField(
             controller: _controller,
             minLines: 5,
+            maxLines: 5,
             decoration: const InputDecoration(
+              fillColor: Colors.white,
+              filled: true,
+              enabledBorder: WidgetConstants.inputFieldBorder,
+              focusedBorder: WidgetConstants.inputFieldBorder,
               hintText: TextConstants.coverLetterHint,
-              hintStyle: WidgetConstants.gray12Style
+              hintStyle: WidgetConstants.grey12Style
             )
           ),
+          SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 20),),
           GestureDetector(
+            onTap: () async => await handleApplyJob(),
             child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
               decoration: BoxDecoration(
                 color: ColorConstants.main,
                 borderRadius: BorderRadius.circular(16)
@@ -62,5 +107,54 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
         ],
       ),
     );
+  }
+
+  List<Widget> _buildErrMessage(){
+    return [
+      SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 20),),
+      Text(_validateMessage!, style: WidgetConstants.inputFieldErrStyle),
+    ];
+  }
+
+  Future<void> _selectCV() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc', 'docx'],
+    );
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      setState(() {
+        _selectedCV = file;
+      });
+    }
+  }
+
+  Future<void> handleApplyJob() async {
+    if (isValidate()){
+      await context.read<JobCubit>().applyJob(token: (context.read<CandidateCubit>().state as LoginSuccessState).token, cvFile: _selectedCV!, letter: _controller.text, idJob: _jobId);
+      if (mounted) Navigator.pop(context);
+    }
+  }
+
+  bool isValidate(){
+    if (_selectedCV == null){
+      setState(() {
+        _validateMessage = TextConstants.pleaseUploadCV;
+      });
+      return false;
+    }
+
+    if ((_selectedCV!.path.endsWith('.pdf') || _selectedCV!.path.endsWith('.doc') || _selectedCV!.path.endsWith('.docx')) && _selectedCV!.lengthSync() / 1024 <= 512){
+      setState(() {
+        _validateMessage = null;
+      });
+      return true;
+    }
+
+    setState(() {
+      _validateMessage = TextConstants.onlySupportCVFile;
+    });
+    return false;
   }
 }

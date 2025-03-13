@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:jobsit_mobile/services/base_services.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,7 @@ class JobServices {
   static const getSavedJobUrl = '${BaseServices.url}/candidate-job-care?';
   static const saveJobUrl = '${BaseServices.url}/candidate-job-care?idJob=';
   static const deleteJobUrl = '${BaseServices.url}/candidate-job-care?idJob=';
+  static const applyJobUrl = '${BaseServices.url}/candidate-application';
 
   // Response key
   static const contentsKey = 'contents';
@@ -33,6 +35,8 @@ class JobServices {
   static const salaryMinKey = 'salaryMin';
   static const salaryMaxKey = 'salaryMax';
   static const jobDTOKey = 'jobDTO';
+  static const referenceLetterKey = 'referenceLetter';
+  static const candidateApplicationKey = 'candidateApplication';
 
   // Response value
   static const dataExistingValue = 'DATA EXISTING';
@@ -114,6 +118,41 @@ class JobServices {
 
     if (response.statusCode != 200) {
       throw Exception(TextConstants.deleteJobError);
+    }
+  }
+
+  static applyJob({required String token, required File cvFile, required String letter, required int idJob}) async {
+    final uri = Uri.parse(applyJobUrl);
+
+    final body = {
+      jobDTOKey: {
+        idKey: idJob,
+      },
+      referenceLetterKey: letter
+    };
+
+    var request = http.MultipartRequest("POST", uri);
+
+    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Content-Type'] = 'multipart/form-data';
+
+    request.fields[candidateApplicationKey] = jsonEncode(body);
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'fileCV',
+        cvFile.path,
+      ),
+    );
+
+    final response = await request.send();
+
+    if (response.statusCode != 201) {
+      if (response.statusCode == 409){
+        throw Exception(TextConstants.youAreAppliedThisJobError);
+      }else{
+        throw Exception(TextConstants.applyError);
+      }
     }
   }
 }

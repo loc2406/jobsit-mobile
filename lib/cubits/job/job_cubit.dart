@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:jobsit_mobile/cubits/job/apply_success_state.dart';
 import 'package:jobsit_mobile/utils/convert_constants.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 
@@ -70,6 +72,15 @@ class JobCubit extends Cubit<JobState> {
       }
     } catch (e) {
       emit(JobState.error(e.toString()));
+    }
+  }
+
+  Future<void> applyJob({required String token, required File cvFile, required String letter, required int idJob}) async {
+    try{
+      await JobServices.applyJob(token: token, cvFile: cvFile, letter: letter, idJob: idJob);
+      emit(JobState.applySuccess());
+    }catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

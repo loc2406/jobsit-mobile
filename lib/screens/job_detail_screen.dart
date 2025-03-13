@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/no_logged_in_state.dart';
+import 'package:jobsit_mobile/cubits/job/apply_success_state.dart';
 import 'package:jobsit_mobile/cubits/saved_jobs/saved_job_cubit.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/services/job_services.dart';
@@ -13,7 +14,10 @@ import 'package:jobsit_mobile/utils/asset_constants.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
+import 'package:jobsit_mobile/widgets/apply_bottom_sheet.dart';
 
+import '../cubits/job/job_cubit.dart';
+import '../cubits/job/job_state.dart';
 import '../cubits/saved_jobs/saved_job_state.dart';
 import '../models/job.dart';
 import '../utils/color_constants.dart';
@@ -45,14 +49,21 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     super.didChangeDependencies();
     if (!_isGetData) {
       _job = ModalRoute.of(context)!.settings.arguments as Job;
-      _isSaved = _savedJobCubit.allSavedJobs().any((j)=> j.jobId == _job.jobId);
+      _isSaved =
+          _savedJobCubit.allSavedJobs().any((j) => j.jobId == _job.jobId);
       _isGetData = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<JobCubit, JobState>(
+        listener: (context, state) {
+          if (state is ApplySuccessState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text(TextConstants.applySuccessful)));
+          }
+        }, child: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -66,16 +77,21 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         actions: [
           GestureDetector(
             onTap: () async {
-              if (_candidateCubit.state is NoLoggedInState){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+              if (_candidateCubit.state is NoLoggedInState) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
                 return;
               }
 
-              if (_candidateCubit.state is LoginSuccessState){
-                if (_isSaved){
-                  await _savedJobCubit.deleteJob(_job.jobId, (_candidateCubit.state as LoginSuccessState).token);
-                }else{
-                  await _savedJobCubit.saveJob(_job.jobId, (_candidateCubit.state as LoginSuccessState).token);
+              if (_candidateCubit.state is LoginSuccessState) {
+                if (_isSaved) {
+                  await _savedJobCubit.deleteJob(_job.jobId,
+                      (_candidateCubit.state as LoginSuccessState).token);
+                } else {
+                  await _savedJobCubit.saveJob(_job.jobId,
+                      (_candidateCubit.state as LoginSuccessState).token);
                 }
 
                 setState(() {
@@ -85,7 +101,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
             },
             child: BlocBuilder<SavedJobCubit, SavedJobsState>(
               builder: (context, state) {
-                final isSaved = _savedJobCubit.allSavedJobs().any((job)=> job.jobId == _job.jobId);
+                final isSaved = _savedJobCubit
+                    .allSavedJobs()
+                    .any((job) => job.jobId == _job.jobId);
                 return Icon(
                   isSaved
                       ? CupertinoIcons.bookmark_fill
@@ -95,10 +113,13 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
               },
             ),
           ),
-          const SizedBox(width: 25,)
+          const SizedBox(
+            width: 25,
+          )
         ],
       ),
       body: _buildBody(),
+    ),
     );
   }
 
@@ -127,13 +148,14 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                         borderRadius: BorderRadius.circular(8)),
                     child: _job.companyLogo != null
                         ? Image.network(
-                            '${JobServices.displayJobLogoUrl}${_job.companyLogo}',
-                            width: ValueConstants.deviceWidthValue(uiValue: 86),
-                            height:
-                                ValueConstants.deviceWidthValue(uiValue: 86),
-                            errorBuilder: (context, object, stacktrace) =>
-                                _buildDefaultLogo(),
-                          )
+                      '${JobServices.displayJobLogoUrl}${_job.companyLogo}',
+                      width:
+                      ValueConstants.deviceWidthValue(uiValue: 86),
+                      height:
+                      ValueConstants.deviceWidthValue(uiValue: 86),
+                      errorBuilder: (context, object, stacktrace) =>
+                          _buildDefaultLogo(),
+                    )
                         : _buildDefaultLogo(),
                   ),
                   SizedBox(
@@ -142,22 +164,34 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                   Text(
                     _job.jobName,
                     style: WidgetConstants.main22Style,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: ValueConstants.deviceHeightValue(uiValue: 10),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        _job.companyName,
-                        style: WidgetConstants.black16Style,
+                      Expanded(
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          _job.companyName,
+                          style: WidgetConstants.black16Style,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       SizedBox(
                         width: ValueConstants.deviceWidthValue(uiValue: 5),
                       ),
                       SvgPicture.asset(AssetConstants.iconLocation),
-                      Text(
-                        _job.location,
-                        style: WidgetConstants.black16Style,
-                      ),
+                      Expanded(
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          _job.location,
+                          overflow: TextOverflow.ellipsis,
+                          style: WidgetConstants.black16Style,
+                        ),
+                      )
                     ],
                   ),
                   SizedBox(
@@ -192,7 +226,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                           asset: AssetConstants.iconSalary,
                           title: TextConstants.salary,
                           content:
-                              '\$${_job.salaryMin}k - \$${_job.salaryMax}k'),
+                          '\$${_job.salaryMin}k - \$${_job.salaryMax}k'),
                       _buildJobSubDetail(
                           asset: AssetConstants.iconCalendar,
                           title: TextConstants.deadline,
@@ -220,11 +254,11 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                   ),
                   Expanded(
                       child: SizedBox(
-                    width: ValueConstants.screenWidth,
-                    child: _selectedTab == TextConstants.description
-                        ? _buildJobDescription()
-                        : _buildCompanyOverview(),
-                  )),
+                        width: ValueConstants.screenWidth,
+                        child: _selectedTab == TextConstants.description
+                            ? _buildJobDescription()
+                            : _buildCompanyOverview(),
+                      )),
                 ],
               ),
             ),
@@ -234,10 +268,11 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
             color: Colors.white,
             padding: const EdgeInsets.all(16),
             child: GestureDetector(
+              onTap: showApplyBottomSheet,
               child: Container(
                 alignment: Alignment.center,
                 padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                 decoration: BoxDecoration(
                   color: ColorConstants.main,
                   borderRadius: BorderRadius.circular(16),
@@ -309,6 +344,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         Text(
           content,
           style: WidgetConstants.black12Style,
+          softWrap: true,
         ),
       ],
     );
@@ -397,14 +433,29 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
               SizedBox(
                 width: ValueConstants.deviceWidthValue(uiValue: 5),
               ),
-              Text(
-                _job.location,
-                style: WidgetConstants.black14Style,
+              Expanded(
+                child: Text(
+                  _job.location,
+                  style: WidgetConstants.black14Style,
+                  softWrap: true,
+                ),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  void showApplyBottomSheet() {
+    if (_candidateCubit.state is NoLoggedInState) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+      return;
+    }
+
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => ApplyBottomSheet(jobId: _job.jobId));
   }
 }
