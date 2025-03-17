@@ -17,11 +17,11 @@ class JobItem extends StatefulWidget {
   const JobItem(
       {super.key,
       required this.job,
-      required this.onIconBookmarkClicked,
+        this.onIconBookmarkClicked,
       this.isApplied = false});
 
   final Job job;
-  final Future<void> Function() onIconBookmarkClicked;
+  final Future<void> Function()? onIconBookmarkClicked;
   final bool isApplied;
 
   @override
@@ -30,7 +30,7 @@ class JobItem extends StatefulWidget {
 
 class JobItemState extends State<JobItem> {
   late final Job job;
-  late final Future<void> Function() onIconBookmarkClicked;
+  late final Future<void> Function()? onIconBookmarkClicked;
   late final bool isApplied;
   late final SavedJobCubit _savedJobCubit;
   late int differenceInDays;
@@ -64,6 +64,7 @@ class JobItemState extends State<JobItem> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   alignment: Alignment.center,
@@ -116,7 +117,7 @@ class JobItemState extends State<JobItem> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      await onIconBookmarkClicked.call();
+                      await onIconBookmarkClicked?.call();
                     },
                     child: BlocBuilder<SavedJobCubit, SavedJobsState>(
                       builder: (context, state) {

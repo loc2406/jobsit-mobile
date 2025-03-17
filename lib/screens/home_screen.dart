@@ -94,11 +94,13 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             GestureDetector(
               child: Container(
+                width: 24,
+                height: 24,
                 decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
                     border: Border.fromBorderSide(
-                        BorderSide(color: ColorConstants.main, width: 2)),
-                    borderRadius: BorderRadius.all(Radius.circular(200))),
-                child: const Icon(Icons.person, color: ColorConstants.main),
+                        BorderSide(color: ColorConstants.main, width: 2)),),
+                child: ClipOval(child: Image.asset(AssetConstants.iconVN, fit: BoxFit.cover,),),
               ),
             ),
             SizedBox(

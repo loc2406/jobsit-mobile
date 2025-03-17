@@ -181,6 +181,7 @@ class TextConstants {
   static const  companyAddress = 'Địa chỉ công ty';
   static const  apply = 'Ứng tuyển';
   static const otherJobs = "Các việc làm khác";
+  static const noOtherJobs = "Không có công việc nào khác";
 
   // Applied Job
   static const appliedJob = 'Công việc đã ứng tuyển';

@@ -66,19 +66,11 @@ class JobCubit extends Cubit<JobState> {
     }
   }
 
-  Future<void> getOtherJobs(int no, Job job) async {
-    try {
-      final data = await JobServices.getOtherJobs(
-          no: no, companyId: job.companyId, limit: _limit);
+  Future<List<Job>> getOtherJobs(int no, Job job) async {
+    final data = await JobServices.getOtherJobs(
+        no: no, companyId: job.companyId, limit: 24);
 
-      final contents = data[JobServices.contentsKey];
-      final isLastPage = data[JobServices.lastKey] == true;
-
-      final otherJobs = ConvertConstants.convertToListJobs(contents);
-
-      // emit(JobState.viewDetail(job, otherJobs, no, isLastPage));
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    final contents = data[JobServices.contentsKey];
+    return ConvertConstants.convertToListJobs(contents);
   }
 }

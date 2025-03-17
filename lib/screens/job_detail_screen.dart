@@ -17,6 +17,7 @@ import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
 import 'package:jobsit_mobile/widgets/apply_bottom_sheet.dart';
+import 'package:jobsit_mobile/widgets/job_item.dart';
 
 import '../cubits/applied_jobs/applied_job_cubit.dart';
 import '../cubits/applied_jobs/error_state.dart';
@@ -35,13 +36,13 @@ class JobDetailScreen extends StatefulWidget {
 
 class _JobDetailScreenState extends State<JobDetailScreen> {
   late Job _job;
-  bool _isGetData = false;
+  bool _isInitData = false;
   String _selectedTab = TextConstants.description;
   late SavedJobCubit _savedJobCubit;
   late CandidateCubit _candidateCubit;
   late JobCubit _jobCubit;
   bool _isSaved = false;
-  PagingController _otherJobsController =PagingController(firstPageKey: 0);
+  List<Job> _otherJobs = [];
 
   @override
   void initState() {
@@ -51,89 +52,94 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     _jobCubit = context.read<JobCubit>();
   }
 
-  void _getOtherJobs(int no, Job job){
-    _jobCubit.getOtherJobs(no, job);
+  Future<void> _getOtherJobs() async {
+    final otherJobs = await _jobCubit.getOtherJobs(0, _job);
+    setState(() {
+      _otherJobs = otherJobs;
+    });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_isGetData) {
+    if (!_isInitData) {
       _job = ModalRoute.of(context)!.settings.arguments as Job;
-      _isSaved = _savedJobCubit.allSavedJobs().any((j) => j.jobId == _job.jobId);
-      _otherJobsController.addPageRequestListener((pageKey){
-        _getOtherJobs(pageKey, _job);
-      });
-      _isGetData = true;
+      _isSaved =
+          _savedJobCubit.allSavedJobs().any((j) => j.jobId == _job.jobId);
+      _getOtherJobs();
+      _isInitData = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AppliedJobCubit, AppliedJobState>(
-        listener: (context, state) {
-          if (state is AppliedJobSuccessState) {
-            WidgetConstants.showSnackBar(context: this.context, message: TextConstants.applySuccessful);
-          }else if (state is ErrorState){
-            WidgetConstants.showSnackBar(context: this.context, message: state.errMessage);
-          }
-        }, child: Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        title: const Text(
-          TextConstants.jobDetail,
-          style: WidgetConstants.mainBold16Style,
-        ),
-        centerTitle: true,
-        leading: const SizedBox(),
-        actions: [
-          GestureDetector(
-            onTap: () async {
-              if (_candidateCubit.state is NoLoggedInState) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
-                return;
-              }
-
-              if (_candidateCubit.state is LoginSuccessState) {
-                if (_isSaved) {
-                  await _savedJobCubit.deleteJob(_job.jobId,
-                      (_candidateCubit.state as LoginSuccessState).token);
-                } else {
-                  await _savedJobCubit.saveJob(_job.jobId,
-                      (_candidateCubit.state as LoginSuccessState).token);
+      listener: (context, state) {
+        if (state is AppliedJobSuccessState) {
+          WidgetConstants.showSnackBar(
+              context: this.context, message: TextConstants.applySuccessful);
+        } else if (state is ErrorState) {
+          WidgetConstants.showSnackBar(
+              context: this.context, message: state.errMessage);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          title: const Text(
+            TextConstants.jobDetail,
+            style: WidgetConstants.mainBold16Style,
+          ),
+          centerTitle: true,
+          leading: const SizedBox(),
+          actions: [
+            GestureDetector(
+              onTap: () async {
+                if (_candidateCubit.state is NoLoggedInState) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
+                  return;
                 }
 
-                setState(() {
-                  _isSaved = !_isSaved;
-                });
-              }
-            },
-            child: BlocBuilder<SavedJobCubit, SavedJobsState>(
-              builder: (context, state) {
-                final isSaved = _savedJobCubit
-                    .allSavedJobs()
-                    .any((job) => job.jobId == _job.jobId);
-                return Icon(
-                  isSaved
-                      ? CupertinoIcons.bookmark_fill
-                      : CupertinoIcons.bookmark,
-                  color: ColorConstants.main,
-                );
+                if (_candidateCubit.state is LoginSuccessState) {
+                  if (_isSaved) {
+                    await _savedJobCubit.deleteJob(_job.jobId,
+                        (_candidateCubit.state as LoginSuccessState).token);
+                  } else {
+                    await _savedJobCubit.saveJob(_job.jobId,
+                        (_candidateCubit.state as LoginSuccessState).token);
+                  }
+
+                  setState(() {
+                    _isSaved = !_isSaved;
+                  });
+                }
               },
+              child: BlocBuilder<SavedJobCubit, SavedJobsState>(
+                builder: (context, state) {
+                  final isSaved = _savedJobCubit
+                      .allSavedJobs()
+                      .any((job) => job.jobId == _job.jobId);
+                  return Icon(
+                    isSaved
+                        ? CupertinoIcons.bookmark_fill
+                        : CupertinoIcons.bookmark,
+                    color: ColorConstants.main,
+                  );
+                },
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 25,
-          )
-        ],
+            const SizedBox(
+              width: 25,
+            )
+          ],
+        ),
+        body: _buildBody(),
       ),
-      body: _buildBody(),
-    ),
     );
   }
 
@@ -146,11 +152,13 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(), // Thêm hiệu ứng cuộn mượt
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: ValueConstants.deviceWidthValue(uiValue: 24)),
+                padding: EdgeInsets.symmetric(
+                    horizontal: ValueConstants.deviceWidthValue(uiValue: 24)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 15)),
+                    SizedBox(
+                        height: ValueConstants.deviceHeightValue(uiValue: 15)),
 
                     Container(
                       alignment: Alignment.center,
@@ -163,14 +171,18 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                       ),
                       child: _job.companyLogo != null
                           ? Image.network(
-                        '${JobServices.displayJobLogoUrl}${_job.companyLogo}',
-                        width: ValueConstants.deviceWidthValue(uiValue: 86),
-                        height: ValueConstants.deviceWidthValue(uiValue: 86),
-                        errorBuilder: (context, object, stacktrace) => _buildDefaultLogo(),
-                      )
+                              '${JobServices.displayJobLogoUrl}${_job.companyLogo}',
+                              width:
+                                  ValueConstants.deviceWidthValue(uiValue: 86),
+                              height:
+                                  ValueConstants.deviceWidthValue(uiValue: 86),
+                              errorBuilder: (context, object, stacktrace) =>
+                                  _buildDefaultLogo(),
+                            )
                           : _buildDefaultLogo(),
                     ),
-                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 15)),
+                    SizedBox(
+                        height: ValueConstants.deviceHeightValue(uiValue: 15)),
 
                     Text(
                       _job.jobName,
@@ -178,7 +190,8 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                       overflow: TextOverflow.ellipsis,
                     ),
 
-                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10)),
+                    SizedBox(
+                        height: ValueConstants.deviceHeightValue(uiValue: 10)),
 
                     Text(
                       textAlign: TextAlign.center,
@@ -187,10 +200,12 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                       softWrap: true,
                     ),
 
-                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10)),
+                    SizedBox(
+                        height: ValueConstants.deviceHeightValue(uiValue: 10)),
 
                     SvgPicture.asset(AssetConstants.iconLocation),
-                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10)),
+                    SizedBox(
+                        height: ValueConstants.deviceHeightValue(uiValue: 10)),
                     Text(
                       textAlign: TextAlign.center,
                       _job.location,
@@ -198,7 +213,8 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                       style: WidgetConstants.black16Style,
                     ),
 
-                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10)),
+                    SizedBox(
+                        height: ValueConstants.deviceHeightValue(uiValue: 10)),
 
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -208,7 +224,8 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                       ),
                     ),
 
-                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 30)),
+                    SizedBox(
+                        height: ValueConstants.deviceHeightValue(uiValue: 30)),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,7 +246,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                             asset: AssetConstants.iconSalary,
                             title: TextConstants.salary,
                             content:
-                            '\$${_job.salaryMin}k - \$${_job.salaryMax}k'),
+                                '\$${_job.salaryMin}k - \$${_job.salaryMax}k'),
                         _buildJobSubDetail(
                             asset: AssetConstants.iconCalendar,
                             title: TextConstants.deadline,
@@ -240,7 +257,8 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
 
                     Container(
                       width: ValueConstants.screenWidth,
-                      margin: EdgeInsets.only(top: ValueConstants.deviceHeightValue(uiValue: 30)),
+                      margin: EdgeInsets.only(
+                          top: ValueConstants.deviceHeightValue(uiValue: 30)),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white),
                         borderRadius: BorderRadius.circular(8),
@@ -253,8 +271,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                       ),
                     ),
 
-                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 30)),
-                    
+                    SizedBox(
+                        height: ValueConstants.deviceHeightValue(uiValue: 30)),
+
                     SizedBox(
                       width: ValueConstants.screenWidth,
                       child: _selectedTab == TextConstants.description
@@ -262,13 +281,14 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                           : _buildCompanyOverview(),
                     ),
 
-                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 30)), // Đảm bảo không bị che mất nội dung cuối
+                    SizedBox(
+                        height: ValueConstants.deviceHeightValue(uiValue: 30)),
+                    // Đảm bảo không bị che mất nội dung cuối
                   ],
                 ),
               ),
             ),
           ),
-          
           Container(
             width: ValueConstants.screenWidth,
             color: Colors.white,
@@ -277,7 +297,8 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
               onTap: showApplyBottomSheet,
               child: Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                 decoration: BoxDecoration(
                   color: ColorConstants.main,
                   borderRadius: BorderRadius.circular(16),
@@ -293,7 +314,6 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       ),
     );
   }
-
 
   Widget _buildDefaultLogo() {
     return const Icon(
@@ -455,6 +475,36 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
             TextConstants.otherJobs,
             style: WidgetConstants.blackBold16Style,
           ),
+          SizedBox(
+            height: ValueConstants.deviceHeightValue(uiValue: 16),
+          ),
+          SizedBox(
+            height: 200,
+            child: _otherJobs.isEmpty || _otherJobs.length == 1
+                ? const Center(
+                    child: Text(TextConstants.noOtherJobs,
+                        style: WidgetConstants.black16Style),
+                  )
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _otherJobs.length,
+                    itemBuilder: (context, index) {
+                      final job = _otherJobs[index];
+
+                      if (job.jobId == _job.jobId) {
+                        return const SizedBox();
+                      }
+
+                      return Container(
+                        width: ValueConstants.screenWidth * 0.9,
+                        margin: const EdgeInsets.only(right: 20),
+                        child: JobItem(
+                          job: job,
+                          onIconBookmarkClicked: () => handleIcBookmarkClicked(job),
+                        ),
+                      );
+                    }),
+          )
         ],
       ),
     );
@@ -470,5 +520,23 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     showModalBottomSheet(
         context: context,
         builder: (context) => ApplyBottomSheet(jobId: _job.jobId));
+  }
+
+  Future<void> handleIcBookmarkClicked(Job job) async {
+    if (_candidateCubit.state is NoLoggedInState){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      return;
+    }
+
+    if (_candidateCubit.state is LoginSuccessState){
+      final candidateToken = (_candidateCubit.state as LoginSuccessState).token;
+      final isSaved = _savedJobCubit.allSavedJobs().any((j)=> j.jobId == job.jobId);
+
+      if (!isSaved){
+        await _savedJobCubit.saveJob(job.jobId, candidateToken);
+      }else{
+        await _savedJobCubit.deleteJob(job.jobId, candidateToken);
+      }
+    }
   }
 }
