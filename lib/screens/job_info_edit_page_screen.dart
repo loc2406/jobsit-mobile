@@ -186,7 +186,9 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 14),
                       decoration: BoxDecoration(
-                        //border: Border.all(color: cvError == '' ? Colors.grey : Colors.red), // Đổi màu viền khi có lỗi
+                          border: Border.all(
+                            color: cvError == '' ? ColorConstants.main : Colors.red, // ✅ Đổi màu viền khi có lỗi
+                          ), // Đổi màu viền khi có lỗi
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -381,7 +383,16 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
           avatar: _avatarPath,
           email: email,
           password: password);
-      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AccountScreen(),
+          settings: RouteSettings(arguments: {
+            "email": email,
+            "password": password,
+          }),
+        ),
+      );
     }
   }
 }

@@ -164,11 +164,12 @@ class CandidateServices {
     ));
     request.files.add(
         await http.MultipartFile.fromPath("fileCV", cv!.path));
-
+print('tessssssssssssssssssst user ${user} '
+    'anddddddddddd ${token } ${position} ${major} ${jobType} ${wantJob} ${location} ${coverLetter} ${cv} ${avatar}');
     var response = await request.send();
 
     if (response.statusCode != 200) {
-      throw Exception(TextConstants.updateCandidateInfoFailedError);
+      throw Exception(' loiiiiiiiii ${TextConstants.updateCandidateInfoFailedError}');
     }
   }
   static Future<Map<String, dynamic>> loginAccount(
