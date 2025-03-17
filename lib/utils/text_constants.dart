@@ -74,7 +74,7 @@ class TextConstants {
   static const pleaseInputCorrectAddressRegex = 'Vui lòng nhập đúng định dạng địa chỉ đang ở';
   static const pleaseInputAddress = 'Vui lòng nhập địa chỉ';
   static const pleaseUploadCV = 'Vui lòng tải lên CV đính kèm';
-  static const onlySupportCVFile = 'Chỉ hỗ trợ file .doc, .docx và .pdf và tối đa 512 KB';
+  static const onlySupportCVFile = 'Chỉ hỗ trợ file .pdf và tối đa 512 KB';
 
   // Verify account
   static const verifyEmail = "Xác thực Email";
@@ -108,7 +108,7 @@ class TextConstants {
   static const saveJobError = 'Lưu việc làm thất bại!';
   static const deleteJobError = 'Lưu việc làm thất bại!';
   static const applyError = 'Ứng tuyển thất bại!';
-  static const youAreAppliedThisJobError = 'Bạn đã ứng tuyển công việc này!';
+  static const getOtherJobsError = 'Lấy danh sách các công việc liên quan thất bại!';
 
 // Message
   static const noMatchingJobAtThisTimeMess = 'Rất tiếc, hiện tại không có công việc phù hợp được tìm thấy';
@@ -119,6 +119,7 @@ class TextConstants {
   static const saveJobSuccessful = 'Lưu việc làm thành công';
   static const deleteJobSuccessful = 'Hủy lưu việc làm thành công';
   static const applySuccessful = 'Ứng tuyển thành công';
+  static const youAreAppliedThisJobMessage = 'Bạn đã ứng tuyển công việc này!';
 
 // Bottom navigation bar
   static const home = 'Trang chủ';
@@ -178,6 +179,7 @@ class TextConstants {
   static const  companyOverview = 'Giới thiệu công ty';
   static const  companyAddress = 'Địa chỉ công ty';
   static const  apply = 'Ứng tuyển';
+  static const otherJobs = "Các việc làm khác";
 
   // Appbar title
   static const savedJob = 'Công việc đã lưu';

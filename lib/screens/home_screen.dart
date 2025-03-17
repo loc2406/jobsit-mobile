@@ -18,6 +18,7 @@ import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
 import 'package:jobsit_mobile/widgets/filter_bottom_sheet.dart';
 import 'package:jobsit_mobile/widgets/job_item.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../cubits/candidate/candidate_cubit.dart';
 import '../cubits/job/error_state.dart';

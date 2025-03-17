@@ -18,7 +18,7 @@ class CandidateServices {
   static const getCandidateByIdUrl = '${BaseServices.url}/candidate/user/';
   static const getCandidateAvatarUrl = '${BaseServices.url}/file/display/';
   static const updateCandidateUrl = '${BaseServices.url}/candidate/';
-  static const universitiesUrl = '${BaseServices.url}/university';
+  static const universitiesUrl = '${BaseServices.url}/university?no=0&&limit=10';
   static const updateSearchableUrl = '${BaseServices.url}/candidate/searchable/';
   static const updateMailReceiveUrl = '${BaseServices.url}/candidate/email-notification/';
   static const logoutUrl = '${BaseServices.url}/logout?token=';
@@ -43,6 +43,7 @@ class CandidateServices {
   static const userProfileDTOKey = 'userProfileDTO';
   static const universityDTOKey = 'universityDTO';
   static const idKey = 'id';
+  static const contentsKey = 'contents';
 
   // Response value
   static const dataExistingValue = 'DATA EXISTING';
@@ -196,7 +197,13 @@ class CandidateServices {
       final response = await http.get(Uri.parse(universitiesUrl));
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+        // Đối với danh sách k phân trang
+        // final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+
+        // Đối với data phân trang
+        final dataObject = jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> data = dataObject[contentsKey];
+
         return data.map((university) => University.fromMap(university)).toList();
       } else {
         throw Exception(TextConstants.loadUniversitiesFailedError);

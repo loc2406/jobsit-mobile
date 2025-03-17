@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:jobsit_mobile/services/base_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:jobsit_mobile/utils/convert_constants.dart';
+import 'package:jobsit_mobile/utils/exceptions/AppliedJobBeforeException.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 
@@ -17,6 +18,7 @@ class JobServices {
   static const saveJobUrl = '${BaseServices.url}/candidate-job-care?idJob=';
   static const deleteJobUrl = '${BaseServices.url}/candidate-job-care?idJob=';
   static const applyJobUrl = '${BaseServices.url}/candidate-application';
+  static const getOtherJobsUrl = '${BaseServices.url}/job/active/company/';
 
   // Response key
   static const contentsKey = 'contents';
@@ -149,10 +151,30 @@ class JobServices {
 
     if (response.statusCode != 201) {
       if (response.statusCode == 409){
-        throw Exception(TextConstants.youAreAppliedThisJobError);
+        throw AppliedJobBeforeException();
       }else{
         throw Exception(TextConstants.applyError);
       }
     }
+  }
+
+  static Future<Map<String, dynamic>> getOtherJobs({required int no, required int companyId, required int limit}) async {
+    final uri = Uri.parse('$getOtherJobsUrl$companyId?no=$no&limit=$limit');
+
+    final response = await http.get(uri, headers: BaseServices.headers);
+
+    if (response.statusCode != 200) {
+      throw Exception(TextConstants.getOtherJobsError);
+    }
+
+    final Map<String, dynamic> otherJobsObject = jsonDecode(utf8.decode(response.bodyBytes));
+
+    final List<dynamic> otherJobsContents = otherJobsObject[contentsKey];
+    final bool isLastPage = otherJobsObject[lastKey];
+
+    return {
+      contentsKey: otherJobsContents,
+      lastKey: isLastPage,
+    };
   }
 }

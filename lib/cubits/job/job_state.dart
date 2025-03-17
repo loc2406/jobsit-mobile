@@ -3,6 +3,7 @@ import 'package:jobsit_mobile/cubits/job/error_state.dart';
 import 'package:jobsit_mobile/cubits/job/empty_state.dart';
 import 'package:jobsit_mobile/cubits/job/loaded_state.dart';
 import 'package:jobsit_mobile/cubits/job/loading_state.dart';
+import 'package:jobsit_mobile/cubits/job/view_detail_state.dart';
 
 import '../../models/job.dart';
 
@@ -35,4 +36,6 @@ class JobState {
   factory JobState.error(String errorMessage) => ErrorState(errorMessage);
 
   factory JobState.applySuccess() => ApplySuccessState();
+
+  factory JobState.viewDetail(Job job, List<Job> otherJobs, int page, bool isLastPage) => ViewDetailState(job, otherJobs, page, isLastPage);
 }

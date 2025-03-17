@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 
 import 'color_constants.dart';
@@ -36,5 +37,11 @@ class WidgetConstants {
   static Widget buildDefaultCandidateAvatar() {
     return Icon(Icons.image_outlined,
         color: ColorConstants.main, size: ValueConstants.screenWidth * 0.1);
+  }
+
+  static showSnackBar({required BuildContext context, required String message, int durationSeconds = 3}){
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text(message), duration: Duration(seconds: durationSeconds),));
   }
 }

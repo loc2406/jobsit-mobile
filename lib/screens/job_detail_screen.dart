@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/no_logged_in_state.dart';
 import 'package:jobsit_mobile/cubits/job/apply_success_state.dart';
+import 'package:jobsit_mobile/cubits/job/error_state.dart';
 import 'package:jobsit_mobile/cubits/saved_jobs/saved_job_cubit.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/services/job_services.dart';
@@ -35,13 +37,20 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   String _selectedTab = TextConstants.description;
   late SavedJobCubit _savedJobCubit;
   late CandidateCubit _candidateCubit;
+  late JobCubit _jobCubit;
   bool _isSaved = false;
+  PagingController _otherJobsController =PagingController(firstPageKey: 0);
 
   @override
   void initState() {
     super.initState();
     _savedJobCubit = context.read<SavedJobCubit>();
     _candidateCubit = context.read<CandidateCubit>();
+    _jobCubit = context.read<JobCubit>();
+  }
+
+  void _getOtherJobs(int no, Job job){
+    _jobCubit.getOtherJobs(no, job);
   }
 
   @override
@@ -49,8 +58,10 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     super.didChangeDependencies();
     if (!_isGetData) {
       _job = ModalRoute.of(context)!.settings.arguments as Job;
-      _isSaved =
-          _savedJobCubit.allSavedJobs().any((j) => j.jobId == _job.jobId);
+      _isSaved = _savedJobCubit.allSavedJobs().any((j) => j.jobId == _job.jobId);
+      _otherJobsController.addPageRequestListener((pageKey){
+        _getOtherJobs(pageKey, _job);
+      });
       _isGetData = true;
     }
   }
@@ -60,8 +71,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     return BlocListener<JobCubit, JobState>(
         listener: (context, state) {
           if (state is ApplySuccessState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(TextConstants.applySuccessful)));
+            WidgetConstants.showSnackBar(context: this.context, message: TextConstants.applySuccessful);
+          }else if (state is ErrorState){
+            WidgetConstants.showSnackBar(context: this.context, message: state.errMessage);
           }
         }, child: Scaffold(
       appBar: AppBar(
@@ -129,140 +141,132 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       child: Column(
         children: [
           Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: ValueConstants.deviceWidthValue(uiValue: 24)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 15),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: ValueConstants.deviceWidthValue(uiValue: 86),
-                    height: ValueConstants.deviceWidthValue(uiValue: 86),
-                    decoration: BoxDecoration(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(), // Thêm hiệu ứng cuộn mượt
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: ValueConstants.deviceWidthValue(uiValue: 24)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 15)),
+
+                    Container(
+                      alignment: Alignment.center,
+                      width: ValueConstants.deviceWidthValue(uiValue: 86),
+                      height: ValueConstants.deviceWidthValue(uiValue: 86),
+                      decoration: BoxDecoration(
                         color: Colors.transparent,
                         border: Border.all(color: ColorConstants.main),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: _job.companyLogo != null
-                        ? Image.network(
-                      '${JobServices.displayJobLogoUrl}${_job.companyLogo}',
-                      width:
-                      ValueConstants.deviceWidthValue(uiValue: 86),
-                      height:
-                      ValueConstants.deviceWidthValue(uiValue: 86),
-                      errorBuilder: (context, object, stacktrace) =>
-                          _buildDefaultLogo(),
-                    )
-                        : _buildDefaultLogo(),
-                  ),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 15),
-                  ),
-                  Text(
-                    _job.jobName,
-                    style: WidgetConstants.main22Style,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 10),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          _job.companyName,
-                          style: WidgetConstants.black16Style,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      SizedBox(
-                        width: ValueConstants.deviceWidthValue(uiValue: 5),
-                      ),
-                      SvgPicture.asset(AssetConstants.iconLocation),
-                      Expanded(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          _job.location,
-                          overflow: TextOverflow.ellipsis,
-                          style: WidgetConstants.black16Style,
-                        ),
+                      child: _job.companyLogo != null
+                          ? Image.network(
+                        '${JobServices.displayJobLogoUrl}${_job.companyLogo}',
+                        width: ValueConstants.deviceWidthValue(uiValue: 86),
+                        height: ValueConstants.deviceWidthValue(uiValue: 86),
+                        errorBuilder: (context, object, stacktrace) => _buildDefaultLogo(),
                       )
-                    ],
-                  ),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 10),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: _buildJobPositionsList(),
+                          : _buildDefaultLogo(),
                     ),
-                  ),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 30),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildJobSubDetail(
-                          asset: AssetConstants.iconProfile,
-                          title: TextConstants.position,
-                          content: _job.positions.isNotEmpty
-                              ? _job.positions[0].name
-                              : TextConstants.dontHave),
-                      _buildJobSubDetail(
-                          asset: AssetConstants.iconBag,
-                          title: TextConstants.type,
-                          content: _job.schedules.isNotEmpty
-                              ? _job.schedules[0].name
-                              : TextConstants.dontHave),
-                      _buildJobSubDetail(
-                          asset: AssetConstants.iconSalary,
-                          title: TextConstants.salary,
-                          content:
-                          '\$${_job.salaryMin}k - \$${_job.salaryMax}k'),
-                      _buildJobSubDetail(
-                          asset: AssetConstants.iconCalendar,
-                          title: TextConstants.deadline,
-                          content: DateFormat(TextConstants.defaultDate)
-                              .format(DateTime.parse(_job.endDate).toLocal()))
-                    ],
-                  ),
-                  Container(
-                    width: ValueConstants.screenWidth,
-                    margin: EdgeInsets.only(
-                        top: ValueConstants.deviceHeightValue(uiValue: 30)),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white),
-                      borderRadius: BorderRadius.circular(8),
+                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 15)),
+
+                    Text(
+                      _job.jobName,
+                      style: WidgetConstants.main22Style,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    child: Row(
+
+                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10)),
+
+                    Text(
+                      textAlign: TextAlign.center,
+                      _job.companyName,
+                      style: WidgetConstants.black16Style,
+                      softWrap: true,
+                    ),
+
+                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10)),
+
+                    SvgPicture.asset(AssetConstants.iconLocation),
+                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10)),
+                    Text(
+                      textAlign: TextAlign.center,
+                      _job.location,
+                      softWrap: true,
+                      style: WidgetConstants.black16Style,
+                    ),
+
+                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 10)),
+
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: _buildJobPositionsList(),
+                      ),
+                    ),
+
+                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 30)),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildJobDetailTab(TextConstants.description),
-                        _buildJobDetailTab(TextConstants.company),
+                        _buildJobSubDetail(
+                            asset: AssetConstants.iconProfile,
+                            title: TextConstants.position,
+                            content: _job.positions.isNotEmpty
+                                ? _job.positions[0].name
+                                : TextConstants.dontHave),
+                        _buildJobSubDetail(
+                            asset: AssetConstants.iconBag,
+                            title: TextConstants.type,
+                            content: _job.schedules.isNotEmpty
+                                ? _job.schedules[0].name
+                                : TextConstants.dontHave),
+                        _buildJobSubDetail(
+                            asset: AssetConstants.iconSalary,
+                            title: TextConstants.salary,
+                            content:
+                            '\$${_job.salaryMin}k - \$${_job.salaryMax}k'),
+                        _buildJobSubDetail(
+                            asset: AssetConstants.iconCalendar,
+                            title: TextConstants.deadline,
+                            content: DateFormat(TextConstants.defaultDate)
+                                .format(DateTime.parse(_job.endDate).toLocal()))
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 30),
-                  ),
-                  Expanded(
-                      child: SizedBox(
-                        width: ValueConstants.screenWidth,
-                        child: _selectedTab == TextConstants.description
-                            ? _buildJobDescription()
-                            : _buildCompanyOverview(),
-                      )),
-                ],
+
+                    Container(
+                      width: ValueConstants.screenWidth,
+                      margin: EdgeInsets.only(top: ValueConstants.deviceHeightValue(uiValue: 30)),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          _buildJobDetailTab(TextConstants.description),
+                          _buildJobDetailTab(TextConstants.company),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 30)),
+                    
+                    SizedBox(
+                      width: ValueConstants.screenWidth,
+                      child: _selectedTab == TextConstants.description
+                          ? _buildJobDescription()
+                          : _buildCompanyOverview(),
+                    ),
+
+                    SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 30)), // Đảm bảo không bị che mất nội dung cuối
+                  ],
+                ),
               ),
             ),
           ),
+          
           Container(
             width: ValueConstants.screenWidth,
             color: Colors.white,
@@ -271,8 +275,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
               onTap: showApplyBottomSheet,
               child: Container(
                 alignment: Alignment.center,
-                padding:
-                const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                 decoration: BoxDecoration(
                   color: ColorConstants.main,
                   borderRadius: BorderRadius.circular(16),
@@ -283,11 +286,12 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
+
 
   Widget _buildDefaultLogo() {
     return const Icon(
@@ -441,6 +445,13 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 ),
               ),
             ],
+          ),
+          SizedBox(
+            height: ValueConstants.deviceHeightValue(uiValue: 16),
+          ),
+          const Text(
+            TextConstants.otherJobs,
+            style: WidgetConstants.blackBold16Style,
           ),
         ],
       ),
