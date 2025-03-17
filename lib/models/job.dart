@@ -87,6 +87,26 @@ class Job {
   factory Job.fromSavedMap(Map<String, dynamic> map) {
     return Job(
       companyId: int.parse(map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.idKey].toString()),
+      companyName: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.nameKey],
+      companyLogo: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.logoKey],
+      companyDescription: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.descriptionKey] ?? '',
+      jobId: int.parse(map[JobServices.jobDTOKey][JobServices.idKey].toString()),
+      jobName: map[JobServices.jobDTOKey][JobServices.nameKey],
+      jobDescription: map[JobServices.jobDTOKey][JobServices.descriptionKey],
+      positions: ConvertConstants.convertToListJobPositions(map[JobServices.jobDTOKey][JobServices.positionDTOsKey] as List<dynamic>),
+      schedules: ConvertConstants.convertToListJobSchedules(map[JobServices.jobDTOKey][JobServices.scheduleDTOsKey] as List<dynamic>),
+      amount: int.parse(map[JobServices.jobDTOKey][JobServices.amountKey].toString()),
+      startDate: map[JobServices.jobDTOKey][JobServices.startDateKey].toString(),
+      endDate: map[JobServices.jobDTOKey][JobServices.endDateKey].toString(),
+      location: map[JobServices.jobDTOKey][JobServices.locationKey] ?? '',
+      salaryMin: int.parse(map[JobServices.jobDTOKey][JobServices.salaryMinKey].toString()),
+      salaryMax: int.parse(map[JobServices.jobDTOKey][JobServices.salaryMaxKey].toString()),
+    );
+  }
+
+  factory Job.fromAppliedMap(Map<String, dynamic> map) {
+    return Job(
+      companyId: int.parse(map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.idKey].toString()),
       companyName: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.nameKey] ?? '',
       companyLogo: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.logoKey] ?? '',
       companyDescription: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.descriptionKey] ?? '',

@@ -12,6 +12,7 @@ import 'package:jobsit_mobile/utils/preferences/shared_prefs.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
+import 'cubits/applied_jobs/applied_job_cubit.dart';
 import 'models/candidate.dart';
 
 Future<void> main() async {
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
       BlocProvider(create: (context) => CandidateCubit()),
       BlocProvider(create: (context) => JobCubit()),
       BlocProvider(create: (context) => SavedJobCubit()),
+      BlocProvider(create: (context) => AppliedJobCubit()),
     ], child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -49,9 +51,9 @@ class MainScreen extends StatefulWidget {
   State<StatefulWidget> createState() => MainStateScreen();
 }
 
-class MainStateScreen extends State<MainScreen>{
-
+class MainStateScreen extends State<MainScreen> {
   late final CandidateCubit _cubit;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -62,23 +64,30 @@ class MainStateScreen extends State<MainScreen>{
 
   Future<void> _checkLoginStatus() async {
     String? token = await SharedPrefs.getCandidateToken();
-    if (token != null && token.isNotEmpty){
+    if (token != null && token.isNotEmpty) {
       bool isExpired = JwtDecoder.isExpired(token);
       int? id = await SharedPrefs.getCandidateId();
 
-      if (!isExpired && id != null){
+      if (!isExpired && id != null) {
         Candidate candidate = await CandidateServices.getCandidateById(id);
         _cubit.setLoginStatus(status: true, token: token, candidate: candidate);
-      }else{
+      } else {
         _cubit.setLoginStatus(status: false);
       }
-    }else{
+    } else {
       _cubit.setLoginStatus(status: false);
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return const MenuScreen();
+    return _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : const MenuScreen();
   }
 }
+

@@ -27,6 +27,12 @@ class ConvertConstants {
         .toList();
   }
 
+  static List<Job> convertToListAppliedJobs(List<dynamic> list) {
+    return list
+        .map((jobMap) => Job.fromAppliedMap(jobMap as Map<String, dynamic>))
+        .toList();
+  }
+
   static String getNameById(List<Map<String, dynamic>> map, int id) {
     if (id == -1) return '';
     Map<String, dynamic> element = map.firstWhere(

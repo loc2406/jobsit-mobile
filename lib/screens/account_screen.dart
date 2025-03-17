@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jobsit_mobile/cubits/applied_jobs/applied_job_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/error_state.dart';
@@ -309,6 +310,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 if (mounted && isLogout){
                   SharedPrefs.saveCandidateToken('');
                   context.read<SavedJobCubit>().clearAllSavedJobs();
+                  context.read<AppliedJobCubit>().clearAllAppliedJobs();
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(TextConstants.youAreLogout)));
                 }
               },

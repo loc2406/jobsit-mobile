@@ -109,6 +109,7 @@ class TextConstants {
   static const deleteJobError = 'Lưu việc làm thất bại!';
   static const applyError = 'Ứng tuyển thất bại!';
   static const getOtherJobsError = 'Lấy danh sách các công việc liên quan thất bại!';
+  static const getAppliedJobError = 'Lấy danh sách công việc đã ứng tuyển thất bại!';
 
 // Message
   static const noMatchingJobAtThisTimeMess = 'Rất tiếc, hiện tại không có công việc phù hợp được tìm thấy';
@@ -180,6 +181,10 @@ class TextConstants {
   static const  companyAddress = 'Địa chỉ công ty';
   static const  apply = 'Ứng tuyển';
   static const otherJobs = "Các việc làm khác";
+
+  // Applied Job
+  static const appliedJob = 'Công việc đã ứng tuyển';
+
 
   // Appbar title
   static const savedJob = 'Công việc đã lưu';

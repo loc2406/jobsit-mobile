@@ -68,7 +68,7 @@ class _MenuScreenState extends State<MenuScreen> {
         onTap: (index) {
 
           if(_cubit.state is NoLoggedInState){
-            if ((index == 2 || index == 3) && _currentIndex != index){
+            if (index >0 && _currentIndex != index){
               Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginScreen()));
             }
           }

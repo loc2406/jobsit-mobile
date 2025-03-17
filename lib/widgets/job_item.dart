@@ -7,16 +7,22 @@ import 'package:jobsit_mobile/services/base_services.dart';
 import 'package:jobsit_mobile/services/job_services.dart';
 import 'package:jobsit_mobile/utils/asset_constants.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
+import 'package:jobsit_mobile/utils/text_constants.dart';
 
 import '../cubits/saved_jobs/saved_job_state.dart';
 import '../models/job.dart';
 import '../utils/value_constants.dart';
 
 class JobItem extends StatefulWidget {
-  const JobItem({super.key, required this.job, required this.onIconBookmarkClicked});
+  const JobItem(
+      {super.key,
+      required this.job,
+      required this.onIconBookmarkClicked,
+      this.isApplied = false});
 
   final Job job;
   final Future<void> Function() onIconBookmarkClicked;
+  final bool isApplied;
 
   @override
   State<StatefulWidget> createState() => JobItemState();
@@ -25,6 +31,7 @@ class JobItem extends StatefulWidget {
 class JobItemState extends State<JobItem> {
   late final Job job;
   late final Future<void> Function() onIconBookmarkClicked;
+  late final bool isApplied;
   late final SavedJobCubit _savedJobCubit;
   late int differenceInDays;
 
@@ -33,6 +40,7 @@ class JobItemState extends State<JobItem> {
     super.initState();
     job = widget.job;
     onIconBookmarkClicked = widget.onIconBookmarkClicked;
+    isApplied = widget.isApplied;
     _savedJobCubit = context.read<SavedJobCubit>();
 
     final endDate = DateTime.parse(job.endDate).toLocal();
@@ -102,37 +110,43 @@ class JobItemState extends State<JobItem> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  width: ValueConstants.deviceWidthValue(uiValue: 13),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    await onIconBookmarkClicked.call();
-                  },
-                  child: BlocBuilder<SavedJobCubit, SavedJobsState>(
-                    builder: (context, state) {
-                      final isSaved = _savedJobCubit.allSavedJobs().any((job)=> job.jobId == this.job.jobId);
-                      return Icon(
-                        isSaved
-                            ? CupertinoIcons.bookmark_fill
-                            : CupertinoIcons.bookmark,
-                        color: ColorConstants.main,
-                      );
-                    },
+                if (!isApplied) ...[
+                  SizedBox(
+                    width: ValueConstants.deviceWidthValue(uiValue: 13),
                   ),
-                )
+                  GestureDetector(
+                    onTap: () async {
+                      await onIconBookmarkClicked.call();
+                    },
+                    child: BlocBuilder<SavedJobCubit, SavedJobsState>(
+                      builder: (context, state) {
+                        final isSaved = _savedJobCubit
+                            .allSavedJobs()
+                            .any((job) => job.jobId == this.job.jobId);
+                        return Icon(
+                          isSaved
+                              ? CupertinoIcons.bookmark_fill
+                              : CupertinoIcons.bookmark,
+                          color: ColorConstants.main,
+                        );
+                      },
+                    ),
+                  )
+                ]
               ],
             ),
-            SizedBox(
-              height: ValueConstants.deviceWidthValue(uiValue: 15),
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: buildJobPositionsList(),
+            if (!isApplied) ...[
+              SizedBox(
+                height: ValueConstants.deviceWidthValue(uiValue: 15),
               ),
-            ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: buildJobPositionsList(),
+                ),
+              ),
+            ],
             SizedBox(
               height: ValueConstants.deviceWidthValue(uiValue: 15),
             ),
@@ -153,20 +167,34 @@ class JobItemState extends State<JobItem> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.people,
-                      color: ColorConstants.main,
-                    ),
-                    SizedBox(
-                      width: ValueConstants.deviceWidthValue(uiValue: 5),
-                    ),
-                    Text(
-                      job.amount.toString(),
-                    )
-                  ],
-                ),
+                !isApplied
+                    ? Row(
+                        children: [
+                          const Icon(
+                            Icons.people,
+                            color: ColorConstants.main,
+                          ),
+                          SizedBox(
+                            width: ValueConstants.deviceWidthValue(uiValue: 5),
+                          ),
+                          Text(
+                            job.amount.toString(),
+                          )
+                        ],
+                      )
+                    : Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: const BoxDecoration(
+                            color: ColorConstants.main,
+                            borderRadius: BorderRadius.all(Radius.circular(4))),
+                        child: const Text(
+                          TextConstants.applied,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
                 Row(
                   children: [
                     const Icon(

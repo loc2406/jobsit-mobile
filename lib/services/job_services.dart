@@ -17,8 +17,9 @@ class JobServices {
   static const getSavedJobUrl = '${BaseServices.url}/candidate-job-care?';
   static const saveJobUrl = '${BaseServices.url}/candidate-job-care?idJob=';
   static const deleteJobUrl = '${BaseServices.url}/candidate-job-care?idJob=';
-  static const applyJobUrl = '${BaseServices.url}/candidate-application';
   static const getOtherJobsUrl = '${BaseServices.url}/job/active/company/';
+  static const applyJobUrl = '${BaseServices.url}/candidate-application';
+  static const getAppliedJobsUrl = '${BaseServices.url}/candidate-application/candidate?';
 
   // Response key
   static const contentsKey = 'contents';
@@ -174,6 +175,26 @@ class JobServices {
 
     return {
       contentsKey: otherJobsContents,
+      lastKey: isLastPage,
+    };
+  }
+
+  static getAppliedJobs({required String token, required int no, required int limit}) async {
+    final uri = Uri.parse('${getAppliedJobsUrl}no=$no&limit=$limit');
+
+    final response = await http.get(uri, headers: BaseServices.getHeaderWithToken(token));
+
+    if (response.statusCode != 200) {
+      throw Exception(TextConstants.getAppliedJobError);
+    }
+
+    final Map<String, dynamic> jobsObject = jsonDecode(utf8.decode(response.bodyBytes));
+
+    final List<dynamic> jobContents = jobsObject[contentsKey];
+    final bool isLastPage = jobsObject[lastKey];
+
+    return {
+      contentsKey: jobContents,
       lastKey: isLastPage,
     };
   }

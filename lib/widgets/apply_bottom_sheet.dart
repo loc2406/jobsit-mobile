@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jobsit_mobile/cubits/applied_jobs/applied_job_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
@@ -147,7 +148,7 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
 
   Future<void> handleApplyJob() async {
     if (isValidate()) {
-      await context.read<JobCubit>().applyJob(
+      await context.read<AppliedJobCubit>().applyJob(
           token:
               (context.read<CandidateCubit>().state as LoginSuccessState).token,
           cvFile: _selectedCV!,

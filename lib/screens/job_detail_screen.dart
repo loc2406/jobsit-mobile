@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
+import 'package:jobsit_mobile/cubits/applied_jobs/applied_job_state.dart';
+import 'package:jobsit_mobile/cubits/applied_jobs/applied_job_success_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/candidate_cubit.dart';
 import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
 import 'package:jobsit_mobile/cubits/candidate/no_logged_in_state.dart';
-import 'package:jobsit_mobile/cubits/job/apply_success_state.dart';
-import 'package:jobsit_mobile/cubits/job/error_state.dart';
 import 'package:jobsit_mobile/cubits/saved_jobs/saved_job_cubit.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/services/job_services.dart';
@@ -18,6 +18,8 @@ import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
 import 'package:jobsit_mobile/widgets/apply_bottom_sheet.dart';
 
+import '../cubits/applied_jobs/applied_job_cubit.dart';
+import '../cubits/applied_jobs/error_state.dart';
 import '../cubits/job/job_cubit.dart';
 import '../cubits/job/job_state.dart';
 import '../cubits/saved_jobs/saved_job_state.dart';
@@ -68,9 +70,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<JobCubit, JobState>(
+    return BlocListener<AppliedJobCubit, AppliedJobState>(
         listener: (context, state) {
-          if (state is ApplySuccessState) {
+          if (state is AppliedJobSuccessState) {
             WidgetConstants.showSnackBar(context: this.context, message: TextConstants.applySuccessful);
           }else if (state is ErrorState){
             WidgetConstants.showSnackBar(context: this.context, message: state.errMessage);

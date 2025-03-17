@@ -67,9 +67,9 @@ class _SavedJobScreenState extends State<SavedJobScreen> {
           ),
           centerTitle: true,
         ),
-        body: BlocBuilder<SavedJobCubit, SavedJobsState>(
+        body: BlocBuilder<CandidateCubit, CandidateState>(
             builder: (context, state) {
-          if (_candidateCubit.state is NoLoggedInState || state is EmptyState) {
+          if (state is NoLoggedInState) {
             return const Center(
               child: Text(TextConstants.noData,
                   style: WidgetConstants.black16Style),
