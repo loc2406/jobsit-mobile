@@ -1,4 +1,5 @@
 import 'package:jobsit_mobile/services/job_services.dart';
+import 'package:jobsit_mobile/utils/value_constants.dart';
 
 import '../models/job.dart';
 
@@ -54,5 +55,10 @@ class ConvertConstants {
     if (id == -1) return {};
     return map.firstWhere((schedule) => schedule[JobServices.idKey] == id,
         orElse: () => {} as Map<String, Object>);
+  }
+
+  static double convertVNDToUSD(int vnd) {
+    double usd = vnd / ValueConstants.exchangeRateFromUSDToVND;
+    return double.parse(usd.toStringAsFixed(2));
   }
 }

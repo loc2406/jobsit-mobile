@@ -52,7 +52,6 @@ class SavedJobCubit extends Cubit<SavedJobsState> {
     try {
       await JobServices.saveJob(jobId: jobId, token: token);
       emit(SavedJobsState.saveSuccess());
-      getSavedJobs(token: token, no: 0);
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -63,7 +62,6 @@ class SavedJobCubit extends Cubit<SavedJobsState> {
     try {
       await JobServices.deleteJob(jobId: jobId, token: token);
       emit(SavedJobsState.deleteSuccess());
-      getSavedJobs(token: token, no: 0);
     } catch (e) {
       debugPrint(e.toString());
     }

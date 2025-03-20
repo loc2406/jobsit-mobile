@@ -13,6 +13,7 @@ import 'package:jobsit_mobile/cubits/saved_jobs/saved_job_cubit.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/services/job_services.dart';
 import 'package:jobsit_mobile/utils/asset_constants.dart';
+import 'package:jobsit_mobile/utils/convert_constants.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
@@ -246,7 +247,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                             asset: AssetConstants.iconSalary,
                             title: TextConstants.salary,
                             content:
-                                '\$${_job.salaryMin}k - \$${_job.salaryMax}k'),
+                                '\$${ConvertConstants.convertVNDToUSD(_job.salaryMin)}k - \$${ConvertConstants.convertVNDToUSD(_job.salaryMax)}k'),
                         _buildJobSubDetail(
                             asset: AssetConstants.iconCalendar,
                             title: TextConstants.deadline,

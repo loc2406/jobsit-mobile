@@ -199,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Job>(
             itemBuilder: (context, job, index){
-              return JobItem(job: job, onIconBookmarkClicked: () => handleIcBookmarkClicked(job),);
+              return JobItem(job: job, onIconBookmarkClicked: () async => await handleIcBookmarkClicked(job),);
             },
             newPageProgressIndicatorBuilder: (_) => const Center(
                   child: Padding(
