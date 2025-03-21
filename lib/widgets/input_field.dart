@@ -4,6 +4,7 @@ import 'package:jobsit_mobile/utils/color_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
 
 class InputField extends StatelessWidget {
+  final String? label;
   final IconData? suffixIcon;
   final void Function()? suffixIconClicked;
   final TextEditingController controller;
@@ -12,6 +13,7 @@ class InputField extends StatelessWidget {
   final String? Function(String?) validateMethod;
 
   const InputField({super.key,
+    this.label,
     required this.controller,
     required this.keyboardType,
     required this.validateMethod,
@@ -24,14 +26,14 @@ class InputField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
+        hintText: label,
+        hintStyle: const TextStyle(color: Colors.grey),
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        suffixIcon: suffixIcon != null ? IconButton(
-          icon: Icon(suffixIcon,
-            color: ColorConstants.main,),
-          onPressed: suffixIconClicked,
-        ) : null,
+        suffixIcon: suffixIcon != null ? GestureDetector(onTap: suffixIconClicked,child:  Icon(suffixIcon,
+          color: ColorConstants.main,),) : null,
         enabledBorder: WidgetConstants.inputFieldBorder,
         focusedBorder: WidgetConstants.inputFieldBorder,
+        errorStyle: const TextStyle(color: Colors.grey, fontSize: 13, fontStyle: FontStyle.italic),
         errorBorder: WidgetConstants.inputFieldBorder,
         focusedErrorBorder: WidgetConstants.inputFieldBorder,
       ),
