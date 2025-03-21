@@ -45,6 +45,7 @@ dependencies:
   flutter_pdfview: ^1.2.7
   open_file: ^3.3.2
   visibility_detector: ^0.4.0+2
+  flutter_debouncer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

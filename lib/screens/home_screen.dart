@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:jobsit_mobile/cubits/candidate/login_success_state.dart';
@@ -41,11 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Province> _provinces = [];
   final _searchController = TextEditingController();
   final PagingController<int, Job> _pagingController =
-      PagingController(firstPageKey: 0);
+  PagingController(firstPageKey: 0);
   String _selectedLocation = '';
   String _selectedSchedule = '';
   String _selectedPosition = '';
   String _selectedMajor = '';
+  final Debouncer _debouncer = Debouncer();
 
   @override
   void initState() {
@@ -98,9 +100,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 24,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                    border: Border.fromBorderSide(
-                        BorderSide(color: ColorConstants.main, width: 2)),),
-                child: ClipOval(child: Image.asset(AssetConstants.iconVN, fit: BoxFit.cover,),),
+                  border: Border.fromBorderSide(
+                      BorderSide(color: ColorConstants.main, width: 2)),),
+                child: ClipOval(child: Image.asset(
+                  AssetConstants.iconVN, fit: BoxFit.cover,),),
               ),
             ),
             SizedBox(
@@ -120,23 +123,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                       child: TextField(
-                    controller: _searchController,
-                    onChanged: (keyword) => handleFilterJobs(),
-                    decoration: const InputDecoration(
-                        hintText: TextConstants.searchJob,
-                        hintStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13),
-                        fillColor: Colors.white,
-                        filled: true,
-                        suffixIcon: Icon(
-                          Icons.search,
-                          color: ColorConstants.main,
-                        ),
-                        focusedBorder: WidgetConstants.searchBorder,
-                        enabledBorder: WidgetConstants.searchBorder),
-                  )),
+                        controller: _searchController,
+                        onChanged: (keyword) => handleFilterJobs(),
+                        decoration: const InputDecoration(
+                            hintText: TextConstants.searchJob,
+                            hintStyle: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13),
+                            fillColor: Colors.white,
+                            filled: true,
+                            suffixIcon: Icon(
+                              Icons.search,
+                              color: ColorConstants.main,
+                            ),
+                            focusedBorder: WidgetConstants.searchBorder,
+                            enabledBorder: WidgetConstants.searchBorder),
+                      )),
                   SizedBox(width: ValueConstants.deviceWidthValue(uiValue: 8)),
                   GestureDetector(
                     onTap: showFilter,
@@ -177,13 +180,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     child: const SizedBox(),
                   ),
-                  BlocListener<SavedJobCubit, SavedJobsState>(listener: (context, state){
-                    if (state is SaveJobSuccessState){
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(TextConstants.saveJobSuccessful)));
-                    }else if (state is DeleteJobSuccessState){
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(TextConstants.deleteJobSuccessful)));
-                    }
-                  })
+                  BlocListener<SavedJobCubit, SavedJobsState>(
+                      listener: (context, state) {
+                        if (state is SaveJobSuccessState) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text(
+                                  TextConstants.saveJobSuccessful)));
+                        } else if (state is DeleteJobSuccessState) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text(
+                                  TextConstants.deleteJobSuccessful)));
+                        }
+                      })
                 ], child: _buildJobList()),
               ),
             ],
@@ -198,15 +206,18 @@ class _HomeScreenState extends State<HomeScreen> {
       child: PagedListView<int, Job>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Job>(
-            itemBuilder: (context, job, index){
-              return JobItem(job: job, onIconBookmarkClicked: () async => await handleIcBookmarkClicked(job),);
+            itemBuilder: (context, job, index) {
+              return JobItem(job: job,
+                onIconBookmarkClicked: () async =>
+                await handleIcBookmarkClicked(job),);
             },
-            newPageProgressIndicatorBuilder: (_) => const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: WidgetConstants.circularProgress,
-                  ),
-                ),
+            newPageProgressIndicatorBuilder: (_) =>
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: WidgetConstants.circularProgress,
+              ),
+            ),
             noItemsFoundIndicatorBuilder: (context) {
               if (_searchController.text.isEmpty || _selectedLocation.isEmpty) {
                 return const Center(
@@ -231,7 +242,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void showFilter() {
     showModalBottomSheet(
         context: context,
-        builder: (context) => Wrap(
+        builder: (context) =>
+            Wrap(
               children: [
                 FilterBottomSheet(
                   provinces: _provinces,
@@ -264,20 +276,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> handleIcBookmarkClicked(Job job) async {
-    if (_candidateCubit.state is NoLoggedInState){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+    if (_candidateCubit.state is NoLoggedInState) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
       return;
     }
 
-    if (_candidateCubit.state is LoginSuccessState){
-      final candidateToken = (_candidateCubit.state as LoginSuccessState).token;
-      final isSaved = _savedJobCubit.allSavedJobs().any((j)=> j.jobId == job.jobId);
+    _debouncer.debounce(
+        duration: const Duration(seconds: 3), onDebounce: () async {
+      if (_candidateCubit.state is LoginSuccessState) {
+        final candidateToken = (_candidateCubit.state as LoginSuccessState)
+            .token;
+        final isSaved = _savedJobCubit.allSavedJobs().any((j) =>
+        j.jobId == job.jobId);
 
-      if (!isSaved){
-        await _savedJobCubit.saveJob(job.jobId, candidateToken);
-      }else{
-        await _savedJobCubit.deleteJob(job.jobId, candidateToken);
+        if (!isSaved) {
+          await _savedJobCubit.saveJob(job.jobId, candidateToken);
+        } else {
+          await _savedJobCubit.deleteJob(job.jobId, candidateToken);
+        }
       }
-    }
+    });
   }
 }

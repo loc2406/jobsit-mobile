@@ -41,7 +41,7 @@ class _SavedJobScreenState extends State<SavedJobScreen> {
     _pagingController.addPageRequestListener((pageKey) async {
       final state = _candidateCubit.state;
       if (state is LoginSuccessState) {
-        debugPrint('Fetching saved jobs for page: $pageKey'); // Kiểm tra có gọi API không
+        debugPrint('Fetching saved jobs for page: $pageKey');
         await _getSavedJobs(token: state.token, no: pageKey);
       }
     });

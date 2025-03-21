@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
@@ -106,27 +107,26 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                   return;
                 }
 
-                if (_candidateCubit.state is LoginSuccessState) {
-                  if (_isSaved) {
-                    await _savedJobCubit.deleteJob(_job.jobId,
-                        (_candidateCubit.state as LoginSuccessState).token);
-                  } else {
-                    await _savedJobCubit.saveJob(_job.jobId,
-                        (_candidateCubit.state as LoginSuccessState).token);
+                Debouncer().debounce(duration: const Duration(seconds: 3), onDebounce: () async {
+                  if (_candidateCubit.state is LoginSuccessState) {
+                    if (_isSaved) {
+                      await _savedJobCubit.deleteJob(_job.jobId,
+                          (_candidateCubit.state as LoginSuccessState).token);
+                    } else {
+                      await _savedJobCubit.saveJob(_job.jobId,
+                          (_candidateCubit.state as LoginSuccessState).token);
+                    }
                   }
-
-                  setState(() {
-                    _isSaved = !_isSaved;
-                  });
-                }
+                });
               },
               child: BlocBuilder<SavedJobCubit, SavedJobsState>(
                 builder: (context, state) {
-                  final isSaved = _savedJobCubit
+                  _isSaved = _savedJobCubit
                       .allSavedJobs()
                       .any((job) => job.jobId == _job.jobId);
+                  debugPrint('${state.toString()}===$_isSaved');
                   return Icon(
-                    isSaved
+                    _isSaved
                         ? CupertinoIcons.bookmark_fill
                         : CupertinoIcons.bookmark,
                     color: ColorConstants.main,
@@ -529,15 +529,17 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       return;
     }
 
-    if (_candidateCubit.state is LoginSuccessState){
-      final candidateToken = (_candidateCubit.state as LoginSuccessState).token;
-      final isSaved = _savedJobCubit.allSavedJobs().any((j)=> j.jobId == job.jobId);
+    Debouncer().debounce(duration: const Duration(seconds: 3), onDebounce: () async {
+      if (_candidateCubit.state is LoginSuccessState){
+        final candidateToken = (_candidateCubit.state as LoginSuccessState).token;
+        final isSaved = _savedJobCubit.allSavedJobs().any((j)=> j.jobId == job.jobId);
 
-      if (!isSaved){
-        await _savedJobCubit.saveJob(job.jobId, candidateToken);
-      }else{
-        await _savedJobCubit.deleteJob(job.jobId, candidateToken);
+        if (!isSaved){
+          await _savedJobCubit.saveJob(job.jobId, candidateToken);
+        }else{
+          await _savedJobCubit.deleteJob(job.jobId, candidateToken);
+        }
       }
-    }
+    });
   }
 }
