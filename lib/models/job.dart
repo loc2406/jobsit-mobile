@@ -44,8 +44,8 @@ class Job {
   final String startDate;
   final String endDate;
   final String location;
-  final int salaryMin;
-  final int salaryMax;
+  final double salaryMin;
+  final double salaryMax;
 
   const Job({required this.companyId,
     required this.companyName,
@@ -71,16 +71,16 @@ class Job {
       companyLogo: map[JobServices.companyDTOKey][JobServices.logoKey] ?? '',
       companyDescription: map[JobServices.companyDTOKey][JobServices.descriptionKey] ?? '',
       jobId: int.parse(map[JobServices.idKey].toString()),
-      jobName: map[JobServices.nameKey],
+      jobName: map[JobServices.titleKey],
       jobDescription: map[JobServices.descriptionKey],
-      positions: ConvertConstants.convertToListJobPositions(map[JobServices.positionDTOsKey] as List<dynamic>),
-      schedules: ConvertConstants.convertToListJobSchedules(map[JobServices.scheduleDTOsKey] as List<dynamic>),
+      positions: ConvertConstants.convertToListJobPositions(map[JobServices.positionDTOSKey] as List<dynamic>),
+      schedules: ConvertConstants.convertToListJobSchedules(map[JobServices.scheduleDTOSKey] as List<dynamic>),
       amount: int.parse(map[JobServices.amountKey].toString()),
-      startDate: map[JobServices.startDateKey].toString(),
-      endDate: map[JobServices.endDateKey].toString(),
-      location: map[JobServices.locationKey] ?? '',
-      salaryMin: int.parse(map[JobServices.salaryMinKey].toString()),
-      salaryMax: int.parse(map[JobServices.salaryMaxKey].toString()),
+      startDate: map[JobServices.postingDateKey].toString(),
+      endDate: map[JobServices.applicationDeadlineKey ].toString(),
+      location: "${map[JobServices.addressKey]}, ${map[JobServices.districtKey]}, ${map[JobServices.cityKey]}, ${map[JobServices.countryKey]}",
+      salaryMin: double.parse(map[JobServices.minAllowanceKey].toString()),
+      salaryMax: double.parse(map[JobServices.maxAllowanceKey].toString()),
     );
   }
 
@@ -91,16 +91,16 @@ class Job {
       companyLogo: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.logoKey],
       companyDescription: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.descriptionKey] ?? '',
       jobId: int.parse(map[JobServices.jobDTOKey][JobServices.idKey].toString()),
-      jobName: map[JobServices.jobDTOKey][JobServices.nameKey],
+      jobName: map[JobServices.jobDTOKey][JobServices.titleKey],
       jobDescription: map[JobServices.jobDTOKey][JobServices.descriptionKey],
-      positions: ConvertConstants.convertToListJobPositions(map[JobServices.jobDTOKey][JobServices.positionDTOsKey] as List<dynamic>),
-      schedules: ConvertConstants.convertToListJobSchedules(map[JobServices.jobDTOKey][JobServices.scheduleDTOsKey] as List<dynamic>),
+      positions: ConvertConstants.convertToListJobPositions(map[JobServices.jobDTOKey][JobServices.positionDTOSKey] as List<dynamic>),
+      schedules: ConvertConstants.convertToListJobSchedules(map[JobServices.jobDTOKey][JobServices.scheduleDTOSKey] as List<dynamic>),
       amount: int.parse(map[JobServices.jobDTOKey][JobServices.amountKey].toString()),
-      startDate: map[JobServices.jobDTOKey][JobServices.startDateKey].toString(),
-      endDate: map[JobServices.jobDTOKey][JobServices.endDateKey].toString(),
-      location: map[JobServices.jobDTOKey][JobServices.locationKey] ?? '',
-      salaryMin: int.parse(map[JobServices.jobDTOKey][JobServices.salaryMinKey].toString()),
-      salaryMax: int.parse(map[JobServices.jobDTOKey][JobServices.salaryMaxKey].toString()),
+      startDate: map[JobServices.jobDTOKey][JobServices.postingDateKey].toString(),
+      endDate: map[JobServices.jobDTOKey][JobServices.applicationDeadlineKey ].toString(),
+      location: "${map[JobServices.jobDTOKey][JobServices.addressKey]}, ${map[JobServices.jobDTOKey][JobServices.districtKey]}, ${map[JobServices.jobDTOKey][JobServices.cityKey]}, ${map[JobServices.jobDTOKey][JobServices.countryKey]}",
+      salaryMin: double.parse(map[JobServices.jobDTOKey][JobServices.minAllowanceKey].toString()),
+      salaryMax: double.parse(map[JobServices.jobDTOKey][JobServices.maxAllowanceKey].toString()),
     );
   }
 
@@ -111,16 +111,16 @@ class Job {
       companyLogo: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.logoKey] ?? '',
       companyDescription: map[JobServices.jobDTOKey][JobServices.companyDTOKey][JobServices.descriptionKey] ?? '',
       jobId: int.parse(map[JobServices.jobDTOKey][JobServices.idKey].toString()),
-      jobName: map[JobServices.jobDTOKey][JobServices.nameKey],
+      jobName: map[JobServices.jobDTOKey][JobServices.titleKey],
       jobDescription: map[JobServices.jobDTOKey][JobServices.descriptionKey],
-      positions: ConvertConstants.convertToListJobPositions(map[JobServices.jobDTOKey][JobServices.positionDTOsKey] as List<dynamic>),
-      schedules: ConvertConstants.convertToListJobSchedules(map[JobServices.jobDTOKey][JobServices.scheduleDTOsKey] as List<dynamic>),
+      positions: ConvertConstants.convertToListJobPositions(map[JobServices.jobDTOKey][JobServices.positionDTOSKey] as List<dynamic>),
+      schedules: ConvertConstants.convertToListJobSchedules(map[JobServices.jobDTOKey][JobServices.scheduleDTOSKey] as List<dynamic>),
       amount: int.parse(map[JobServices.jobDTOKey][JobServices.amountKey].toString()),
-      startDate: map[JobServices.jobDTOKey][JobServices.startDateKey].toString(),
-      endDate: map[JobServices.jobDTOKey][JobServices.endDateKey].toString(),
-      location: map[JobServices.jobDTOKey][JobServices.locationKey] ?? '',
-      salaryMin: int.parse(map[JobServices.jobDTOKey][JobServices.salaryMinKey].toString()),
-      salaryMax: int.parse(map[JobServices.jobDTOKey][JobServices.salaryMaxKey].toString()),
+      startDate: map[JobServices.jobDTOKey][JobServices.postingDateKey].toString(),
+      endDate: map[JobServices.jobDTOKey][JobServices.applicationDeadlineKey ].toString(),
+      location: "${map[JobServices.jobDTOKey][JobServices.addressKey]}, ${map[JobServices.jobDTOKey][JobServices.districtKey]}, ${map[JobServices.jobDTOKey][JobServices.cityKey]}, ${map[JobServices.jobDTOKey][JobServices.countryKey]}",
+      salaryMin: double.parse(map[JobServices.jobDTOKey][JobServices.minAllowanceKey].toString()),
+      salaryMax: double.parse(map[JobServices.jobDTOKey][JobServices.maxAllowanceKey].toString()),
     );
   }
 }

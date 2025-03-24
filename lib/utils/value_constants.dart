@@ -41,7 +41,7 @@ class ValueConstants {
     {"id": 2, "name": "Software Engineering"},
     {"id": 3, "name": "Computer Engineering"},
     {"id": 4, "name": "Artificial Intelligence"},
-    {"id": 5, "name": "	Artificial Intelligence"},
+    {"id": 5, "name": "	Network Engineering"},
     {"id": 6, "name": "	Information Systems Management"}
   ];
 }

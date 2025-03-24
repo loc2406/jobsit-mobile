@@ -57,7 +57,7 @@ class ConvertConstants {
         orElse: () => {} as Map<String, Object>);
   }
 
-  static double convertVNDToUSD(int vnd) {
+  static double convertVNDToUSD(double vnd) {
     double usd = vnd / ValueConstants.exchangeRateFromUSDToVND;
     return double.parse(usd.toStringAsFixed(2));
   }

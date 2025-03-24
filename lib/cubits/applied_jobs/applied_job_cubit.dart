@@ -59,6 +59,7 @@ class AppliedJobCubit extends Cubit<AppliedJobState> {
       }
     } catch (e) {
       debugPrint(e.toString());
+      emit(AppliedJobState.error(TextConstants.getAppliedJobError));
     }
   }
 }

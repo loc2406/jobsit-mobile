@@ -141,7 +141,12 @@ class _SavedJobScreenState extends State<SavedJobScreen> {
           noItemsFoundIndicatorBuilder: (context) => const Center(
                 child: Text(TextConstants.noData,
                     style: WidgetConstants.black16Style),
-              )),
+              ),
+          firstPageErrorIndicatorBuilder: (context) => const Center(
+            child: Text(TextConstants.getSavedJobError,
+                style: WidgetConstants.black16Style),
+          )
+      ),
     );
   }
 

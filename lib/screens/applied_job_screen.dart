@@ -58,7 +58,6 @@ class _AppliedJobScreenState extends State<AppliedJobScreen> {
     });
   }
 
-
   Future<void> _getAppliedJobs({required String token, required int no}) async {
     await _appliedJobCubit.getAppliedJobs(token: token, no: no);
   }
@@ -66,26 +65,28 @@ class _AppliedJobScreenState extends State<AppliedJobScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          title: const Text(
-            TextConstants.appliedJob,
-            style: WidgetConstants.mainBold16Style,
-          ),
-          centerTitle: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: const Text(
+          TextConstants.appliedJob,
+          style: WidgetConstants.mainBold16Style,
         ),
-        body: BlocBuilder<CandidateCubit, CandidateState>(
-          builder: (context, state) {
-            if (state is NoLoggedInState) {
-              return const Center(
-                child: Text(TextConstants.noData, style: WidgetConstants.black16Style),
-              );
-            }
-            return _buildAppliedJob();
-          },
-        ),);
+        centerTitle: true,
+      ),
+      body: BlocBuilder<CandidateCubit, CandidateState>(
+        builder: (context, state) {
+          if (state is NoLoggedInState) {
+            return const Center(
+              child: Text(TextConstants.noData,
+                  style: WidgetConstants.black16Style),
+            );
+          }
+          return _buildAppliedJob();
+        },
+      ),
+    );
   }
 
   Widget _buildAppliedJob() {
@@ -117,7 +118,8 @@ class _AppliedJobScreenState extends State<AppliedJobScreen> {
                     }
                   } else if (state is ErrorState) {
                     _pagingController.error = state.errMessage;
-                  }else if (state is EmptyState|| state is AppliedJobSuccessState) {
+                  } else if (state is EmptyState ||
+                      state is AppliedJobSuccessState) {
                     _resetPagingController();
                   }
                 },
@@ -131,21 +133,21 @@ class _AppliedJobScreenState extends State<AppliedJobScreen> {
 
   Widget _buildJobList() {
     return PagedListView<int, Job>(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Job>(
-          itemBuilder: (context, job, index) => JobItem(
-                job: job,
-                onIconBookmarkClicked: () async {},
-                isApplied: true
-              ),
-          newPageProgressIndicatorBuilder: (_) => const Center(
-                child: WidgetConstants.circularProgress,
-              ),
-          noItemsFoundIndicatorBuilder: (context) => const Center(
-                child: Text(TextConstants.noData,
-                    style: WidgetConstants.black16Style),
-              )),
-    );
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Job>(
+            itemBuilder: (context, job, index) => JobItem(
+                job: job, onIconBookmarkClicked: () async {}, isApplied: true),
+            newPageProgressIndicatorBuilder: (_) => const Center(
+                  child: WidgetConstants.circularProgress,
+                ),
+            noItemsFoundIndicatorBuilder: (context) => const Center(
+                  child: Text(TextConstants.noData,
+                      style: WidgetConstants.black16Style),
+                ),
+            firstPageErrorIndicatorBuilder: (context) => const Center(
+                  child: Text(TextConstants.getAppliedJobError,
+                      style: WidgetConstants.black16Style),
+                )));
   }
 
   @override

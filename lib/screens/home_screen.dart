@@ -10,6 +10,7 @@ import 'package:jobsit_mobile/cubits/job/job_cubit.dart';
 import 'package:jobsit_mobile/cubits/job/job_state.dart';
 import 'package:jobsit_mobile/cubits/job/loaded_state.dart';
 import 'package:jobsit_mobile/cubits/saved_jobs/delete_job_success.dart';
+import 'package:jobsit_mobile/cubits/saved_jobs/loading_state.dart';
 import 'package:jobsit_mobile/cubits/saved_jobs/save_job_success_state.dart';
 import 'package:jobsit_mobile/cubits/saved_jobs/saved_job_state.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
@@ -19,7 +20,6 @@ import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
 import 'package:jobsit_mobile/widgets/filter_bottom_sheet.dart';
 import 'package:jobsit_mobile/widgets/job_item.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 import '../cubits/candidate/candidate_cubit.dart';
 import '../cubits/job/error_state.dart';
@@ -282,20 +282,17 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    _debouncer.debounce(
-        duration: const Duration(seconds: 3), onDebounce: () async {
-      if (_candidateCubit.state is LoginSuccessState) {
-        final candidateToken = (_candidateCubit.state as LoginSuccessState)
-            .token;
-        final isSaved = _savedJobCubit.allSavedJobs().any((j) =>
-        j.jobId == job.jobId);
+    if (_candidateCubit.state is LoginSuccessState) {
+      final candidateToken = (_candidateCubit.state as LoginSuccessState)
+          .token;
+      final isSaved = _savedJobCubit.allSavedJobs().any((j) =>
+      j.jobId == job.jobId);
 
-        if (!isSaved) {
-          await _savedJobCubit.saveJob(job.jobId, candidateToken);
-        } else {
-          await _savedJobCubit.deleteJob(job.jobId, candidateToken);
-        }
+      if (!isSaved) {
+        await _savedJobCubit.saveJob(job.jobId, candidateToken);
+      } else {
+        await _savedJobCubit.deleteJob(job.jobId, candidateToken);
       }
-    });
+    }
   }
 }

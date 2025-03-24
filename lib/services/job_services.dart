@@ -19,24 +19,29 @@ class JobServices {
   static const deleteJobUrl = '${BaseServices.url}/candidate-job-care?idJob=';
   static const getOtherJobsUrl = '${BaseServices.url}/job/active/company/';
   static const applyJobUrl = '${BaseServices.url}/candidate-application';
-  static const getAppliedJobsUrl = '${BaseServices.url}/candidate-application/candidate?';
+  static const getAppliedJobsUrl = '${BaseServices.url}/candidate-application?';
 
   // Response key
   static const contentsKey = 'contents';
   static const companyDTOKey = 'companyDTO';
   static const idKey = 'id';
   static const nameKey = 'name';
+  static const titleKey = 'title';
   static const logoKey = 'logo';
   static const descriptionKey = 'description';
-  static const locationKey = 'location';
-  static const positionDTOsKey = 'positionDTOs';
-  static const scheduleDTOsKey = 'scheduleDTOs';
+  static const positionDTOSKey = 'positionDTOS';
+  static const scheduleDTOSKey = 'scheduleDTOS';
+  static const majorDTOSKey = 'majorDTOS';
   static const amountKey = 'amount';
-  static const startDateKey = 'startDate';
-  static const endDateKey = 'endDate';
+  static const postingDateKey = 'postingDate';
+  static const applicationDeadlineKey = 'applicationDeadline';
   static const lastKey = 'last';
-  static const salaryMinKey = 'salaryMin';
-  static const salaryMaxKey = 'salaryMax';
+  static const minAllowanceKey = 'minAllowance';
+  static const maxAllowanceKey = 'maxAllowance';
+  static const countryKey = 'country';
+  static const cityKey = 'city';
+  static const districtKey = 'district';
+  static const addressKey = 'address';
   static const jobDTOKey = 'jobDTO';
   static const referenceLetterKey = 'referenceLetter';
   static const candidateApplicationKey = 'candidateApplication';

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jobsit_mobile/cubits/saved_jobs/loading_state.dart';
 import 'package:jobsit_mobile/cubits/saved_jobs/saved_job_cubit.dart';
 import 'package:jobsit_mobile/screens/job_detail_screen.dart';
 import 'package:jobsit_mobile/services/base_services.dart';
@@ -17,7 +18,7 @@ class JobItem extends StatefulWidget {
   const JobItem(
       {super.key,
       required this.job,
-        this.onIconBookmarkClicked,
+      this.onIconBookmarkClicked,
       this.isApplied = false});
 
   final Job job;
@@ -34,6 +35,7 @@ class JobItemState extends State<JobItem> {
   late final bool isApplied;
   late final SavedJobCubit _savedJobCubit;
   late int differenceInDays;
+  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -77,8 +79,7 @@ class JobItemState extends State<JobItem> {
                   child: job.companyLogo != null
                       ? Image.network(
                           '${JobServices.displayJobLogoUrl}${job.companyLogo}',
-                          width: 24,
-                          height: 24,
+                          fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               _buildJobDefaultLogo(),
                         )
@@ -116,20 +117,21 @@ class JobItemState extends State<JobItem> {
                     width: ValueConstants.deviceWidthValue(uiValue: 13),
                   ),
                   GestureDetector(
-                    onTap: () async {
-                      await onIconBookmarkClicked?.call();
-                    },
+                    onTap: _isProcessing ? null : _handleBookmarkClick,
                     child: BlocBuilder<SavedJobCubit, SavedJobsState>(
                       builder: (context, state) {
                         final isSaved = _savedJobCubit
                             .allSavedJobs()
                             .any((job) => job.jobId == this.job.jobId);
-                        return Icon(
-                          isSaved
-                              ? CupertinoIcons.bookmark_fill
-                              : CupertinoIcons.bookmark,
-                          color: ColorConstants.main,
-                        );
+
+                        return _isProcessing
+                            ? const CircularProgressIndicator()
+                            : Icon(
+                                isSaved
+                                    ? CupertinoIcons.bookmark_fill
+                                    : CupertinoIcons.bookmark,
+                                color: ColorConstants.main,
+                              );
                       },
                     ),
                   )
@@ -247,5 +249,17 @@ class JobItemState extends State<JobItem> {
               ),
             ))
         .toList();
+  }
+
+  Future<void> _handleBookmarkClick() async {
+    setState(() {
+      _isProcessing = true;
+    });
+
+    await onIconBookmarkClicked?.call();
+
+    setState(() {
+      _isProcessing = false;
+    });
   }
 }
