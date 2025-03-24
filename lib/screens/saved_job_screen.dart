@@ -111,8 +111,11 @@ class _SavedJobScreenState extends State<SavedJobScreen> {
                     _pagingController.error = state.errMessage;
                   } else if (state is EmptyState) {
                     _pagingController.itemList = [];
-                  } else if (state is SaveJobSuccessState ||
-                      state is DeleteJobSuccessState) {
+                  }
+                  else if (state is SaveJobSuccessState) {
+                    _pagingController.refresh();
+                  }
+                  else if (state is DeleteJobSuccessState) {
                     _pagingController.refresh();
                   }
                 },

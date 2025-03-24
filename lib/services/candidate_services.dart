@@ -17,9 +17,9 @@ class CandidateServices {
   static const loginCandidateUrl = '${BaseServices.url}/login';
   static const getCandidateByIdUrl = '${BaseServices.url}/candidate/user/';
   static const getCandidateAvatarUrl = '${BaseServices.url}/file/display/';
-  static const updateCandidateUrl = '${BaseServices.url}/candidate/';
-  static const universitiesUrl = '${BaseServices.url}/university?no=0&&limit=10';
-  static const updateSearchableUrl = '${BaseServices.url}/candidate/searchable/';
+  static const updateCandidateUrl = '${BaseServices.url}/candidate';
+  static const universitiesUrl = '${BaseServices.url}/university';
+  static const updateSearchableUrl = '${BaseServices.url}/candidate/searchable';
   static const updateMailReceiveUrl = '${BaseServices.url}/candidate/email-notification/';
   static const logoutUrl = '${BaseServices.url}/logout?token=';
 
@@ -148,7 +148,7 @@ class CandidateServices {
     University? university,
   }) async {
     final uri =
-        Uri.parse('${CandidateServices.updateCandidateUrl}$candidateId');
+        Uri.parse('${CandidateServices.updateCandidateUrl}');
 
     var request = http.MultipartRequest("PUT", uri);
 
@@ -198,11 +198,11 @@ class CandidateServices {
 
       if (response.statusCode == 200) {
         // Đối với danh sách k phân trang
-        // final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
 
         // Đối với data phân trang
-        final dataObject = jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> data = dataObject[contentsKey];
+        // final dataObject = jsonDecode(utf8.decode(response.bodyBytes));
+        // final List<dynamic> data = dataObject[contentsKey];
 
         return data.map((university) => University.fromMap(university)).toList();
       } else {
@@ -213,8 +213,8 @@ class CandidateServices {
     }
   }
 
-  static updateSearchable(int id, String token) async {
-    final uri = Uri.parse('${CandidateServices.updateSearchableUrl}$id');
+  static updateSearchable( String token) async {
+    final uri = Uri.parse(CandidateServices.updateSearchableUrl);
 
     final response = await http.put(uri,
         headers: BaseServices.getHeaderWithToken(token));

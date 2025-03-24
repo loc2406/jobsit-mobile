@@ -152,7 +152,7 @@ class CandidateCubit extends Cubit<CandidateState> {
 
   updateSearchable(int id, String token) async {
     try{
-      await CandidateServices.updateSearchable(id, token);
+      await CandidateServices.updateSearchable(token);
       final candidate = await CandidateServices.getCandidateById(id);
       emit(CandidateState.loginSuccess(token, candidate));
     }catch(e){

@@ -35,7 +35,6 @@ class JobItemState extends State<JobItem> {
   late final bool isApplied;
   late final SavedJobCubit _savedJobCubit;
   late int differenceInDays;
-  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -117,16 +116,16 @@ class JobItemState extends State<JobItem> {
                     width: ValueConstants.deviceWidthValue(uiValue: 13),
                   ),
                   GestureDetector(
-                    onTap: _isProcessing ? null : _handleBookmarkClick,
+                    onTap: () async {
+                      await onIconBookmarkClicked?.call();
+                    },
                     child: BlocBuilder<SavedJobCubit, SavedJobsState>(
                       builder: (context, state) {
                         final isSaved = _savedJobCubit
                             .allSavedJobs()
                             .any((job) => job.jobId == this.job.jobId);
 
-                        return _isProcessing
-                            ? const CircularProgressIndicator()
-                            : Icon(
+                        return Icon(
                                 isSaved
                                     ? CupertinoIcons.bookmark_fill
                                     : CupertinoIcons.bookmark,
@@ -249,17 +248,5 @@ class JobItemState extends State<JobItem> {
               ),
             ))
         .toList();
-  }
-
-  Future<void> _handleBookmarkClick() async {
-    setState(() {
-      _isProcessing = true;
-    });
-
-    await onIconBookmarkClicked?.call();
-
-    setState(() {
-      _isProcessing = false;
-    });
   }
 }

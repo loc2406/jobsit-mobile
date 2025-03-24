@@ -39,8 +39,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   final _birthdateController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
-  final _schoolController = TextEditingController();
   bool? _selectedGender;
+  String? _candidateCity;
+  String? _candidateDistrict;
+  String? _candidateUniversity;
   Province? _selectedCity;
   String? _selectedDistrict;
   University? _selectedUniversity;
@@ -53,8 +55,11 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   void initState() {
     super.initState();
     _cubit = context.read<CandidateCubit>();
-    _getProvinces();
-    _getUniversities();
+  }
+
+  Future<void> _loadInitialData() async {
+    await _getProvinces();
+    await _getUniversities();
   }
 
   Future<void> _getProvinces() async {
@@ -84,15 +89,68 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       _candidate = candidateInfo[TextConstants.candidate];
       _token = candidateInfo[TextConstants.token];
-      _firstNameController.text = _candidate.firstName;
-      _lastNameController.text = _candidate.lastName;
-      _emailController.text = _candidate.email;
-      _birthdateController.text =
-          _candidate.birthdate ?? TextConstants.defaultCandidateBirthdate;
-      _phoneController.text = _candidate.phone;
-      _selectedGender = _candidate.gender;
+      _loadInitialData().whenComplete(() => _setCandidateData());
       _isSetData = true;
     }
+  }
+
+  void _setCandidateData() {
+    final location = _candidate.location;
+
+    if (location != null) {
+      RegExp regex = RegExp(r"^(.*?),\s*(Huyện|Quận|Thành phố|thị xã)?\s*([^,]+),\s*(Tỉnh|Thành phố)?\s*(.+)$");
+      Match? match = regex.firstMatch(location);
+
+      if (match != null) {
+        String address = match.group(1)?.trim() ?? "";
+        _candidateDistrict = "${match.group(2) ?? ''} ${match.group(3) ?? ''}".trim();
+        _candidateCity = "${match.group(4) ?? ''} ${match.group(5) ?? ''}".trim();
+
+        debugPrint("Địa chỉ: $address");
+        debugPrint("Quận/Huyện: $_candidateDistrict");
+        debugPrint("Tỉnh: $_candidateCity");
+        debugPrint("DS Tỉnh: ${_cities.length}");
+
+        _addressController.text = address;
+
+        setState(() {
+          try {
+            _selectedCity = _cities.firstWhere(
+                    (province) => province.name.toLowerCase() == _candidateCity?.toLowerCase());
+          } catch (e) {
+            _selectedCity = null;
+          }
+        });
+
+        if (_selectedCity != null) {
+          _getDistrictsAndSetSelected();
+        }
+      }
+    }
+
+    _firstNameController.text = _candidate.firstName;
+    _lastNameController.text = _candidate.lastName;
+    _emailController.text = _candidate.email;
+    _birthdateController.text =
+        _candidate.birthdate ?? TextConstants.defaultCandidateBirthdate;
+    _phoneController.text = _candidate.phone;
+    _selectedGender = _candidate.gender;
+  }
+
+
+  Future<void> _getDistrictsAndSetSelected() async {
+    final List<String> districts = await _cubit.getDistricts(_selectedCity!.code);
+    setState(() {
+      _districts = districts;
+
+      try {
+        _selectedDistrict =
+            _districts.firstWhere((district) => district.toLowerCase() ==
+                _candidateDistrict?.toLowerCase());
+      } catch (e) {
+        _selectedDistrict = null;
+      }
+    });
   }
 
   @override
@@ -433,6 +491,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           setState(() {
             _selectedCity = value;
             _districts = districts;
+            _selectedDistrict = null;
           });
         },
         icon: const Icon(
@@ -521,7 +580,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                 (university) => DropdownMenuItem(
               value: university,
               child: Tooltip(
-                message: university.name, // Hiển thị toàn bộ nội dung khi di chuột hoặc nhấn giữ
+                message: university.name,
                 child: Text(
                   university.name,
                   style: WidgetConstants.black16Style,

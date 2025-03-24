@@ -282,17 +282,19 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    if (_candidateCubit.state is LoginSuccessState) {
-      final candidateToken = (_candidateCubit.state as LoginSuccessState)
-          .token;
-      final isSaved = _savedJobCubit.allSavedJobs().any((j) =>
-      j.jobId == job.jobId);
+    _debouncer.debounce(duration: const Duration(seconds: 3), onDebounce: () async {
+      if (_candidateCubit.state is LoginSuccessState) {
+        final candidateToken = (_candidateCubit.state as LoginSuccessState)
+            .token;
+        final isSaved = _savedJobCubit.allSavedJobs().any((j) =>
+        j.jobId == job.jobId);
 
-      if (!isSaved) {
-        await _savedJobCubit.saveJob(job.jobId, candidateToken);
-      } else {
-        await _savedJobCubit.deleteJob(job.jobId, candidateToken);
+        if (!isSaved) {
+          await _savedJobCubit.saveJob(job.jobId, candidateToken);
+        } else {
+          await _savedJobCubit.deleteJob(job.jobId, candidateToken);
+        }
       }
-    }
+    });
   }
 }

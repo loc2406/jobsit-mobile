@@ -24,23 +24,24 @@ class SavedJobCubit extends Cubit<SavedJobsState> {
     emit(SavedJobsState.loading());
     try {
       final response =
-          await JobServices.getSavedJobs(token: token, no: no, limit: _limit);
+      await JobServices.getSavedJobs(token: token, no: no, limit: _limit);
 
       final contents = response[JobServices.contentsKey];
       final isLastPage = response[JobServices.lastKey] == true;
 
       final savedJobs = ConvertConstants.convertToListSavedJobs(contents);
 
+      //debugPrint("GỌI API LẤY CÔNG VIỆC ĐÃ LƯU TRANG: $no, SỐ LƯỢNG: ${savedJobs.length}");
+
+      if (no == 0) {
+        _savedJobs.clear();
+      }
+
       if (savedJobs.isEmpty) {
         emit(SavedJobsState.empty());
       } else {
-
-        if (no == 0){
-          _savedJobs = [];
-        }
-
         _savedJobs.addAll(savedJobs);
-        emit(SavedJobsState.loaded(savedJobs: savedJobs, page: no, isLastPage: isLastPage));
+        emit(SavedJobsState.loaded(savedJobs: List.from(_savedJobs), page: no, isLastPage: isLastPage));
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -51,6 +52,8 @@ class SavedJobCubit extends Cubit<SavedJobsState> {
     emit(SavedJobsState.loading());
     try {
       await JobServices.saveJob(jobId: jobId, token: token);
+      _savedJobs.clear();
+      await getSavedJobs(token: token, no: 0);
       emit(SavedJobsState.saveSuccess());
     } catch (e) {
       debugPrint(e.toString());
@@ -61,6 +64,8 @@ class SavedJobCubit extends Cubit<SavedJobsState> {
     emit(SavedJobsState.loading());
     try {
       await JobServices.deleteJob(jobId: jobId, token: token);
+      _savedJobs.clear();
+      await getSavedJobs(token: token, no: 0);
       emit(SavedJobsState.deleteSuccess());
     } catch (e) {
       debugPrint(e.toString());

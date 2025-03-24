@@ -33,7 +33,7 @@ class Candidate {
 
   factory Candidate.fromMap(Map<String, dynamic> map) {
     return Candidate(
-      id: int.parse(map[idField].toString()),
+      id: int.parse(map[CandidateServices.userDTOKey][idField].toString()),
       email: map[CandidateServices.userDTOKey][emailField] ?? '',
       firstName: map[CandidateServices.userDTOKey][firstNameField],
       lastName: map[CandidateServices.userDTOKey][lastNameField],
