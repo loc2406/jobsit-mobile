@@ -45,6 +45,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   late JobCubit _jobCubit;
   bool _isSaved = false;
   List<Job> _otherJobs = [];
+  final _debouncer = Debouncer();
 
   @override
   void initState() {
@@ -99,32 +100,14 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
           actions: [
             GestureDetector(
               onTap: () async {
-                if (_candidateCubit.state is NoLoggedInState) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen()));
-                  return;
-                }
-
-                Debouncer().debounce(duration: const Duration(seconds: 3), onDebounce: () async {
-                  if (_candidateCubit.state is LoginSuccessState) {
-                    if (_isSaved) {
-                      await _savedJobCubit.deleteJob(_job.jobId,
-                          (_candidateCubit.state as LoginSuccessState).token);
-                    } else {
-                      await _savedJobCubit.saveJob(_job.jobId,
-                          (_candidateCubit.state as LoginSuccessState).token);
-                    }
-                  }
-                });
+                await handleIcBookmarkClicked(_job);
               },
               child: BlocBuilder<SavedJobCubit, SavedJobsState>(
                 builder: (context, state) {
                   _isSaved = _savedJobCubit
                       .allSavedJobs()
                       .any((job) => job.jobId == _job.jobId);
-                  debugPrint('${state.toString()}===$_isSaved');
+
                   return Icon(
                     _isSaved
                         ? CupertinoIcons.bookmark_fill
@@ -501,7 +484,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                         margin: const EdgeInsets.only(right: 20),
                         child: JobItem(
                           job: job,
-                          onIconBookmarkClicked: () => handleIcBookmarkClicked(job),
+                          onIconBookmarkClicked: () async => await handleIcBookmarkClicked(job),
                         ),
                       );
                     }),
@@ -529,14 +512,16 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       return;
     }
 
-    Debouncer().debounce(duration: const Duration(seconds: 3), onDebounce: () async {
-      if (_candidateCubit.state is LoginSuccessState){
-        final candidateToken = (_candidateCubit.state as LoginSuccessState).token;
-        final isSaved = _savedJobCubit.allSavedJobs().any((j)=> j.jobId == job.jobId);
+    _debouncer.debounce(duration: const Duration(seconds: 3), onDebounce: () async {
+      if (_candidateCubit.state is LoginSuccessState) {
+        final candidateToken = (_candidateCubit.state as LoginSuccessState)
+            .token;
+        final isSaved = _savedJobCubit.allSavedJobs().any((j) =>
+        j.jobId == job.jobId);
 
-        if (!isSaved){
+        if (!isSaved) {
           await _savedJobCubit.saveJob(job.jobId, candidateToken);
-        }else{
+        } else {
           await _savedJobCubit.deleteJob(job.jobId, candidateToken);
         }
       }

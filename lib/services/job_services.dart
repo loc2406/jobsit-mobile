@@ -61,7 +61,7 @@ class JobServices {
 
     String api = '${searchJobUrl}no=$no&limit=$limit';
     
-    if (name.isNotEmpty) api += '&name=$name';
+    if (name.isNotEmpty) api += '&title=$name';
     if (provinceName.isNotEmpty) api += '&provinceName=$provinceName';
     if (schedule.isNotEmpty) api += '&schedule=$schedule';
     if (position.isNotEmpty) api += '&position=$position}';

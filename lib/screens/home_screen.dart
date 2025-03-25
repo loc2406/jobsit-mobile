@@ -184,11 +184,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       listener: (context, state) {
                         if (state is SaveJobSuccessState) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text(
+                              const SnackBar(duration: Duration(seconds: 2), content: Text(
                                   TextConstants.saveJobSuccessful)));
                         } else if (state is DeleteJobSuccessState) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text(
+                              const SnackBar(duration: Duration(seconds: 2),content: Text(
                                   TextConstants.deleteJobSuccessful)));
                         }
                       })
