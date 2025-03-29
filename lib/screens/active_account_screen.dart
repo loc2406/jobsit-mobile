@@ -14,6 +14,7 @@ import 'package:jobsit_mobile/utils/validate_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
 import 'package:jobsit_mobile/widgets/input_field.dart';
+import 'package:jobsit_mobile/widgets/input_field_async.dart';
 
 class ActiveAccountScreen extends StatefulWidget {
   const ActiveAccountScreen({super.key});
@@ -84,7 +85,7 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
             ),
             Form(
               key: _formKey,
-              child: InputField(
+              child: InputFieldAsync(
                   controller: _otpController,
                   keyboardType: TextInputType.number,
                   validateMethod: ValidateConstants.validateOtp),

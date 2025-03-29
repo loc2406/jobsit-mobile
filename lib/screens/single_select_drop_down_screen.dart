@@ -159,6 +159,10 @@
 // }
 import 'package:flutter/material.dart';
 
+import '../main.dart' as ColorConstants;
+
+
+
 class SingleSelectDropdown extends StatefulWidget {
   final String title;
   final List<String> options;
@@ -223,7 +227,7 @@ class _SingleSelectDropdownState extends State<SingleSelectDropdown> {
               key: _key,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                border: Border.all(color: errorText == null ? Colors.blue : Colors.red), // ✅ Đổi màu viền khi có lỗi
+                border: Border.all(color: errorText == null ? Colors.amber : Colors.red), // ✅ Đổi màu viền khi có lỗi
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

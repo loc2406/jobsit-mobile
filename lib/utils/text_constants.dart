@@ -190,8 +190,9 @@ class TextConstants {
   static const retrievePassword = 'Lấy lại mật khẩu';
   static const send = 'Gửi';
   static const returnToSignIn = 'Quay về trang đăng nhập';
- static const passwordResetRequestSentToEmail = 'Yêu cầu đặt lại mật khẩu đã gửi đến';
-
+  static const passwordResetRequestSentToEmail = 'Yêu cầu đặt lại mật khẩu đã gửi đến';
+  static const emailNotExisted = "Email chưa được sử dụng.";
+  static const emailUsed = "Email đã sử dụng, vui lòng sử dụng email khác.";
   static const pleaseConfirmYourPassword = 'Vui lòng xác nhận mật khẩu của bạn';
   static const passwordsDoNotMatch ='Mật khẩu không khớp';
 }

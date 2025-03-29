@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:open_file/open_file.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import '../cubits/candidate/candidate_cubit.dart';
 import '../cubits/job/job_cubit.dart';
 import '../models/candidate.dart';
+import '../services/candidate_services.dart';
 import '../utils/color_constants.dart';
 import '../utils/text_constants.dart';
 import '../utils/validate_constants.dart';
@@ -12,6 +15,7 @@ import '../utils/value_constants.dart';
 import '../widgets/input_field.dart';
 import 'account_screen.dart';
 
+import 'cv_viewer_screen.dart';
 import 'multi_select_drop_down_screen1.dart';
 import 'single_select_drop_down_screen.dart';
 
@@ -30,7 +34,7 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
   List<int> selectedPositionIds = [];
   List<int> selectedMajorIds = [];
   List<int> selectedJobTypeIds = [];
-  String? selectedLocation;
+  String? selectedDesiredWorkingProvince;
   final _formKey = GlobalKey<FormState>();
   late Candidate _candidate;
   late String _token;
@@ -40,6 +44,7 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
   late String email;
   late String password;
   String cvError = '';
+  File? _selectedCV;
   @override
   void initState() {
     super.initState();
@@ -70,13 +75,76 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
     selectedJobTypeIds = _candidate.scheduleDTOs!
         .map((sche) => sche[TextConstants.id] as int)
         .toList();
-    selectedLocation = _candidate.location!;
+    selectedDesiredWorkingProvince = _candidate.desiredWorkingProvince!;
     jobWantedController.text = _candidate.desiredJob!;
     coverLetterController.text = _candidate.referenceLetter!;
+    selectedFileNameCV = _candidate.cv; // Lưu tên file
+    //selectedFileCV = _candidate.cvFilePath != null ? File(_candidate.cvFilePath!) : null;
+   // selectedFileCV = _candidate.cv != null ? File(_candidate.cv!) : null;
+   // CandidateServices.getCandidateAvatarLink(_candidate.cv!)
+
   }
 
   Future<void> _getProvinces() async {
     await _cubit.getProvinces();
+  }
+  // void _viewFileCV() {
+  //   if (selectedFileCV != null) {
+  //     OpenFile.open(selectedFileCV!.path);
+  //   }
+  // }
+  // void _viewFileCV() async {
+  //   if (selectedFileCV != null) {
+  //     // Nếu CV là file cục bộ, mở trang xem CV
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => CVViewerScreen(path: selectedFileCV!.path),
+  //       ),
+  //     );
+  //   } else if (selectedFileNameCV != null) {
+  //     // Nếu CV trên server, mở bằng trình duyệt
+  //     final Uri url = Uri.parse("http://localhost:8085/api/file/display/$selectedFileNameCV");
+  //     if (await canLaunchUrl(url)) {
+  //       await launchUrl(url, mode: LaunchMode.externalApplication);
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text("Không thể mở file CV")),
+  //       );
+  //     }
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Không có CV để xem")),
+  //     );
+  //   }
+  // }
+  void _viewFileCV() {
+    if (selectedFileCV != null) {
+      // Nếu CV là file cục bộ, mở bằng PDFView
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CVViewerScreen(
+            path: selectedFileCV!.path,
+            isOnline: false, // Đây là file cục bộ
+          ),
+        ),
+      );
+    } else {
+      // Nếu CV trên server, mở bằng WebView
+      //String fileUrl = "http://192.168.1.15:8085/api/file/display/$selectedFileNameCV";
+      String fileUrl =CandidateServices.getCandidateAvatarLink(selectedFileNameCV!);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CVViewerScreen(
+            path: fileUrl,
+            isOnline: true, // File online
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _pickFileCV() async {
@@ -100,7 +168,8 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          TextConstants.jobInformation,
+          '${TextConstants.jobInformation}',
+
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true, // Căn giữa tiêu đề
@@ -127,22 +196,27 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
               _buildDropdowns(),
               _buildLabel(TextConstants.cv),
 
+
               // GestureDetector(
               //   onTap: () async {
               //     await _pickFileCV(); // Load file trước
               //
-              //     // Kiểm tra file ngay sau khi chọn xong
               //     setState(() {
-              //       cvError = ValidateConstants.validateCandidateCv(selectedFileCV)!;
+              //       cvError =
+              //           ValidateConstants.validateCandidateCv(selectedFileCV) ??
+              //               '';
               //     });
               //   },
               //   child: Column(
               //     crossAxisAlignment: CrossAxisAlignment.start,
               //     children: [
               //       Container(
-              //         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              //         padding: const EdgeInsets.symmetric(
+              //             horizontal: 12, vertical: 14),
               //         decoration: BoxDecoration(
-              //           border: Border.all(color: cvError == '' ? Colors.grey : Colors.red), // Đổi màu viền khi có lỗi
+              //             border: Border.all(
+              //               color: cvError == '' ? ColorConstants.main : Colors.red, // ✅ Đổi màu viền khi có lỗi
+              //             ), // Đổi màu viền khi có lỗi
               //           borderRadius: BorderRadius.circular(8),
               //         ),
               //         child: Row(
@@ -150,11 +224,22 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
               //           children: [
               //             Expanded(
               //               child: Text(
-              //                 selectedFileNameCV ?? "Chọn file CV (PDF)",
-              //                 style: TextStyle(color: cvError == '' ? Colors.black54 : Colors.red),
+              //                 selectedFileNameCV ??
+              //                     TextConstants.pleaseSelectedFileCv,
               //                 overflow: TextOverflow.ellipsis,
               //               ),
               //             ),
+              //             // if (selectedFileCV != null) // Hiển thị nút xóa khi có file
+              //             //   IconButton(
+              //             //     icon: const Icon(Icons.close, color: Colors.red),
+              //             //     onPressed: () {
+              //             //       setState(() {
+              //             //         selectedFileCV = null;
+              //             //         selectedFileNameCV = null;
+              //             //         cvError = ''; // Xóa lỗi khi xóa file
+              //             //       });
+              //             //     },
+              //             //   ),
               //           ],
               //         ),
               //       ),
@@ -171,24 +256,20 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
               // ),
               GestureDetector(
                 onTap: () async {
-                  await _pickFileCV(); // Load file trước
-
+                  await _pickFileCV();
                   setState(() {
-                    cvError =
-                        ValidateConstants.validateCandidateCv(selectedFileCV) ??
-                            '';
+                    cvError = ValidateConstants.validateCandidateCv(selectedFileCV) ?? '';
                   });
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                       decoration: BoxDecoration(
-                          border: Border.all(
-                            color: cvError == '' ? ColorConstants.main : Colors.red, // ✅ Đổi màu viền khi có lỗi
-                          ), // Đổi màu viền khi có lỗi
+                        border: Border.all(
+                          color: cvError == '' ? ColorConstants.main : Colors.red,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -196,22 +277,32 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
                         children: [
                           Expanded(
                             child: Text(
-                              selectedFileNameCV ??
-                                  TextConstants.pleaseSelectedFileCv,
+                              selectedFileNameCV ?? TextConstants.pleaseSelectedFileCv,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          // if (selectedFileCV != null) // Hiển thị nút xóa khi có file
-                          //   IconButton(
-                          //     icon: const Icon(Icons.close, color: Colors.red),
-                          //     onPressed: () {
-                          //       setState(() {
-                          //         selectedFileCV = null;
-                          //         selectedFileNameCV = null;
-                          //         cvError = ''; // Xóa lỗi khi xóa file
-                          //       });
-                          //     },
-                          //   ),
+                          Row(
+                            children: [
+                              if (selectedFileNameCV != null) // Nút xem file
+                                IconButton(
+                                  icon: const Icon(Icons.remove_red_eye, color: Colors.blue),
+                                  onPressed: () {
+                                    _viewFileCV();
+                                  },
+                                ),
+                              if (selectedFileNameCV != null) // Nút xóa file
+                                IconButton(
+                                  icon: const Icon(Icons.close, color: Colors.red),
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedFileCV = null;
+                                      selectedFileNameCV = null;
+
+                                    });
+                                  },
+                                ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -220,13 +311,12 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           cvError!,
-                          style: TextStyle(color: Colors.red, fontSize: 12),
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
                         ),
                       ),
                   ],
                 ),
               ),
-
               _buildLabel(TextConstants.coverLetter),
               _buildMultilineTextField(coverLetterController,
                   TextConstants.writeABriefIntroductionAboutYourself),
@@ -242,19 +332,7 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
   Widget _buildDropdowns() {
     return Column(
       children: [
-        // SizedBox(
-        //   height: 100,
-        //   child: MultiSelectDropdownScreen(
-        //     title: TextConstants.jobPosition,
-        //     options: ValueConstants.positions,
-        //     selectedOptionIds: selectedPositionIds,
-        //     onSelectionChanged: (ids) {
-        //       setState(() {
-        //         selectedPositionIds = ids;
-        //       });
-        //     },
-        //   ),
-        // ),
+
         SizedBox(
           height: 120,
           child: MultiSelectDropdownScreen(
@@ -306,10 +384,10 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
           child: SingleSelectDropdown(
             title: TextConstants.jobLocation,
             options: _cubit.provinces(),
-            initialValue: selectedLocation,
+            initialValue: selectedDesiredWorkingProvince,
             onSelectionChanged: (selected) {
               setState(() {
-                selectedLocation = selected;
+                selectedDesiredWorkingProvince = selected;
               });
             },
             validateMethod: (location) =>
@@ -322,17 +400,25 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
 
   Widget _buildMultilineTextField(
       TextEditingController controller, String placeholder) {
-    return TextField(
-      controller: controller,
-      maxLines: 3,
-      decoration: InputDecoration(
-        hintText: placeholder,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+    return Container(
+      decoration: BoxDecoration( border: Border.all(
+        color:ColorConstants.main, // ✅ Đổi màu viền khi có lỗi
       ),
-    );
+        borderRadius: BorderRadius.circular(8),),
+      child: TextField(
+        controller: controller,
+        maxLines: 3,
+        decoration: InputDecoration(
+          hintText: placeholder,
+            border: InputBorder.none,
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+        ),
+      ),
+    )
+      ;
   }
+
 
   Widget _buildLabel(String text) {
     return Padding(
@@ -377,7 +463,7 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
           major: selectedMajorIds,
           jobType: selectedJobTypeIds,
           wantJob: jobWantedController.text,
-          location: selectedLocation!,
+          desiredWorkingProvince: selectedDesiredWorkingProvince!,
           coverLetter: coverLetterController.text, // ✅ Fix lỗi
           cv: selectedFileCV!,
           avatar: _avatarPath,
@@ -396,3 +482,4 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
     }
   }
 }
+

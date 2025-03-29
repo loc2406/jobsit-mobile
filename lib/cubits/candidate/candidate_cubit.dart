@@ -104,6 +104,15 @@ class CandidateCubit extends Cubit<CandidateState> {
       return [];
     }
   }
+  Future<Map<String, dynamic>?> verifyOtp(String otp) async {
+    try {
+      final response = await CandidateServices.verifyOtp(otp);
+      return response;
+    } catch (e) {
+      debugPrint('❌ Lỗi khi gọi API: $e');
+      return null;
+    }
+  }
   handleUpdate(
       {required Candidate user,
         required String token,
@@ -111,7 +120,7 @@ class CandidateCubit extends Cubit<CandidateState> {
         required List<int> major,
         required List<int> jobType,
         required String wantJob,
-        required String location,
+        required String desiredWorkingProvince,
         required String coverLetter,
         required File cv,
       required String avatar,
@@ -121,7 +130,7 @@ class CandidateCubit extends Cubit<CandidateState> {
       emit(CandidateState.loading());
       final responseBody = await CandidateServices.updateCandidateJob(
           user: user, token: token, position: position,major: major,jobType: jobType,
-          wantJob: wantJob,location: location,coverLetter: coverLetter,cv: cv, avatar : avatar);
+          wantJob: wantJob,desiredWorkingProvince: desiredWorkingProvince,coverLetter: coverLetter,cv: cv, avatar : avatar);
       final responseBodyUser =
       await CandidateServices.loginAccount(email, password);
 

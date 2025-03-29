@@ -472,7 +472,7 @@ class _AccountScreenState extends State<AccountScreen> {
               AssetConstants.iconEdit,
             ),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const JobInfoEditPage(),
@@ -547,7 +547,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 SizedBox(
                   width: ValueConstants.deviceWidthValue(uiValue: 10),
                 ),
-                Text(_candidate.location ?? TextConstants.noData),
+                Text(_candidate.desiredWorkingProvince ?? TextConstants.noData),
               ],
             ),
             SizedBox(
