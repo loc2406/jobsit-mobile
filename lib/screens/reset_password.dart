@@ -24,7 +24,7 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   late final CandidateCubit _cubit;
-  late final String _email;
+  late final String _otp;
   final _formKey = GlobalKey<FormState>();
 
   final _newPasswordController = TextEditingController();
@@ -42,11 +42,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is String) {
-      _email = args;
+      _otp = args;
     } else {
-      _email = ""; // Gán giá trị mặc định nếu args không phải là chuỗi
+      _otp = ""; // Gán giá trị mặc định nếu args không phải là chuỗi
     }
-    print('Email nhận được: $_email');
+
   }
 
   @override
@@ -72,6 +72,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           children: [
             const Text(
               TextConstants.resetPassword,
+
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w700,
@@ -191,7 +192,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   Future<void> changePasswordByOtp() async {
     if ((_formKey.currentState as FormState).validate()) {
-      await _cubit.sendOtpToChangePassWord(_email, _newPasswordController.text);
+      await _cubit.sendOtpToChangePassWord(_otp, _newPasswordController.text);
     }
   }
 

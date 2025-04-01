@@ -1,0 +1,1 @@
+class AppliedJobBeforeException implements Exception{}

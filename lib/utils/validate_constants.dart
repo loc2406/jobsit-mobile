@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:jobsit_mobile/utils/text_constants.dart';
@@ -90,9 +91,13 @@ class ValidateConstants{
       return TextConstants.emailIncorrect;
     }
     final uri =
-    Uri.parse("${CandidateServices.sendActiveEmailUrl}email=$email");
+    Uri.parse("${CandidateServices.checkEmail}email=$email");
     final response = await http.get(uri, headers: BaseServices.headers);
-    if (response.statusCode == 404) {
+    final decodedBody = utf8.decode(response.bodyBytes);
+    final data = jsonDecode(decodedBody);
+
+    if (data['message'] != TextConstants.emailUsed) {
+
       return TextConstants.emailNotFound;
     }
     return null;
@@ -187,7 +192,7 @@ class ValidateConstants{
     return null;
   }
 
-  static String? validateOtp(String? otp){
+  static Future<String?> validateOtp(String? otp) async {
     if (otp == null || otp.trim().isEmpty){
       return TextConstants.pleaseInputOtp;
     }
@@ -195,6 +200,7 @@ class ValidateConstants{
     if (otp.length != 6){
       return TextConstants.otpMustHave6Number;
     }
+
 
     return null;
   }

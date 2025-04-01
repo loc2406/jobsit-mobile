@@ -20,6 +20,7 @@ class Candidate {
   final List<Map<String, dynamic>>? scheduleDTOs;
   final String? desiredJob;
   final String? referenceLetter;
+  final String? desiredWorkingProvince;
   const Candidate({required this.id,
     required this.email,
     required this.firstName,
@@ -37,7 +38,8 @@ class Candidate {
     this.positionDTOs,
     this.scheduleDTOs,
     this.desiredJob,
-    this.referenceLetter
+    this.referenceLetter,
+    this.desiredWorkingProvince
   });
 
   factory Candidate.fromMap(Map<String, dynamic> map) {
@@ -65,7 +67,8 @@ class Candidate {
           ? List<Map<String, dynamic>>.from(map[CandidateServices.candidateOtherInfoDTOKey]['scheduleDTOs'])
           : null,
       desiredJob: map[CandidateServices.candidateOtherInfoDTOKey]?[desiredJobField]?? '',
-      referenceLetter: map[CandidateServices.candidateOtherInfoDTOKey]?[referenceLetterField] ?? ''
+      referenceLetter: map[CandidateServices.candidateOtherInfoDTOKey]?[referenceLetterField] ?? '',
+      desiredWorkingProvince: map[CandidateServices.candidateOtherInfoDTOKey]?[desiredWorkingProvinceField] ?? ''
     );
   }
 
@@ -88,4 +91,5 @@ class Candidate {
   static const scheduleDTOsField = 'scheduleDTOs';
   static const desiredJobField = 'desiredJob';
   static const referenceLetterField = 'referenceLetter';
+  static const desiredWorkingProvinceField ='desiredWorkingProvince';
 }
