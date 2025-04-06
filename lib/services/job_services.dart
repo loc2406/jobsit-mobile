@@ -32,6 +32,7 @@ class JobServices {
   static const positionDTOSKey = 'positionDTOS';
   static const scheduleDTOSKey = 'scheduleDTOS';
   static const majorDTOSKey = 'majorDTOS';
+  static const locationKey = 'location';
   static const amountKey = 'amount';
   static const postingDateKey = 'postingDate';
   static const applicationDeadlineKey = 'applicationDeadline';
@@ -60,7 +61,7 @@ class JobServices {
   }) async {
 
     String api = '${searchJobUrl}no=$no&limit=$limit';
-    
+
     if (name.isNotEmpty) api += '&title=$name';
     if (provinceName.isNotEmpty) api += '&provinceName=$provinceName';
     if (schedule.isNotEmpty) api += '&schedule=$schedule';

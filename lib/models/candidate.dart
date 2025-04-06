@@ -15,7 +15,12 @@ class Candidate {
   final bool searchable;
   final University? university;
   final String? cv;
-
+  final List<Map<String, dynamic>>? positionDTOs;
+  final List<Map<String, dynamic>>? majorDTOs;
+  final List<Map<String, dynamic>>? scheduleDTOs;
+  final String? desiredJob;
+  final String? referenceLetter;
+  final String? desiredWorkingProvince;
   const Candidate({required this.id,
     required this.email,
     required this.firstName,
@@ -29,6 +34,12 @@ class Candidate {
     required this.searchable,
     this.university,
     this.cv,
+    this.majorDTOs,
+    this.positionDTOs,
+    this.scheduleDTOs,
+    this.desiredJob,
+    this.referenceLetter,
+    this.desiredWorkingProvince
   });
 
   factory Candidate.fromMap(Map<String, dynamic> map) {
@@ -46,6 +57,18 @@ class Candidate {
       searchable: map[CandidateServices.candidateOtherInfoDTOKey][searchableField],
       university: map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField] != null ?University.fromMap(map[CandidateServices.candidateOtherInfoDTOKey][universityDTOField]) : null,
       cv: map[CandidateServices.candidateOtherInfoDTOKey][cvField],
+        positionDTOs: map[CandidateServices.candidateOtherInfoDTOKey][positionDTOsField] != null
+            ? List<Map<String, dynamic>>.from(map[CandidateServices.candidateOtherInfoDTOKey]['positionDTOs'])
+            : null,
+        majorDTOs: map[CandidateServices.candidateOtherInfoDTOKey][majorDTOsField] != null
+            ? List<Map<String, dynamic>>.from(map[CandidateServices.candidateOtherInfoDTOKey]['majorDTOs'])
+            : null,
+        scheduleDTOs: map[CandidateServices.candidateOtherInfoDTOKey][scheduleDTOsField] != null
+            ? List<Map<String, dynamic>>.from(map[CandidateServices.candidateOtherInfoDTOKey]['scheduleDTOs'])
+            : null,
+        desiredJob: map[CandidateServices.candidateOtherInfoDTOKey]?[desiredJobField]?? '',
+        referenceLetter: map[CandidateServices.candidateOtherInfoDTOKey]?[referenceLetterField] ?? '',
+        desiredWorkingProvince: map[CandidateServices.candidateOtherInfoDTOKey]?[desiredWorkingProvinceField] ?? ''
     );
   }
 
@@ -63,4 +86,10 @@ class Candidate {
   static const searchableField = 'searchable';
   static const universityDTOField = 'universityDTO';
   static const cvField = 'cv';
+  static const positionDTOsField = 'positionDTOs';
+  static const majorDTOsField = 'majorDTOs';
+  static const scheduleDTOsField = 'scheduleDTOs';
+  static const desiredJobField = 'desiredJob';
+  static const referenceLetterField = 'referenceLetter';
+  static const desiredWorkingProvinceField ='desiredWorkingProvince';
 }

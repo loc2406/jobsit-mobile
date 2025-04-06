@@ -78,10 +78,27 @@ class CandidateCubit extends Cubit<CandidateState> {
         emit(CandidateState.error(TextConstants.tokenOrCandidateIdError));
       }
     } catch (e) {
+    } catch (e) {
       emit(CandidateState.error(e.toString()));
     }
   }
-
+  sendOtpToChangePassWord(String otp, String password) async {
+    try{
+      emit(CandidateState.loading());
+      await CandidateServices.sendOtpToChangePassWord(otp,password);
+      emit(CandidateState.activeSuccess());
+    }catch(e){
+      emit(CandidateState.error(e.toString()));
+    }
+  }
+  sendEmailForgotPassWord(String email) async {
+    try{
+      await CandidateServices.sendEmailForgotPassWord(email);
+      emit(CandidateState.sendOtpSuccess());
+    }catch(e){
+      emit(CandidateState.error(e.toString()));
+    }
+  }
   Future<List<Province>> getProvinces() async {
     try{
       final provinces = await ProvinceServices.getProvinces();
@@ -89,6 +106,55 @@ class CandidateCubit extends Cubit<CandidateState> {
     }catch(e){
       debugPrint(e.toString());
       return [];
+    }
+  }
+  Future<Map<String, dynamic>?> verifyOtp(String otp) async {
+    try {
+      final response = await CandidateServices.verifyOtp(otp);
+      return response;
+    } catch (e) {
+      debugPrint('❌ Lỗi khi gọi API: $e');
+      return null;
+    }
+  }
+  handleUpdate(
+      {required Candidate user,
+        required String token,
+        required List<int> position,
+        required List<int> major,
+        required List<int> jobType,
+        required String wantJob,
+        required String desiredWorkingProvince,
+        required String coverLetter,
+        required File cv,
+        required String avatar,
+        required String email ,
+        required String password}) async {
+    try {
+      emit(CandidateState.loading());
+      final responseBody = await CandidateServices.updateCandidateJob(
+          user: user, token: token, position: position,major: major,jobType: jobType,
+          wantJob: wantJob,desiredWorkingProvince: desiredWorkingProvince,coverLetter: coverLetter,cv: cv, avatar : avatar);
+      final responseBodyUser =
+      await CandidateServices.loginAccount(email, password);
+
+      final tokenUser = responseBodyUser[CandidateServices.tokenKey].toString();
+      final candidateId =
+      int.tryParse(responseBodyUser[CandidateServices.idUserKey].toString());
+
+      if (tokenUser.isNotEmpty && candidateId != null) {
+        final candidate = await CandidateServices.getCandidateById(candidateId);
+        emit(CandidateState.loginSuccess(tokenUser, candidate));
+      } else {
+        emit(CandidateState.error(TextConstants.tokenOrCandidateIdError));
+      }
+
+
+
+
+
+    } catch (e) {
+      emit(CandidateState.error(e.toString()));
     }
   }
 
@@ -179,14 +245,6 @@ class CandidateCubit extends Cubit<CandidateState> {
     }catch(e){
       debugPrint(e.toString());
       return false;
-    }
-  }
-
-  void setLoginStatus({required bool status, String? token, Candidate? candidate}) {
-    if (status){
-      emit(CandidateState.loginSuccess(token!, candidate!));
-    }else{
-      emit(CandidateState.noLoggedIn());
     }
   }
 }

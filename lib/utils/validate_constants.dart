@@ -1,11 +1,16 @@
 import 'dart:io';
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
 
 import '../models/province.dart';
-
+import '../services/base_services.dart';
+import '../services/candidate_services.dart';
+import 'package:http/http.dart' as http;
 class ValidateConstants{
 
   static String? validateEmailLogin(String? email){
@@ -59,7 +64,46 @@ class ValidateConstants{
 
     return null;
   }
+  static Future<String?> validateEmail(String? email) async {
+    if (email == null || email.trim().isEmpty){
+      return TextConstants.pleaseInputEmail;
+    }
 
+    final isValidMinLength = email.length >= 6;
+    if (!isValidMinLength){
+      return TextConstants.pleaseInputMin6Letters;
+    }
+
+    final isValidMaxLength = email.length <= 256;
+    if (!isValidMaxLength){
+      return TextConstants.pleaseInputMax256Letters;
+    }
+
+    final RegExp emailRegex = RegExp(
+        r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    );
+
+    if (!emailRegex.hasMatch(email)){
+      return TextConstants.emailIncorrect;
+    }
+    if (RegExp(r"-@|@-").hasMatch(email)) {
+      return TextConstants.emailIncorrect;
+    }
+    if (email.startsWith(".") || email.endsWith(".")) {
+      return TextConstants.emailIncorrect;
+    }
+    final uri =
+    Uri.parse("${CandidateServices.checkEmail}email=$email");
+    final response = await http.get(uri, headers: BaseServices.headers);
+    final decodedBody = utf8.decode(response.bodyBytes);
+    final data = jsonDecode(decodedBody);
+
+    if (data['message'] != TextConstants.emailUsed) {
+
+      return TextConstants.emailNotFound;
+    }
+    return null;
+  }
   static String? validatePasswordRegister(String? password){
     if (password == null || password.trim().isEmpty){
       return TextConstants.pleaseInputPassword;
@@ -96,7 +140,7 @@ class ValidateConstants{
   }
 
   static String? validateFirstName(String? firstName){
-    if (firstName == null || firstName.isEmpty){
+    if (firstName == null || firstName.trim().isEmpty){
       return TextConstants.pleaseInputFirstName;
     }
 
@@ -113,7 +157,7 @@ class ValidateConstants{
   }
 
   static String? validateLastName(String? lastName){
-    if (lastName == null || lastName.isEmpty){
+    if (lastName == null || lastName.trim().isEmpty){
       return TextConstants.pleaseInputLastName;
     }
 
@@ -162,6 +206,40 @@ class ValidateConstants{
     return null;
   }
 
+  static String? validateLocation(String? location){
+    if (location == null || location.trim().isEmpty){
+      return TextConstants.pleaseInputLocation;
+    }
+
+
+
+    return null;
+  }
+  static String? validatePosition(List<int>? position){
+    if (position == null || position.isEmpty){
+      return TextConstants.pleaseInputPosition;
+    }
+    return null;
+  }
+  static String? validateMajor(List<int>? major){
+    if (major == null || major.isEmpty){
+      return TextConstants.pleaseInputMajor;
+    }
+
+
+
+    return null;
+  }
+  static String? validateSchedule(List<int>? schedule){
+    if (schedule == null || schedule.isEmpty){
+      return TextConstants.pleaseInputSchedule;
+    }
+
+
+
+    return null;
+  }
+
   static String? validateCandidateAvatar(File? img){
     if (img == null) return TextConstants.pleaseUpdateAvatar;
     // String extension = path.extension(img.path).toLowerCase();
@@ -173,6 +251,26 @@ class ValidateConstants{
     }
 
     return TextConstants.editSuccessful;
+  }
+
+  static String? validateCandidateCv(File? cv) {
+    if (cv == null) {
+      return TextConstants.pleaseUploadCv; // Lỗi 1: Chưa tải lên CV
+    }
+
+    String extension = path.extension(cv.path).toLowerCase();
+    List<String> validExtensions = [".doc", ".docx", ".pdf"];
+
+    if (!validExtensions.contains(extension)) {
+      return TextConstants.cvSizeMustSmallerThan512KBAndMustBeDocDocxPdf; // Lỗi 2: Định dạng không hợp lệ
+    }
+
+    int cvSize = cv.lengthSync();
+    if (cvSize > 512 * 1024) {
+      return TextConstants.cvSizeMustSmallerThan512KBAndMustBeDocDocxPdf; // Lỗi 3: File quá lớn
+    }
+
+    return ''; // Hợp lệ
   }
 
   static String? validateBirthdate(String? birthdate){
@@ -231,6 +329,21 @@ class ValidateConstants{
     if (address[address.length-1] == ' '){
       return TextConstants.pleaseNotFinishBySpace;
     }
+
+    return null;
+  }
+
+  static String? validateJobWanted(String? jobWanted){
+    if (jobWanted == null || jobWanted.trim().isEmpty){
+      return TextConstants.pleaseInputJobWanted;
+    }
+
+    final isValidLength = jobWanted.length >= 8 && jobWanted.length <= 255;
+    if (!isValidLength){
+      return TextConstants.jobWantedMustFrom8To255Letters;
+    }
+
+
 
     return null;
   }

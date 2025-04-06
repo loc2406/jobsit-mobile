@@ -456,43 +456,56 @@ class _AccountScreenState extends State<AccountScreen> {
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 5),
             ),
-            const Text(
-              TextConstants.noData,
+            Text(
+              _candidate.desiredJob! == ''
+                  ? TextConstants.noData
+                  : _candidate.desiredJob!,
             ),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            ..._buildJobInfoItem(
-                TextConstants.jobPosition, TextConstants.noData),
+            ..._candidate.positionDTOs != null
+                ? _buildJobInfoItems(
+                    TextConstants.jobPosition, _candidate.positionDTOs!)
+                : _buildJobInfoItem(
+                    TextConstants.jobPosition, TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            ..._buildJobInfoItem(TextConstants.major, TextConstants.noData),
+            ..._candidate.majorDTOs != null
+                ? _buildJobInfoItems(TextConstants.major, _candidate.majorDTOs!)
+                : _buildJobInfoItem(TextConstants.major, TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            ..._buildJobInfoItem(
-                TextConstants.jobSchedule, TextConstants.noData),
+            ..._candidate.scheduleDTOs != null
+                ? _buildJobInfoItems(
+                    TextConstants.jobSchedule, _candidate.scheduleDTOs!)
+                : _buildJobInfoItem(
+                    TextConstants.jobSchedule, TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            const Text(
-              TextConstants.jobLocation,
-              style: WidgetConstants.blackBold16Style,
-            ),
+
+                 const Text(
+                    TextConstants.jobLocation,
+                    style: WidgetConstants.blackBold16Style,
+                  )
+                ,
             Row(
               children: [
                 SvgPicture.asset(AssetConstants.iconLocation),
                 SizedBox(
                   width: ValueConstants.deviceWidthValue(uiValue: 10),
                 ),
-                const Text(TextConstants.noData),
+                Text(_candidate.desiredWorkingProvince ?? TextConstants.noData),
               ],
             ),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            ..._buildJobInfoItem(TextConstants.cv, _candidate.cv ?? TextConstants.noData),
+            ..._buildJobInfoItem(
+                TextConstants.cv, _candidate.cv ?? TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
@@ -503,7 +516,7 @@ class _AccountScreenState extends State<AccountScreen> {
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 5),
             ),
-            const Text(TextConstants.noData),
+            Text(_candidate.referenceLetter ?? TextConstants.noData),
           ],
         ),
       ),
@@ -528,6 +541,34 @@ class _AccountScreenState extends State<AccountScreen> {
           style: WidgetConstants.white12Style,
         ),
       )
+    ];
+  }
+
+  List<Widget> _buildJobInfoItems(
+      String title, List<Map<String, dynamic>> items) {
+    return [
+      Text(
+        title,
+        style: WidgetConstants.blackBold16Style,
+      ),
+      SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 5)),
+      Wrap(
+        spacing: 8, // Khoảng cách giữa các phần tử
+        runSpacing: 4, // Khoảng cách giữa các dòng
+        children: items.map((item) {
+          return Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: ColorConstants.main,
+            ),
+            child: Text(
+              item[TextConstants.name], // Hiển thị tên của vị trí
+              style: WidgetConstants.white12Style,
+            ),
+          );
+        }).toList(),
+      ),
     ];
   }
 }

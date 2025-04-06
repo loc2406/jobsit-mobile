@@ -14,6 +14,7 @@ import 'package:jobsit_mobile/utils/validate_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
 import 'package:jobsit_mobile/widgets/input_field.dart';
+import 'package:jobsit_mobile/widgets/input_field_async.dart';
 
 class ActiveAccountScreen extends StatefulWidget {
   const ActiveAccountScreen({super.key});
@@ -55,8 +56,8 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         padding: EdgeInsets.symmetric(
-            vertical: ValueConstants.deviceHeightValue(uiValue: 18) ,
-            horizontal: ValueConstants.deviceWidthValue(uiValue: 12)),
+            vertical: ValueConstants.screenHeight * 0.02,
+            horizontal: ValueConstants.screenWidth * 0.03),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,27 +70,28 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
                   fontSize: 24),
             ),
             SizedBox(
-              height: ValueConstants.deviceHeightValue(uiValue: 8),
+              height: ValueConstants.screenHeight * 0.01,
             ),
             const Text(
               TextConstants.pleaseInputOTPInEmail,
+
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w400,
                   fontSize: 13),
             ),
             SizedBox(
-                height: ValueConstants.deviceHeightValue(uiValue: 8)
+              height: ValueConstants.screenHeight * 0.01,
             ),
             Form(
               key: _formKey,
-              child: InputField(
+              child: InputFieldAsync(
                   controller: _otpController,
                   keyboardType: TextInputType.number,
                   validateMethod: ValidateConstants.validateOtp),
             ),
             SizedBox(
-                height: ValueConstants.deviceHeightValue(uiValue: 16)
+              height: ValueConstants.screenHeight * 0.02,
             ),
             BlocConsumer<CandidateCubit, CandidateState>(
                 builder: (context, state) {
@@ -126,7 +128,7 @@ class _ActiveAccountScreenState extends State<ActiveAccountScreen> {
               }
             }),
             SizedBox(
-                height: ValueConstants.deviceHeightValue(uiValue: 16)
+              height: ValueConstants.screenHeight * 0.02,
             ),
             GestureDetector(
               onTap: sendOtpAgain,

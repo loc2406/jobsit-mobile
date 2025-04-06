@@ -17,4 +17,5 @@ class AssetConstants{
   static const iconBag = 'assets/images/ic_bag.svg';
   static const iconSalary = 'assets/images/ic_salary.svg';
   static const iconBookmark = 'assets/images/ic_bookmark.svg';
+  static const exCV = 'assets/images/example_cv.png';
 }

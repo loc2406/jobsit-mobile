@@ -19,10 +19,13 @@ class CandidateServices {
   static const getCandidateAvatarUrl = '${BaseServices.url}/file/display/';
   static const updateCandidateUrl = '${BaseServices.url}/candidate';
   static const universitiesUrl = '${BaseServices.url}/university';
-  static const updateSearchableUrl = '${BaseServices.url}/candidate/searchable';
+  static const updateSearchableUrl = '${BaseServices.url}/candidate/searchable/';
   static const updateMailReceiveUrl = '${BaseServices.url}/candidate/email-notification/';
   static const logoutUrl = '${BaseServices.url}/logout?token=';
-
+  static const sendEmailForgotPassWordUrl = '${BaseServices.url}/user/forgot-password/';
+  static const sendOtpToChangePassword = '${BaseServices.url}/user/reset-password';
+  static const sendVerifyOtp = '${BaseServices.url}/user/verify-otp?otp=';
+  static const checkEmail = '${BaseServices.url}/user/check-email?';
   // Response key
   static const userDTOKey = 'userDTO';
   static const userCreationDTOKey = 'userCreationDTO';
@@ -44,6 +47,7 @@ class CandidateServices {
   static const universityDTOKey = 'universityDTO';
   static const idKey = 'id';
   static const contentsKey = 'contents';
+  static const desiredWorkingProvinceKey = 'desiredWorkingProvince';
 
   // Response value
   static const dataExistingValue = 'DATA EXISTING';
@@ -79,39 +83,109 @@ class CandidateServices {
         Uri.parse("${CandidateServices.sendActiveEmailUrl}email=$email");
     final response = await http.get(uri, headers: BaseServices.headers);
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200){
       final Map<String, dynamic> errBody = jsonDecode(response.body);
       final errMessage = errBody[messageKey].toString();
 
-      if (errMessage == dataExistingValue) {
+      if (errMessage == dataExistingValue){
         throw Exception(TextConstants.emailIsExistedError);
-      } else {
+      }else{
         throw Exception(TextConstants.sendActiveEmailError);
       }
     }
   }
+  static sendOtpToChangePassWord(String otp, String password) async {
+    final uri = Uri.parse(CandidateServices.sendOtpToChangePassword);
+    final body = {
+      "resetToken": otp,
+      "newPassword": password,
+      "confirmPassword": password
+    };
 
+    final response = await http.post(uri,
+        body: jsonEncode(body), headers: BaseServices.headers);
+
+
+    if (response.statusCode != 200){
+      throw Exception(TextConstants.otpError);
+    }
+  }
   static sendOtpToActiveAccount(String otp) async {
     final uri = Uri.parse("${CandidateServices.activeEmailByOtpUrl}otp=$otp");
     final response = await http.get(uri, headers: BaseServices.headers);
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200){
       throw Exception(TextConstants.sendOtpToActiveError);
     }
   }
+  static Future<void> updateCandidateJob({
+    required Candidate user,
+    required String token,
+    required List<int> position,
+    required List<int> major,
+    required List<int> jobType,
+    required String wantJob,
+    required String desiredWorkingProvince,
+    required String coverLetter,
+    required File cv,
+    required String avatar,
+  }) async {
+    final uri =
+    Uri.parse(CandidateServices.updateCandidateUrl);
 
+    var request = http.MultipartRequest("PUT", uri);
+
+    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Content-Type'] = 'multipart/form-data';
+
+    Map<String, dynamic> candidateData = {
+      userProfileDTOKey: {
+        firstNameKey: user.firstName,
+        lastNameKey: user.lastName,
+        emailKey :user.email,
+        genderKey: user.gender != null ? (user.gender == true ? 1 : 0) : null,
+        phoneKey: user.phone,
+        birthDayKey: user.birthdate,
+        locationKey: user.location
+      },
+      candidateOtherInfoDTOKey:
+      {
+        "universityDTO": null,
+        "referenceLetter": coverLetter,
+        "positionDTOs": position.map((num) => {'id': num}).toList(),
+        "majorDTOs": major.map((num) => {'id': num}).toList(),
+        "scheduleDTOs": jobType.map((num) => {'id': num}).toList(),
+        "desiredJob": wantJob,
+        "desiredWorkingProvince": desiredWorkingProvince
+      }
+    };
+
+    request.fields[candidateProfileDTOKey] = jsonEncode(candidateData);
+    request.files.add(await http.MultipartFile.fromPath(
+      'fileAvatar',
+      avatar,
+    ));
+    request.files.add(
+        await http.MultipartFile.fromPath("fileCV", cv!.path));
+
+    var response = await request.send();
+
+    if (response.statusCode != 200) {
+      throw Exception(' loiiiiiiiii ${TextConstants.updateCandidateInfoFailedError}');
+    }
+  }
   static Future<Map<String, dynamic>> loginAccount(
       String email, String password) async {
     final uri = Uri.parse(CandidateServices.loginCandidateUrl);
     final body = {
-      CandidateServices.emailKey: email,
-      CandidateServices.passwordKey: password,
+    CandidateServices.emailKey: email,
+    CandidateServices.passwordKey: password,
     };
 
     final response = await http.post(uri,
         headers: BaseServices.headers, body: jsonEncode(body));
 
-    if (response.statusCode != 201) {
+    if (response.statusCode != 201){
       throw Exception(TextConstants.emailOrPasswordIncorrectError);
     }
 
@@ -131,8 +205,20 @@ class CandidateServices {
         jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
   }
 
+  static sendEmailForgotPassWord(String email) async {
+    final uri = Uri.parse("${CandidateServices.sendEmailForgotPassWordUrl}$email");
+
+    final response = await http.get(uri);
+
+
+  }
+
   static String getCandidateAvatarLink(String avatar) {
     return '$getCandidateAvatarUrl$avatar';
+  }
+
+  static String getCandidateFileLink(String file) {
+    return '$getCandidateAvatarUrl$file';
   }
 
   static Future<void> updateCandidate({
@@ -242,6 +328,26 @@ class CandidateServices {
 
     if (response.statusCode != 200) {
       throw Exception(TextConstants.logoutFailedError);
+    }
+  }
+
+  static Future<Map<String, dynamic>?> verifyOtp(String otp) async {
+    try {
+      final uri =
+      Uri.parse("${CandidateServices.sendVerifyOtp}$otp");
+      final body = {
+        "otp": otp,
+        "newPassword": "Verifyotp1A",
+        "confirmPassword": "Verifyotp1A"
+      };
+      final response = await http.post(uri,
+          body: jsonEncode(body), headers: BaseServices.headers);
+
+      return jsonDecode(utf8.decode(response.bodyBytes)); // Trả về Map luôn
+
+    } catch (e) {
+      debugPrint(' Lỗi khi gọi API: $e');
+      return null;
     }
   }
 }
