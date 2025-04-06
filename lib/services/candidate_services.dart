@@ -127,8 +127,7 @@ class CandidateServices {
     required String wantJob,
     required String desiredWorkingProvince,
     required String coverLetter,
-    required File cv,
-    required String avatar,
+    required File cv
   }) async {
     final uri =
     Uri.parse(CandidateServices.updateCandidateUrl);
@@ -139,15 +138,7 @@ class CandidateServices {
     request.headers['Content-Type'] = 'multipart/form-data';
 
     Map<String, dynamic> candidateData = {
-      userProfileDTOKey: {
-        firstNameKey: user.firstName,
-        lastNameKey: user.lastName,
-        emailKey :user.email,
-        genderKey: user.gender != null ? (user.gender == true ? 1 : 0) : null,
-        phoneKey: user.phone,
-        birthDayKey: user.birthdate,
-        locationKey: user.location
-      },
+      userProfileDTOKey: {},
       candidateOtherInfoDTOKey:
       {
         "universityDTO": null,
@@ -161,12 +152,8 @@ class CandidateServices {
     };
 
     request.fields[candidateProfileDTOKey] = jsonEncode(candidateData);
-    request.files.add(await http.MultipartFile.fromPath(
-      'fileAvatar',
-      avatar,
-    ));
     request.files.add(
-        await http.MultipartFile.fromPath("fileCV", cv!.path));
+        await http.MultipartFile.fromPath("fileCV", cv.path));
 
     var response = await request.send();
 

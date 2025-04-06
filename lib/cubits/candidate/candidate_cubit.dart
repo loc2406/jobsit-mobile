@@ -82,32 +82,36 @@ class CandidateCubit extends Cubit<CandidateState> {
       emit(CandidateState.error(e.toString()));
     }
   }
+
   sendOtpToChangePassWord(String otp, String password) async {
-    try{
+    try {
       emit(CandidateState.loading());
-      await CandidateServices.sendOtpToChangePassWord(otp,password);
+      await CandidateServices.sendOtpToChangePassWord(otp, password);
       emit(CandidateState.activeSuccess());
-    }catch(e){
+    } catch (e) {
       emit(CandidateState.error(e.toString()));
     }
   }
+
   sendEmailForgotPassWord(String email) async {
-    try{
+    try {
       await CandidateServices.sendEmailForgotPassWord(email);
       emit(CandidateState.sendOtpSuccess());
-    }catch(e){
+    } catch (e) {
       emit(CandidateState.error(e.toString()));
     }
   }
+
   Future<List<Province>> getProvinces() async {
-    try{
+    try {
       final provinces = await ProvinceServices.getProvinces();
       return provinces;
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
       return [];
     }
   }
+
   Future<Map<String, dynamic>?> verifyOtp(String otp) async {
     try {
       final response = await CandidateServices.verifyOtp(otp);
@@ -117,62 +121,53 @@ class CandidateCubit extends Cubit<CandidateState> {
       return null;
     }
   }
+
   handleUpdate(
       {required Candidate user,
-        required String token,
-        required List<int> position,
-        required List<int> major,
-        required List<int> jobType,
-        required String wantJob,
-        required String desiredWorkingProvince,
-        required String coverLetter,
-        required File cv,
-        required String avatar,
-        required String email ,
-        required String password}) async {
+      required String token,
+      required List<int> position,
+      required List<int> major,
+      required List<int> jobType,
+      required String wantJob,
+      required String desiredWorkingProvince,
+      required String coverLetter,
+      required File cv,
+      }) async {
     try {
       emit(CandidateState.loading());
       final responseBody = await CandidateServices.updateCandidateJob(
-          user: user, token: token, position: position,major: major,jobType: jobType,
-          wantJob: wantJob,desiredWorkingProvince: desiredWorkingProvince,coverLetter: coverLetter,cv: cv, avatar : avatar);
-      final responseBodyUser =
-      await CandidateServices.loginAccount(email, password);
-
-      final tokenUser = responseBodyUser[CandidateServices.tokenKey].toString();
-      final candidateId =
-      int.tryParse(responseBodyUser[CandidateServices.idUserKey].toString());
-
-      if (tokenUser.isNotEmpty && candidateId != null) {
-        final candidate = await CandidateServices.getCandidateById(candidateId);
-        emit(CandidateState.loginSuccess(tokenUser, candidate));
-      } else {
-        emit(CandidateState.error(TextConstants.tokenOrCandidateIdError));
-      }
-
-
-
-
-
+          user: user,
+          token: token,
+          position: position,
+          major: major,
+          jobType: jobType,
+          wantJob: wantJob,
+          desiredWorkingProvince: desiredWorkingProvince,
+          coverLetter: coverLetter,
+          cv: cv,
+      );
+      final candidate = await CandidateServices.getCandidateById(user.id);
+      emit(CandidateState.loginSuccess(token, candidate));
     } catch (e) {
       emit(CandidateState.error(e.toString()));
     }
   }
 
   Future<List<String>> getDistricts(int provinceCode) async {
-    try{
+    try {
       final districts = await ProvinceServices.getDistricts(provinceCode);
       return districts;
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
       return [];
     }
   }
 
   Future<List<University>> getUniversities() async {
-    try{
+    try {
       final universities = await CandidateServices.getUniversities();
       return universities;
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
       return [];
     }
@@ -203,48 +198,55 @@ class CandidateCubit extends Cubit<CandidateState> {
           phone: phone,
           gender: gender,
           location: location,
-          university: university
-      );
+          university: university);
 
       emit(CandidateState.editSuccess());
 
       final candidate = await CandidateServices.getCandidateById(candidateId);
       emit(CandidateState.loginSuccess(token, candidate));
-
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
   updateSearchable(int id, String token) async {
-    try{
+    try {
       await CandidateServices.updateSearchable(token);
       final candidate = await CandidateServices.getCandidateById(id);
       emit(CandidateState.loginSuccess(token, candidate));
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
     }
   }
 
   updateMailReceive(int id, String token) async {
-    try{
+    try {
       await CandidateServices.updateMailReceive(id, token);
       final candidate = await CandidateServices.getCandidateById(id);
       emit(CandidateState.loginSuccess(token, candidate));
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
     }
   }
 
   Future<bool> logout(String token) async {
-    try{
+    try {
       emit(CandidateState.loading());
       await CandidateServices.logout(token);
       emit(CandidateState.noLoggedIn());
       return true;
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
       return false;
+    }
+  }
+
+  void setLoginStatus(
+      {required bool status, String? token, Candidate? candidate}) {
+    if (status) {
+      emit(CandidateState.loginSuccess(token!, candidate!));
+    } else {
+      emit(CandidateState.noLoggedIn());
     }
   }
 }

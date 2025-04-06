@@ -82,19 +82,9 @@ class TextConstants {
   static const pleaseUploadCV = 'Vui lòng tải lên CV đính kèm';
   static const onlySupportCVFile = 'Chỉ hỗ trợ file .pdf và tối đa 512 KB';
   static const jobWantedMustFrom8To255Letters = 'Công việc mong muốn phải có độ dài từ 8 đến 255 ký tự';
-
-  static const pleaseUpdateAvatar = 'Vui lòng cập nhật ảnh đại diện';
   static const pleaseUploadCv = 'Vui lòng tải lên CV đính kèm';
   static const cvSizeMustSmallerThan512KBAndMustBeDocDocxPdf = 'Chỉ hỗ trợ file .doc, .docx và .pdf và tối đa 512KB';
   static const writeABriefIntroductionAboutYourself ='Viết một đoạn giới thiệu ngắn về bản thân bạn';
-  static const avatarSizeMustSmallerThan512KB = 'Ảnh đại diện có dung lượng <= 512KB';
-  static const pleaseSelectBirthdate = 'Vui lòng chọn ngày sinh';
-  static const invalidBirthdate = 'Ngày sinh không hợp lệ';
-  static const pleaseSelectGender = 'Vui lòng chọn giới tính';
-  static const pleaseSelectCity = 'Vui lòng chọn Tỉnh\/Thành phố';
-  static const pleaseSelectDistrict = 'Vui lòng chọn Quận\/Huyện';
-  static const pleaseInputCorrectAddressRegex = 'Vui lòng nhập đúng định dạng địa chỉ đang ở';
-  static const pleaseInputAddress = 'Vui lòng nhập địa chỉ';
   static const pleaseInputJobWanted ='Vui lòng nhập công việc mong muốn';
   // Verify account
   static const verifyEmail = "Xác thực Email";
@@ -215,26 +205,6 @@ class TextConstants {
   static const savedJob = 'Công việc đã lưu';
 
 
-  static const jobLocation = 'Nơi làm việc';
-  static const cv = 'CV';
-  static const coverLetter = 'Thư xin việc';
-  static const changePassword = 'Thay đổi mật khẩu';
-  static const logout = 'Đăng xuất';
-  static const dontLoggedIn = 'Bạn chưa đăng nhập!';
-  static const birthdate = 'Ngày sinh';
-  static const defaultCandidateBirthdate = 'dd-MM-yyyy';
-  static const gender = 'Giới tính';
-  static const selectGender = 'Chọn giới tính';
-  static const male = 'Nam';
-  static const female = 'Nữ';
-  static const city = 'Thành phố';
-  static const address = 'Địa chỉ';
-  static const save = 'Lưu';
-  static const district = 'Quận/huyện';
-  static const university = 'Trường học';
-  static const selectUniversity = 'Chọn trường học';
-
-
   // Other
   static const navigateInputOTPScreen = 'navigateInputOTPScreen';
   static const  candidate = 'candidate';
@@ -261,8 +231,6 @@ class TextConstants {
   static const emailUsed = "Email đã sử dụng, vui lòng sử dụng email khác.";
   static const pleaseConfirmYourPassword = 'Vui lòng xác nhận mật khẩu của bạn';
   static const passwordsDoNotMatch ='Mật khẩu không khớp';
-  static const  candidate = 'candidate';
-  static const  token = 'token';
   static const  attachedCV = 'Attached CV';
   static const addNewCV = 'Thêm CV mới';
   static const coverLetterHint = 'Viết giới thiệu ngắn gọn về bản thân bạn';

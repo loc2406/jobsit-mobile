@@ -362,16 +362,16 @@ class _AccountScreenState extends State<AccountScreen> {
         child: Column(
           children: [
             _buildPersonalInfoItem(
-                AssetConstants.iconMessage, _candidate.email),
+                AssetConstants.iconMessage, (_candidate.email != null && _candidate.email.isNotEmpty) ? _candidate.email : TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
-            _buildPersonalInfoItem(AssetConstants.iconCall, _candidate.phone),
+            _buildPersonalInfoItem(AssetConstants.iconCall, (_candidate.phone != null && _candidate.phone.isNotEmpty) ? _candidate.phone : TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
             _buildPersonalInfoItem(AssetConstants.iconLocation,
-                _candidate.location ?? TextConstants.noData),
+                (_candidate.location != null && _candidate.location!.isNotEmpty) ? _candidate.location! : TextConstants.noData),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
@@ -384,7 +384,8 @@ class _AccountScreenState extends State<AccountScreen> {
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
             _buildPersonalInfoItem(AssetConstants.iconCalendar,
-                _candidate.birthdate ?? TextConstants.noData),
+                (_candidate.birthdate != null && _candidate.birthdate!.isNotEmpty) ? _candidate.birthdate! : TextConstants.noData
+            ),
             SizedBox(
               height: ValueConstants.deviceHeightValue(uiValue: 10),
             ),
@@ -429,7 +430,7 @@ class _AccountScreenState extends State<AccountScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const JobInfoEditPageScreen(),
+                  builder: (context) => const JobInfoEditPage(),
                   settings: RouteSettings(arguments: {
                     TextConstants.candidate: _candidate,
                     TextConstants.token: _token,

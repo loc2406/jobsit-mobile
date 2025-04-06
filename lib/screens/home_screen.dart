@@ -15,6 +15,7 @@ import 'package:jobsit_mobile/cubits/saved_jobs/save_job_success_state.dart';
 import 'package:jobsit_mobile/cubits/saved_jobs/saved_job_state.dart';
 import 'package:jobsit_mobile/screens/login_screen.dart';
 import 'package:jobsit_mobile/utils/color_constants.dart';
+import 'package:jobsit_mobile/utils/convert_constants.dart';
 import 'package:jobsit_mobile/utils/text_constants.dart';
 import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
@@ -69,12 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _getJobs(int no) async {
+    debugPrint('_getJobs: $no $_selectedLocation $_selectedSchedule $_selectedPosition $_selectedMajor');
     await _jobCubit.getJobs(
         name: _searchController.text,
-        provinceName: _selectedLocation,
-        schedule: _selectedSchedule,
-        position: _selectedPosition,
-        major: _selectedMajor,
+        address: _selectedLocation,
+        scheduleId: _selectedSchedule.isNotEmpty ? ConvertConstants.getIdByName(ValueConstants.schedules, _selectedSchedule) : -1,
+        positionId: _selectedPosition.isNotEmpty ? ConvertConstants.getIdByName(ValueConstants.positions, _selectedPosition) : -1,
+        majorId: _selectedMajor.isNotEmpty ? ConvertConstants.getIdByName(ValueConstants.majors, _selectedMajor) : -1,
         no: no);
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobsit_mobile/utils/convert_constants.dart';
+import 'package:jobsit_mobile/utils/value_constants.dart';
 
 import '../../models/job.dart';
 import '../../models/province.dart';
@@ -24,21 +25,21 @@ class JobCubit extends Cubit<JobState> {
   }
 
   Future<void> getJobs(
-      {String name = '',
-      String provinceName = '',
-      String schedule = '',
-      String position = '',
-      String major = '',
+      {required String name,
+      required String address,
+      required int scheduleId,
+      required int positionId,
+      required int  majorId,
       required int no}) async {
     emit(JobState.loading());
 
     try {
       final response = await JobServices.getJobs(
           name: name,
-          provinceName: provinceName,
-          schedule: schedule,
-          position: position,
-          major: major,
+          address: address,
+          scheduleId: scheduleId,
+          positionId: positionId,
+          majorId: majorId,
           no: no,
           limit: _limit);
 
@@ -55,10 +56,10 @@ class JobCubit extends Cubit<JobState> {
           page: no,
           name: name,
           isLastPage: isLastPage,
-          location: provinceName,
-          schedule: schedule,
-          position: position,
-          major: major,
+          location: address,
+          schedule: ConvertConstants.getNameById(ValueConstants.schedules, scheduleId),
+          position:  ConvertConstants.getNameById(ValueConstants.positions, positionId),
+          major:  ConvertConstants.getNameById(ValueConstants.majors, majorId),
         ));
       }
     } catch (e) {

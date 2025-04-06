@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import '../cubits/candidate/candidate_cubit.dart';
 import '../cubits/job/job_cubit.dart';
 import '../models/candidate.dart';
+import '../models/province.dart';
 import '../services/candidate_services.dart';
 import '../utils/color_constants.dart';
 import '../utils/text_constants.dart';
@@ -45,6 +45,8 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
   late String password;
   String cvError = '';
   File? _selectedCV;
+  List<Province> _provinces = [];
+
   @override
   void initState() {
     super.initState();
@@ -63,9 +65,6 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     _candidate = candidateInfo[TextConstants.candidate];
     _token = candidateInfo[TextConstants.token];
-    email = candidateInfo[TextConstants.emailUser];
-    password = candidateInfo[TextConstants.passwordUser];
-    _avatarPath = (candidateInfo[TextConstants.avatarPath] as String?)!;
     selectedPositionIds = _candidate.positionDTOs!
         .map((pos) => pos[TextConstants.id] as int)
         .toList();
@@ -79,45 +78,15 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
     jobWantedController.text = _candidate.desiredJob!;
     coverLetterController.text = _candidate.referenceLetter!;
     selectedFileNameCV = _candidate.cv; // Lưu tên file
-    //selectedFileCV = _candidate.cvFilePath != null ? File(_candidate.cvFilePath!) : null;
-   // selectedFileCV = _candidate.cv != null ? File(_candidate.cv!) : null;
-   // CandidateServices.getCandidateAvatarLink(_candidate.cv!)
-
   }
 
   Future<void> _getProvinces() async {
-    await _cubit.getProvinces();
+    final provinces = await _cubit.getProvinces();
+    setState(() {
+      _provinces = provinces;
+    });
   }
-  // void _viewFileCV() {
-  //   if (selectedFileCV != null) {
-  //     OpenFile.open(selectedFileCV!.path);
-  //   }
-  // }
-  // void _viewFileCV() async {
-  //   if (selectedFileCV != null) {
-  //     // Nếu CV là file cục bộ, mở trang xem CV
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => CVViewerScreen(path: selectedFileCV!.path),
-  //       ),
-  //     );
-  //   } else if (selectedFileNameCV != null) {
-  //     // Nếu CV trên server, mở bằng trình duyệt
-  //     final Uri url = Uri.parse("http://localhost:8085/api/file/display/$selectedFileNameCV");
-  //     if (await canLaunchUrl(url)) {
-  //       await launchUrl(url, mode: LaunchMode.externalApplication);
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("Không thể mở file CV")),
-  //       );
-  //     }
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Không có CV để xem")),
-  //     );
-  //   }
-  // }
+
   void _viewFileCV() {
     if (selectedFileCV != null) {
       // Nếu CV là file cục bộ, mở bằng PDFView
@@ -126,21 +95,16 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
         MaterialPageRoute(
           builder: (context) => CVViewerScreen(
             path: selectedFileCV!.path,
-            isOnline: false, // Đây là file cục bộ
           ),
         ),
       );
     } else {
-      // Nếu CV trên server, mở bằng WebView
-      //String fileUrl = "http://192.168.1.15:8085/api/file/display/$selectedFileNameCV";
       String fileUrl =CandidateServices.getCandidateAvatarLink(selectedFileNameCV!);
-
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => CVViewerScreen(
             path: fileUrl,
-            isOnline: true, // File online
           ),
         ),
       );
@@ -195,65 +159,6 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
               const SizedBox(height: 16),
               _buildDropdowns(),
               _buildLabel(TextConstants.cv),
-
-
-              // GestureDetector(
-              //   onTap: () async {
-              //     await _pickFileCV(); // Load file trước
-              //
-              //     setState(() {
-              //       cvError =
-              //           ValidateConstants.validateCandidateCv(selectedFileCV) ??
-              //               '';
-              //     });
-              //   },
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Container(
-              //         padding: const EdgeInsets.symmetric(
-              //             horizontal: 12, vertical: 14),
-              //         decoration: BoxDecoration(
-              //             border: Border.all(
-              //               color: cvError == '' ? ColorConstants.main : Colors.red, // ✅ Đổi màu viền khi có lỗi
-              //             ), // Đổi màu viền khi có lỗi
-              //           borderRadius: BorderRadius.circular(8),
-              //         ),
-              //         child: Row(
-              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //           children: [
-              //             Expanded(
-              //               child: Text(
-              //                 selectedFileNameCV ??
-              //                     TextConstants.pleaseSelectedFileCv,
-              //                 overflow: TextOverflow.ellipsis,
-              //               ),
-              //             ),
-              //             // if (selectedFileCV != null) // Hiển thị nút xóa khi có file
-              //             //   IconButton(
-              //             //     icon: const Icon(Icons.close, color: Colors.red),
-              //             //     onPressed: () {
-              //             //       setState(() {
-              //             //         selectedFileCV = null;
-              //             //         selectedFileNameCV = null;
-              //             //         cvError = ''; // Xóa lỗi khi xóa file
-              //             //       });
-              //             //     },
-              //             //   ),
-              //           ],
-              //         ),
-              //       ),
-              //       if (cvError != '') // Hiển thị lỗi nếu có
-              //         Padding(
-              //           padding: const EdgeInsets.only(top: 4),
-              //           child: Text(
-              //             cvError!,
-              //             style: TextStyle(color: Colors.red, fontSize: 12),
-              //           ),
-              //         ),
-              //     ],
-              //   ),
-              // ),
               GestureDetector(
                 onTap: () async {
                   await _pickFileCV();
@@ -383,7 +288,7 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
           height: 125,
           child: SingleSelectDropdown(
             title: TextConstants.jobLocation,
-            options: _cubit.provinces(),
+            options: _provinces.map((p) => p.name).toList(),
             initialValue: selectedDesiredWorkingProvince,
             onSelectionChanged: (selected) {
               setState(() {
@@ -465,20 +370,9 @@ class _JobInfoEditPageState extends State<JobInfoEditPage> {
           wantJob: jobWantedController.text,
           desiredWorkingProvince: selectedDesiredWorkingProvince!,
           coverLetter: coverLetterController.text, // ✅ Fix lỗi
-          cv: selectedFileCV!,
-          avatar: _avatarPath,
-          email: email,
-          password: password);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const AccountScreen(),
-          settings: RouteSettings(arguments: {
-            "email": email,
-            "password": password,
-          }),
-        ),
+          cv: selectedFileCV!
       );
+      Navigator.pop(context);
     }
   }
 }

@@ -194,7 +194,7 @@ class ValidateConstants{
     return null;
   }
 
-  static String? validateOtp(String? otp){
+  static Future<String?> validateOtp(String? otp) async {
     if (otp == null || otp.trim().isEmpty){
       return TextConstants.pleaseInputOtp;
     }

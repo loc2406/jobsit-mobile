@@ -30,11 +30,7 @@ class _MultiSelectDropdownScreenState extends State<MultiSelectDropdownScreen> {
   final GlobalKey _key = GlobalKey();
   String? errorText; // ✅ Lưu lỗi hiển thị
 
-  @override
-  void dispose() {
-    _hideOverlay();
-    super.dispose();
-  }
+
 
   void _validate() {
     setState(() {
@@ -195,12 +191,17 @@ class _MultiSelectDropdownScreenState extends State<MultiSelectDropdownScreen> {
     overlay?.insert(_overlayEntry!);
   }
 
-  void _hideOverlay() {
+  void _hideOverlay({bool updateState = true}) {
     _overlayEntry?.remove();
     _overlayEntry = null;
-    setState(() {
+    if (updateState && mounted) {
+      setState(() {
+        isDropdownOpen = false;
+      });
+    } else {
       isDropdownOpen = false;
-    });
+    }
   }
+
 }
 

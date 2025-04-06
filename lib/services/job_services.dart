@@ -51,11 +51,11 @@ class JobServices {
   static const dataExistingValue = 'DATA EXISTING';
 
   static Future<Map<String, dynamic>> getJobs({
-    String name = '',
-    String provinceName = '',
-    String schedule = '',
-    String position = '',
-    String major = '',
+    required String name,
+    required String address,
+    required int scheduleId,
+    required int positionId,
+    required int  majorId,
     required int no,
     required int limit,
   }) async {
@@ -63,10 +63,10 @@ class JobServices {
     String api = '${searchJobUrl}no=$no&limit=$limit';
 
     if (name.isNotEmpty) api += '&title=$name';
-    if (provinceName.isNotEmpty) api += '&provinceName=$provinceName';
-    if (schedule.isNotEmpty) api += '&schedule=$schedule';
-    if (position.isNotEmpty) api += '&position=$position}';
-    if (major.isNotEmpty) api += '&major=$major';
+    if (address.isNotEmpty) api += '&address=$address';
+    if (scheduleId != -1) api += '&jobScheduleIds=$scheduleId';
+    if (positionId != -1) api += '&jobPositionIds=$positionId}';
+    if (majorId != -1) api += '&jobMajorIds=$majorId';
 
     final uri = Uri.parse(api);
 
