@@ -8,13 +8,13 @@ import '../utils/color_constants.dart';
 import '../utils/value_constants.dart';
 import 'multi_select_dropdown_screen.dart';
 
-class JobInfoEditPage extends StatefulWidget {
-  const JobInfoEditPage({super.key});
+class JobInfoEditPageScreen extends StatefulWidget {
+  const JobInfoEditPageScreen({super.key});
   @override
-  _JobInfoEditPageState createState() => _JobInfoEditPageState();
+  _JobInfoEditPageScreenState createState() => _JobInfoEditPageScreenState();
 }
 
-class _JobInfoEditPageState extends State<JobInfoEditPage> {
+class _JobInfoEditPageScreenState extends State<JobInfoEditPageScreen> {
   final TextEditingController jobWantedController = TextEditingController();
   final TextEditingController cvController = TextEditingController();
   final TextEditingController coverLetterController = TextEditingController();

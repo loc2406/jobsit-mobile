@@ -22,6 +22,7 @@ import 'package:jobsit_mobile/utils/value_constants.dart';
 import 'package:jobsit_mobile/utils/widget_constants.dart';
 
 import '../models/candidate.dart';
+import 'job_info_edit_page_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -424,7 +425,18 @@ class _AccountScreenState extends State<AccountScreen> {
           GestureDetector(
               child: SvgPicture.asset(
             AssetConstants.iconEdit,
-          ))
+          ), onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const JobInfoEditPageScreen(),
+                  settings: RouteSettings(arguments: {
+                    TextConstants.candidate: _candidate,
+                    TextConstants.token: _token,
+                  })),
+            );
+          }
+          )
         ],
       ),
       SizedBox(

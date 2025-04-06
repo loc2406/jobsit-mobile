@@ -42,209 +42,207 @@ class _LoginScreenState extends State<LoginScreen> {
         resizeToAvoidBottomInset: true,
         body: Container(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(color: ColorConstants.main,
-                        TextConstants.logoLoginAsset,
-                        width: ValueConstants.deviceWidthValue(uiValue: 100),
-                      )
-                    ],
-                  )),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InputField(
-                              label: TextConstants.email,
-                              controller: _emailController,
-                              keyboardType: TextInputType.emailAddress,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 150),),
+                Image.asset(color: ColorConstants.main,
+                  TextConstants.logoLoginAsset,
+                  width: ValueConstants.deviceWidthValue(uiValue: 100),
+                ),
+                SizedBox(height: ValueConstants.deviceHeightValue(uiValue: 150),),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InputField(
+                                label: TextConstants.email,
+                                controller: _emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                validateMethod:
+                                    ValidateConstants.validateEmailLogin),
+                            SizedBox(
+                              height:
+                                  ValueConstants.deviceHeightValue(uiValue: 20),
+                            ),
+                            InputField(
+                              label: TextConstants.password,
+                              controller: _passwordController,
+                              keyboardType: TextInputType.visiblePassword,
                               validateMethod:
-                                  ValidateConstants.validateEmailLogin),
-                          SizedBox(
-                            height:
-                                ValueConstants.deviceHeightValue(uiValue: 20),
-                          ),
-                          InputField(
-                            label: TextConstants.password,
-                            controller: _passwordController,
-                            keyboardType: TextInputType.visiblePassword,
-                            validateMethod:
-                                ValidateConstants.validatePasswordLogin,
-                            suffixIcon: _isShowPass
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            suffixIconClicked: () {
-                              setState(() {
-                                _isShowPass = !_isShowPass;
-                              });
-                            },
-                            isObscure: _isShowPass ? false : true,
-                          ),
-                        ],
-                      )),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 20),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: _isSaveLoginState,
-                            onChanged: (value) {
-                              setState(() {
-                                _isSaveLoginState = !_isSaveLoginState;
-                              });
-                            },
-                            checkColor: Colors.white,
-                            activeColor: ColorConstants.main,
-                            side: const BorderSide(
-                                color: ColorConstants.main, width: 2),
-                          ),
-                          const Text(
-                            TextConstants.saveLoginState,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400),
-                          )
-                        ],
-                      ),
-                      const Text(
-                        TextConstants.forgotPassword,
-                        style: TextStyle(
-                            color: ColorConstants.main,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            decorationColor: ColorConstants.main),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 30),
-                  ),
-                  BlocConsumer<CandidateCubit, CandidateState>(
-                      builder: (context, state) {
-                    if (state is LoadingState) {
-                      return WidgetConstants.circularProgress;
-                    }
-
-                    return SizedBox(
-                        width: double.infinity,
-                        child: TextButton(
-                            style: const ButtonStyle(
-                                padding: WidgetStatePropertyAll(
-                                    EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 32)),
-                                backgroundColor:
-                                    WidgetStatePropertyAll(ColorConstants.main),
-                                shape: WidgetStatePropertyAll(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(16))))),
-                            onPressed: handleLogin,
-                            child: const Text(
-                              TextConstants.login,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700),
-                            )));
-                  }, listener: (context, state) {
-                    if (state is LoginSuccessState) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text(TextConstants.loginSuccessful)));
-                      
-                      Navigator.pop(context);
-
-                    } else if (state is ErrorState) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(state.errMessage)));
-                    }
-                  }),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 20),
-                  ),
-                  const Text(
-                    TextConstants.orLoginWith,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: ColorConstants.grey,
+                                  ValidateConstants.validatePasswordLogin,
+                              suffixIcon: _isShowPass
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              suffixIconClicked: () {
+                                setState(() {
+                                  _isShowPass = !_isShowPass;
+                                });
+                              },
+                              isObscure: _isShowPass ? false : true,
+                            ),
+                          ],
+                        )),
+                    SizedBox(
+                      height: ValueConstants.deviceHeightValue(uiValue: 20),
                     ),
-                  ),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 14),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: ValueConstants.deviceWidthValue(uiValue: 60),
-                        height: ValueConstants.deviceHeightValue(uiValue: 60),
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                            color: ColorConstants.btnLoginGoogle,
-                            borderRadius: BorderRadius.circular(200),
-                            border: const Border.fromBorderSide(
-                                BorderSide(color: ColorConstants.main))),
-                        child: SvgPicture.asset(TextConstants.iconGgLoginAsset),
-                      ),
-                      SizedBox(
-                        width: ValueConstants.deviceHeightValue(uiValue: 26),
-                      ),
-                      Container(
-                        width: ValueConstants.deviceWidthValue(uiValue: 60),
-                        height: ValueConstants.deviceHeightValue(uiValue: 60),
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: ColorConstants.btnLoginFb,
-                            borderRadius: BorderRadius.circular(200),
-                            border: const Border.fromBorderSide(
-                                BorderSide(color: ColorConstants.main))),
-                        child: SvgPicture.asset(TextConstants.iconFbLoginAsset),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: ValueConstants.deviceHeightValue(uiValue: 30),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(TextConstants.dontHaveAccount,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Checkbox(
+                              value: _isSaveLoginState,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isSaveLoginState = !_isSaveLoginState;
+                                });
+                              },
+                              checkColor: Colors.white,
+                              activeColor: ColorConstants.main,
+                              side: const BorderSide(
+                                  color: ColorConstants.main, width: 2),
+                            ),
+                            const Text(
+                              TextConstants.saveLoginState,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
+                        const Text(
+                          TextConstants.forgotPassword,
                           style: TextStyle(
+                              color: ColorConstants.main,
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
-                              color: Colors.black)),
-                      SizedBox(
-                        width: ValueConstants.deviceHeightValue(uiValue: 8),
+                              decorationColor: ColorConstants.main),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: ValueConstants.deviceHeightValue(uiValue: 30),
+                    ),
+                    BlocConsumer<CandidateCubit, CandidateState>(
+                        builder: (context, state) {
+                      if (state is LoadingState) {
+                        return WidgetConstants.circularProgress;
+                      }
+            
+                      return SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                              style: const ButtonStyle(
+                                  padding: WidgetStatePropertyAll(
+                                      EdgeInsets.symmetric(
+                                          vertical: 12, horizontal: 32)),
+                                  backgroundColor:
+                                      WidgetStatePropertyAll(ColorConstants.main),
+                                  shape: WidgetStatePropertyAll(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(16))))),
+                              onPressed: handleLogin,
+                              child: const Text(
+                                TextConstants.login,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700),
+                              )));
+                    }, listener: (context, state) {
+                      if (state is LoginSuccessState) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text(TextConstants.loginSuccessful)));
+                        
+                        Navigator.pop(context);
+            
+                      } else if (state is ErrorState) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(state.errMessage)));
+                      }
+                    }),
+                    SizedBox(
+                      height: ValueConstants.deviceHeightValue(uiValue: 20),
+                    ),
+                    const Text(
+                      TextConstants.orLoginWith,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: ColorConstants.grey,
                       ),
-                      GestureDetector(
-                        onTap: navigateRegisterScreen,
-                        child: const Text(
-                          TextConstants.register,
-                          style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: ColorConstants.main),
+                    ),
+                    SizedBox(
+                      height: ValueConstants.deviceHeightValue(uiValue: 14),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: ValueConstants.deviceWidthValue(uiValue: 60),
+                          height: ValueConstants.deviceHeightValue(uiValue: 60),
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              color: ColorConstants.btnLoginGoogle,
+                              borderRadius: BorderRadius.circular(200),
+                              border: const Border.fromBorderSide(
+                                  BorderSide(color: ColorConstants.main))),
+                          child: SvgPicture.asset(TextConstants.iconGgLoginAsset),
                         ),
-                      )
-                    ],
-                  )
-                ],
-              )
-            ],
+                        SizedBox(
+                          width: ValueConstants.deviceHeightValue(uiValue: 26),
+                        ),
+                        Container(
+                          width: ValueConstants.deviceWidthValue(uiValue: 60),
+                          height: ValueConstants.deviceHeightValue(uiValue: 60),
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: ColorConstants.btnLoginFb,
+                              borderRadius: BorderRadius.circular(200),
+                              border: const Border.fromBorderSide(
+                                  BorderSide(color: ColorConstants.main))),
+                          child: SvgPicture.asset(TextConstants.iconFbLoginAsset),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: ValueConstants.deviceHeightValue(uiValue: 30),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(TextConstants.dontHaveAccount,
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black)),
+                        SizedBox(
+                          width: ValueConstants.deviceHeightValue(uiValue: 8),
+                        ),
+                        GestureDetector(
+                          onTap: navigateRegisterScreen,
+                          child: const Text(
+                            TextConstants.register,
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                color: ColorConstants.main),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ));
   }
